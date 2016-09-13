@@ -20,22 +20,16 @@ const formo = Formo({
 });
 
 const update = Formo.update(formo);
+const touch = Formo.touch(formo);
+const activate = Formo.activate(formo);
+const setAsyncValidating = Formo.setAsyncValidating(formo);
 
 const updateUserName = update('username');
 const updatePassword = update('password');
 
-debug(
-  updateUserName('m'),
-  updateUserName('ma'),
-  updateUserName('mar'),
-  updateUserName('mari'),
-  updateUserName('mario'),
-  updatePassword('S'),
-  updatePassword('Si'),
-  updatePassword('Sic'),
-  updatePassword('Sicu'),
-  updatePassword('Sicur'),
-  updatePassword('Sicura'),
-  updatePassword('Sicura1'),
-  updatePassword('Sicura1!'),
-);
+debug(updateUserName('mario').username.value === 'mario');
+debug(updatePassword('Sicura1!').password.value === 'Sicura1!');
+debug(touch('username').username.touched === true);
+debug(activate('username').username.active === true);
+debug(activate('username').password.active === false);
+debug(setAsyncValidating('username').username.validating === true);
