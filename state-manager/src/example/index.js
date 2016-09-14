@@ -14,9 +14,11 @@ const textField = Fieldo({
   validating: false // I would like this to be the default
 });
 
+const isValidPassword = ({ value }) => value.length > 10;
+
 const formo = Formo({
   username: textField,
-  password: textField
+  password: Fieldo({ ...textField, isValid: isValidPassword })
 });
 
 const update = Formo.update(formo);
@@ -33,3 +35,8 @@ debug(touch('username').username.touched === true);
 debug(activate('username').username.active === true);
 debug(activate('username').password.active === false);
 debug(setAsyncValidating('username').username.validating === true);
+
+
+const touchedPasswordForm = Formo.touch(formo)('password');
+const writtenPasswordForm = Formo.update(touchedPasswordForm)('password')('Sicura1');
+debug(Fieldo.isValid(writtenPasswordForm.password) === false);
