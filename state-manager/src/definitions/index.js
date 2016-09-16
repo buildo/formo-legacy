@@ -1,4 +1,4 @@
-import t, { dict, struct, refinement, maybe } from 'tcomb';
+import t, { dict, struct, refinement } from 'tcomb';
 
 export const typeCheckOriginalValue = ({ type, originalValue }) => {
   return type.is(originalValue);
@@ -11,7 +11,7 @@ export const Fieldo = refinement(struct({
   touched: t.Boolean, // is the field being touched by the user (focused, or focused then blurred); can't be set back to false
   active: t.Boolean, // focused, current
   validating: t.Boolean, // ongoing async validation
-  isValid: maybe(t.Function)
+  isValid: t.Boolean
 }, { strict: true }), typeCheckOriginalValue, 'Fieldo');
 
 export const Formo = dict(t.String, Fieldo, 'Formo');
