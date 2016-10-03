@@ -82,10 +82,10 @@ const asyncValidationFieldDecorator = (Component) => {
       setValue = (value) => {
         const { asyncValidations, setValue: _setValue } = this.props;
 
-        this.setState({ isAsyncValid: !asyncValidations });
-
         // only start asynchronous validations when synchronous validations success
         if (asyncValidations && this.props.isValidValue(value)) {
+          this.context.formsyWrapper.setAsyncValidationState(false);
+          this.setState({ isAsyncValid: !asyncValidations });
           this.debouncedHandleAsyncValidations(value);
         }
 
@@ -94,6 +94,7 @@ const asyncValidationFieldDecorator = (Component) => {
 
       getAsyncErrorMessage(validatorName) {
         const { asyncValidationErrors } = this.props;
+
         if (asyncValidationErrors && asyncValidationErrors[validatorName]) {
           return asyncValidationErrors[validatorName];
         }
