@@ -1,9 +1,5 @@
 {
-  "presets": [ "es2015", "stage-0" ],
-  "plugins": [
-    "lodash",
-    "syntax-async-functions",
-    "transform-regenerator",
-    "transform-runtime"
-  ]
+  "stage": 0,
+  "loose": true,
+  "plugins": ["tcomb"]
 }

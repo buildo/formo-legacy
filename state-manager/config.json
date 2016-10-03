@@ -1,0 +1,8 @@
+{
+  "NODE_ENV": "development",
+  "port": 39340,
+  "eslint": true,
+  "devTool": "source-map",
+  "title": "Formo - state manager",
+  "debug": "app*,*API*,state*"
+}
