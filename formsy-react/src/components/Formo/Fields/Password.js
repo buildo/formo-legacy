@@ -11,6 +11,7 @@ import { Decorator as FormsyElement } from 'formsy-react';
   name: t.String,
   value: maybe(t.String),
   setValue: t.Function,
+  showRequired: t.Function,
   isRequired: t.Function,
   isValid: t.Function,
   getErrorMessage: t.Function
@@ -18,25 +19,29 @@ import { Decorator as FormsyElement } from 'formsy-react';
 export default class Password extends React.Component {
 
   changeValue = (e) => {
+    // `setValue` triggers 'formsy-react' and the validation mechanism.
     this.props.setValue(e.target.value);
   }
 
-  getLocals({ name, getValue, isRequired, isValid, getErrorMessage }) {
+  getLocals({ name, getValue, showRequired, isRequired, isValid, getErrorMessage }) {
     return {
       name,
       value: getValue(),
       onChange: this.changeValue,
+      showRequired: showRequired(),
       isRequired: isRequired(),
       isValid: isValid(),
       errorMessage: getErrorMessage()
     };
   }
 
-  template({ name, value, onChange, isRequired, isValid, errorMessage }) {
+  template({ name, value, onChange, showRequired, isRequired, isValid, errorMessage }) {
     return (
       <div>
-        <span>{isRequired ? '*' : null}</span>
-        <span className='form-label' style={{ fontWeight: 'bold', marginRight: 20, width: 100, display: 'inline-block' }}>{name}</span>
+        <span className='form-label' style={{ fontWeight: 'bold', marginRight: 20, width: 100, display: 'inline-block' }}>
+          {name}
+          {showRequired && <span>{isRequired ? '*' : null}</span>}
+        </span>
         <input
           type='password'
           value={value}

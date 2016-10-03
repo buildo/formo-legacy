@@ -70,12 +70,15 @@ const asyncValidationFieldDecorator = (Component) => {
 
       debouncedHandleAsyncValidations = debounce(this.handleAsyncValidations, 300);
 
+      // if at least one async validator is present, the entire form validation state
+      // is false till all the async validators have been verified
       componentDidMount() {
         if (this.props.asyncValidations) {
           this.context.formsyWrapper.setAsyncValidationState(false);
         }
       }
 
+      // this overwrites the `formsy-react` setValue method to include async validation
       setValue = (value) => {
         const { asyncValidations, setValue: _setValue } = this.props;
 
@@ -97,6 +100,8 @@ const asyncValidationFieldDecorator = (Component) => {
         return null;
       }
 
+      // this overwrites `formsy-react` isValid method to include also async validation
+      // (field is valid if every sync and async validator has been successfully verified)
       isValid = () => {
         return this.props.isValid() && this.state.isAsyncValid;
       }

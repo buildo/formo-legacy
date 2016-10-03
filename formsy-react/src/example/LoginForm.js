@@ -12,6 +12,9 @@ export default class LoginForm extends React.Component {
   constructor(args) {
     super(args);
 
+    // Fake validation rule, used only to delay the validation till we know if the 'password'
+    // field should be visible (if an async rule is used in any field, the form validation is false
+    // till the rule is validated)
     Formsy.addAsyncValidationRule('existsEmail', (value) => {
       return new Promise((resolve) => {
         setTimeout(() => {
@@ -34,6 +37,8 @@ export default class LoginForm extends React.Component {
     });
   };
 
+  // when the sync validation fails, the async validation is not even triggered, so we need
+  // a way to hide the 'password' field when the email is not valid
   onInvalidEmail = () => {
     if (this.state.showPassword)
       this.setState({ showPassword: false });
@@ -85,7 +90,6 @@ export default class LoginForm extends React.Component {
               validationError='This is not a valid email'
               required
               asyncValidations='existsEmail'
-              asyncValidationErrors={{ existsEmail: 'email should exist!' }}
               onInvalid={this.onInvalidEmail}
             />
             {showPassword &&
