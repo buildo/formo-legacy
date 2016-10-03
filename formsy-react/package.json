@@ -52,6 +52,7 @@
     "classnames": "^2.1.5",
     "es6-promise": "^3.2.1",
     "formsy-react": "^0.18.1",
+    "formsy-react-wrapper": "0.0.3",
     "lodash": "^4.15.0",
     "normalize.css": "^3.0.3",
     "react": "^0.14",
