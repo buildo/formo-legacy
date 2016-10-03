@@ -1,0 +1,64 @@
+{
+  "name": "formo-formsy",
+  "version": "0.1.0",
+  "description": "formo-formsy",
+  "main": "lib/index.js",
+  "engines": {
+    "node": ">=6"
+  },
+  "scripts": {
+    "lint": "eslint src",
+    "lint-fix": "eslint --fix src",
+    "clean": "rm -rf lib && mkdir lib",
+    "build": "npm run clean && babel src --out-dir lib && cp config.json lib || true",
+    "watch": "npm run clean && cp config.json lib && babel src --out-dir lib --watch",
+    "start": "npm run clean && UV_THREADPOOL_SIZE=20 webpack-dev-server --config webpack.config.js --progress --hot --inline --host 0.0.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/buildo/formo.git"
+  },
+  "author": "veej",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/buildo/formo/issues"
+  },
+  "homepage": "https://github.com/buildo/formo#readme",
+  "devDependencies": {
+    "babel": "^5.8.38",
+    "babel-core": "^5.8.38",
+    "babel-eslint": "6.1.2",
+    "babel-loader": "^5.4.2",
+    "babel-plugin-tcomb": "^0.1.7",
+    "compression-webpack-plugin": "^0.3.0",
+    "css-loader": "^0.19.0",
+    "eslint": "~3.5.0",
+    "eslint-config-buildo": "github:buildo/eslint-config",
+    "eslint-loader": "^1.0.0",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "file-loader": "^0.9.0",
+    "html-webpack-plugin": "^1.7.0",
+    "json-loader": "^0.5.1",
+    "node-sass": "^3.4.1",
+    "react-addons-perf": "^0.14.8",
+    "resolve-url-loader": "^1.4.3",
+    "sass-loader": "3.2.1",
+    "style-loader": "^0.13.0",
+    "url-loader": "^0.5.6",
+    "webpack": "^1.12.14",
+    "webpack-dev-server": "^1.10.1"
+  },
+  "dependencies": {
+    "classnames": "^2.1.5",
+    "es6-promise": "^3.2.1",
+    "formsy-react": "^0.18.1",
+    "formsy-react-wrapper": "0.0.3",
+    "lodash": "^4.15.0",
+    "normalize.css": "^3.0.3",
+    "react": "^0.14",
+    "react-dom": "^0.14",
+    "sass-variables-loader": "^0.1.3",
+    "tcomb": "^3.2.13",
+    "tcomb-react": "^0.9.3"
+  }
+}
