@@ -1,20 +1,27 @@
 import React from 'react';
-import { Button, LoadingSpinner } from 'buildo-react-components';
+import { Button } from 'buildo-react-components';
 import View from 'react-flexview';
 import Input from './Input';
 
 import 'react-flexview/src/flexView.scss';
 import 'buildo-react-components/src/button/button.scss';
+import './style.scss';
 
-const Message = ({ iff = true, children, ...other }) => iff ? (
-  <View vAlignContent='center' style={{ color: 'red', marginLeft: 10 }} {...other}>
+const Message = ({ iff = true, children, style, ...other }) => iff ? (
+  <View vAlignContent='center' style={{ color: '#F25F5C', marginLeft: 10, ...style }} {...other}>
     {children}
   </View>
 ) : <View />;
 
-const EmailField = ({ email, onEmailChange, onFieldTouch, onFieldActivate, userExists }) => (
+const EmailField = ({
+  email,
+  onEmailChange,
+  onFieldTouch,
+  onFieldActivate,
+  userExists
+}) => (
   <View style={{ position: 'relative', marginBottom: 20 }}>
-    <View basis={100} vAlignContent='center'>Email</View>
+    <View basis={200} vAlignContent='center'>Email</View>
     <Input
       type='email'
       value={email.value}
@@ -24,15 +31,15 @@ const EmailField = ({ email, onEmailChange, onFieldTouch, onFieldActivate, userE
       isValid={!email.touched || email.isValid}
       isActive={email.active}
     />
-    {email.validating && <LoadingSpinner size='small' />}
+    <Message iff={email.validating} style={{ color: '#247BA0' }}>Verifying email...</Message>
     <Message iff={email.touched && !email.isValid}>Please digit a valid email</Message>
-    <Message iff={userExists === true}>{`Email ${email.value} is already registered`}</Message>
+    <Message iff={userExists === true && email.isValid}>{`Email ${email.value} is already registered`}</Message>
   </View>
 );
 
 const PasswordField = ({ password, onPasswordChange, onFieldTouch, onFieldActivate }) => (
   <View style={{ position: 'relative', marginBottom: 20 }}>
-    <View basis={100} vAlignContent='center'>Password</View>
+    <View basis={200} vAlignContent='center'>Password</View>
     <Input
       type='password'
       value={password.value}
@@ -42,7 +49,7 @@ const PasswordField = ({ password, onPasswordChange, onFieldTouch, onFieldActiva
       isValid={!password.touched || password.isValid}
       isActive={password.active}
     />
-    <Message iff={password.touched && !password.isValid}>Please at least 10 characters for your password</Message>
+    <Message iff={password.touched && !password.isValid}>Please allow at least 10 characters for your password</Message>
   </View>
 );
 
@@ -58,14 +65,21 @@ const SubmitButton = ({ email, password }) => (
 
 const containerStyle = {
   padding: 20,
-  background: 'rgba(123,32,98,.2)'
+  background: '#DFDFDF'
 };
 
 const FormoComponent = ({ ...props, log }) => (
-  <View column grow vAlignContent='center' hAlignContent='center'>
+  <View
+    column
+    grow
+    height='100%'
+    vAlignContent='center'
+    hAlignContent='center'
+    style={{ background: '#247BA0' }}
+  >
 
 
-    <View width='600' column style={containerStyle}>
+    <View width='800' column style={containerStyle}>
 
       <EmailField {...props} />
 

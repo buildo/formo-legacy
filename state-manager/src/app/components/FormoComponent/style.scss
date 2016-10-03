@@ -1,0 +1,29 @@
+// PREVENT BOUNCE SCROLLING IN OSX
+
+html {
+  overflow: hidden;
+}
+
+html, body, {
+  height: 100%;
+  font-size: 28px;
+}
+
+// THEME
+
+body, #app, .layout, .layout > div {
+  height: 100%;
+}
+
+input {
+  font-size: 22px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+:focus {
+  outline: none;
+}

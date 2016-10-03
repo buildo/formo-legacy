@@ -16,8 +16,9 @@ const Input = ({
     onFocus={onFocus}
     onBlur={onBlur}
     style={{
-      color: isValid ? 'blue' : 'red',
-      border: isActive ? '1px solid blue' : '1px solid black'
+      color: isValid ? '#247BA0' : '#F25F5C',
+      border: isActive ? '3px solid #247BA0' : '1px solid black',
+      background: isActive ? '#B1DDD5' : null
     }}
   />
 );

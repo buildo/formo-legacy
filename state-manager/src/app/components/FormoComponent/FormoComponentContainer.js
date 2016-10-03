@@ -45,11 +45,14 @@ export default class FormoComponentContainer extends React.Component {
 
   onFieldTouch = (formo) => (fieldName) => () => {
     const newFormo = formoTransition(Formo.deactivate(Formo.touch(formo)(fieldName))(fieldName));
-    this.setState({
-      formo: newFormo
-    });
+    if (fieldName === 'email' && newFormo.email.isValid && !formo.email.touched) {
+      this.setAsyncValidating(newFormo)('email')();
+    } else {
+      this.setState({
+        formo: newFormo
+      });
+    }
   };
-
 
   onFieldActivate = (formo) => (fieldName) => () => {
     const newFormo = formoTransition(Formo.activate(formo)(fieldName));
@@ -58,11 +61,31 @@ export default class FormoComponentContainer extends React.Component {
     });
   };
 
+  setAsyncValidating = (formo) => (fieldName) => () => {
+    const newFormo = formoTransition(Formo.setAsyncValidating(formo)(fieldName));
+    this.setState({
+      formo: newFormo,
+      userExists: null
+    }, () => setTimeout(this.unsetAsyncValidating(this.state.formo)(fieldName), 2000));
+  }
+
+  unsetAsyncValidating = (formo) => (fieldName) => () => {
+    const newFormo = formoTransition(Formo.unsetAsyncValidating(formo)(fieldName));
+    this.setState({
+      formo: newFormo,
+      userExists: true//Math.random() > .8 ? true : false
+    }, () => this.setAsyncValidating(this.state.formo)(fieldName));
+  }
+
   onEmailChange = (formo) => (newValue) => {
     const newFormo = formoTransition(Formo.update(formo)('email')(newValue));
-    this.setState({
-      formo: newFormo
-    });
+    if (newFormo.email.isValid && newFormo.email.touched) {
+      this.setAsyncValidating(newFormo)('email')();
+    } else {
+      this.setState({
+        formo: newFormo
+      });
+    }
   };
 
   onPasswordChange = (formo) => (newValue) => {
@@ -81,7 +104,7 @@ export default class FormoComponentContainer extends React.Component {
       onPasswordChange: this.onPasswordChange(this.state.formo),
       onFieldTouch: this.onFieldTouch(this.state.formo),
       onFieldActivate: this.onFieldActivate(this.state.formo),
-      userExists: false
+      userExists: this.state.userExists
     });
   }
 
