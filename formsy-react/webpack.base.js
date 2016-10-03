@@ -53,6 +53,10 @@ module.exports = function(opts) {
           include: [
             paths.SRC
           ]
+        },
+        {
+          test: /\.gif$/,
+          loader: 'file?name=[path][name].[ext]'
         }
       ]
     }

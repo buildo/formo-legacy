@@ -5,6 +5,8 @@ import { skinnable } from 'revenge';
 import { props } from 'tcomb-react';
 import FormsyAsyncValidationElement from './asyncValidation';
 
+import './spinner.gif';
+
 @FormsyAsyncValidationElement
 @skinnable()
 @props({
@@ -13,6 +15,7 @@ import FormsyAsyncValidationElement from './asyncValidation';
   getErrorMessage: t.Function,
   isValid: t.Function,
   isValidValue: t.Function,
+  isValidating: t.Boolean,
   showRequired: t.Function,
   isRequired: t.Function,
   onInvalid: t.Function
@@ -28,20 +31,21 @@ export default class Input extends React.Component {
       this.props.onInvalid(); // invalid email should hide password field
   }
 
-  getLocals({ name, getValue, getErrorMessage, isValid, showRequired, isRequired }) {
+  getLocals({ name, getValue, getErrorMessage, isValid, isValidating, showRequired, isRequired }) {
     return {
       value: getValue(),
       errorMessage: getErrorMessage(),
       isValid: isValid(),
+      isValidating,
       showRequired: showRequired(),
       isRequired: isRequired(),
       name
     };
   }
 
-  template({ name, value, errorMessage, isValid, showRequired, isRequired }) {
+  template({ name, value, errorMessage, isValid, isValidating, showRequired, isRequired }) {
     return (
-      <div>
+      <div style={{ height: '30px', padding: 0 }}>
         <span className='form-label' style={{ fontWeight: 'bold', marginRight: 20, width: 100, display: 'inline-block' }}>
           {name}
           {showRequired && <span>{isRequired ? '*' : null}</span>}
@@ -60,6 +64,7 @@ export default class Input extends React.Component {
             marginRight: 20
           }}
         />
+        {isValidating && <img src='src/components/Formo/Fields/spinner.gif' height='20px' />}
         {errorMessage && <span style={{ color: 'red' }}>{errorMessage}</span>}
       </div>
     );
