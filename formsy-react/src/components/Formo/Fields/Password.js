@@ -1,5 +1,5 @@
 import React from 'react';
-import t, { maybe } from 'tcomb';
+import t from 'tcomb';
 import cx from 'classnames';
 import { skinnable } from 'revenge';
 import { props } from 'tcomb-react';
@@ -9,8 +9,8 @@ import { Decorator as FormsyElement } from 'formsy-react';
 @skinnable()
 @props({
   name: t.String,
-  value: maybe(t.String),
   setValue: t.Function,
+  getValue: t.Function,
   showRequired: t.Function,
   isRequired: t.Function,
   isValid: t.Function,

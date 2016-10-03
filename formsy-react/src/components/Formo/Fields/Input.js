@@ -1,5 +1,5 @@
 import React from 'react';
-import t, { maybe } from 'tcomb';
+import t from 'tcomb';
 import cx from 'classnames';
 import { skinnable } from 'revenge';
 import { props } from 'tcomb-react';
@@ -10,8 +10,8 @@ import './spinner.gif';
 @FormsyAsyncValidationElement
 @skinnable()
 @props({
-  value: maybe(t.String),
   setValue: t.Function,
+  getValue: t.Function,
   getErrorMessage: t.Function,
   isValid: t.Function,
   isValidValue: t.Function,
