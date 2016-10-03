@@ -1,0 +1,5 @@
+{
+  "NODE_ENV": "development",
+  "debug": "app*,*API*,state*",
+  "eslint": true
+}
