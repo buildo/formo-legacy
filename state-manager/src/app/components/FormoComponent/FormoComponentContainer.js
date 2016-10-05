@@ -62,23 +62,29 @@ export default class FormoComponentContainer extends React.Component {
   };
 
   setAsyncValidating = (formo) => (fieldName) => () => {
-    const newFormo = formoTransition(Formo.setAsyncValidating(formo)(fieldName));
+    const stopValidatingFormo =  formoTransition(Formo.unsetAsyncValidating(formo)(fieldName));
+    const newFormo = formoTransition(Formo.setAsyncValidating(stopValidatingFormo)(fieldName));
     this.setState({
       formo: newFormo,
       userExists: null
-    }, () => setTimeout(this.unsetAsyncValidating(this.state.formo)(fieldName), 2000));
+    }, () => setTimeout(() => this.unsetAsyncValidating(this.state.formo)(fieldName)(newFormo[fieldName].value), 2000));
   }
 
-  unsetAsyncValidating = (formo) => (fieldName) => () => {
+  unsetAsyncValidating = (formo) => (fieldName) => (value) => {
+    console.log(formo[fieldName].value, { value });
+    if (!formo[fieldName].validating || formo[fieldName].value !== value) {
+      return;
+    }
     const newFormo = formoTransition(Formo.unsetAsyncValidating(formo)(fieldName));
     this.setState({
       formo: newFormo,
-      userExists: true//Math.random() > .8 ? true : false
-    }, () => this.setAsyncValidating(this.state.formo)(fieldName));
+      userExists: formo.email.value === 'esiste@buildo.io'
+    });
   }
 
   onEmailChange = (formo) => (newValue) => {
-    const newFormo = formoTransition(Formo.update(formo)('email')(newValue));
+    const stopValidatingFormo =  formoTransition(Formo.unsetAsyncValidating(formo)('email'));
+    const newFormo = formoTransition(Formo.update(stopValidatingFormo)('email')(newValue));
     if (newFormo.email.isValid && newFormo.email.touched) {
       this.setAsyncValidating(newFormo)('email')();
     } else {

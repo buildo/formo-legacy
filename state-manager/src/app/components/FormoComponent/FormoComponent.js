@@ -7,11 +7,22 @@ import 'react-flexview/src/flexView.scss';
 import 'buildo-react-components/src/button/button.scss';
 import './style.scss';
 
+import Highlight from 'react-highlight';
+import 'highlight.js/styles/monokai-sublime.css';
+
 const Message = ({ iff = true, children, style, ...other }) => iff ? (
   <View vAlignContent='center' style={{ color: '#F25F5C', marginLeft: 10, ...style }} {...other}>
     {children}
   </View>
 ) : <View />;
+
+const Log = ({ children, style, ...other }) => {
+  return (
+    <View vAlignContent='center' style={{ fontSize: 18, marginTop: 20, ...style }} {...other}>
+      <Highlight>{children}</Highlight>
+    </View>
+  );
+};
 
 const EmailField = ({
   email,
@@ -79,7 +90,7 @@ const FormoComponent = ({ ...props, log }) => (
   >
 
 
-    <View width='800' column style={containerStyle}>
+    <View width='1000' column style={containerStyle}>
 
       <EmailField {...props} />
 
@@ -90,9 +101,9 @@ const FormoComponent = ({ ...props, log }) => (
     </View>
 
 
-    <View shrink={false}>
+    <Log shrink={false}>
       {log}
-    </View>
+    </Log>
 
   </View>
   );
