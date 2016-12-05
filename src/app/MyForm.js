@@ -6,6 +6,9 @@ import { skinnable, pure } from 'revenge';
 import View from 'react-flexview';
 import { Dropdown } from 'buildo-react-components';
 import formo from 'formo';
+import compact from 'lodash/compact';
+import map from 'lodash/map';
+import printJSON from 'printJSON';
 
 import 'buildo-react-components/src/dropdown/dropdown.scss';
 
@@ -31,7 +34,13 @@ const formoConfig = (props) => ({
     })
   },
   sex: {
-    initialValue: props.sex || ''
+    initialValue: props.sex || '',
+    getSyncValidationErrors: value => {
+      const required = !value ? 'sex is required' : null;
+      return {
+        required
+      };
+    }
   }
 });
 
@@ -51,30 +60,43 @@ export default class MyForm extends React.Component {
 
     return (
       <View row>
-        <View column>
-          <input
-            value={email.value}
-            {...email.setters}
-            onChange={e => email.onChange(e.target.value)}
-            style={style(email)}
-          />
-          <input
-            type='password'
-            value={password.value}
-            {...password.setters}
-            onChange={e => password.onChange(e.target.value)}
-            style={style(password)}
-          />
-          <Dropdown
-            value={sex.value}
-            options={sexOptions}
-            {...sex.setters}
-          />
+        <View column width={600}>
+          <View>
+            <input
+              value={email.value}
+              {...email.setters}
+              onChange={e => email.onChange(e.target.value)}
+              style={style(email)}
+            />
+            {email.touched && compact(map(email.syncValidationErrors)).join(', ')}
+          </View>
+          <View>
+            <input
+              type='password'
+              value={password.value}
+              {...password.setters}
+              onChange={e => password.onChange(e.target.value)}
+              style={style(password)}
+            />
+            {password.touched && compact(map(password.syncValidationErrors)).join(', ')}
+          </View>
+          <View>
+            <Dropdown
+              clearable
+              value={sex.value}
+              options={sexOptions}
+              {...sex.setters}
+              style={style(sex)}
+            />
+            {sex.touched && compact(map(sex.syncValidationErrors)).join(', ')}
+          </View>
         </View>
-        <View column>
-          <View>{!email.isValid && email.touched && JSON.stringify(email.syncValidationErrors)}</View>
-          <View>{!password.isValid && password.touched && JSON.stringify(password.syncValidationErrors)}</View>
-          <View />
+        <View column  marginTop={30}>
+          <textarea
+            readOnly
+            style={{ height: 500, width: 500, fontFamily: 'monospace' }}
+            value={printJSON({ email, password, sex })}
+          />
         </View>
       </View>
     );
