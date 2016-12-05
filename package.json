@@ -1,0 +1,66 @@
+{
+  "name": "formo",
+  "version": "1.0.0",
+  "description": "Form state management",
+  "main": "src/client.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "clean": "rm -rf build/* && mkdir -p build",
+    "start": "npm run clean && cp src/index.html build && webpack-dev-server --config webpack.config.js --hot --inline",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/buildo/formo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/buildo/formo/issues"
+  },
+  "homepage": "https://github.com/buildo/formo#readme",
+  "dependencies": {
+    "avenger": "0.2.9",
+    "buildo-react-components": "^0.10.0",
+    "classnames": "^2.1.5",
+    "debug": "^2.1.3",
+    "es6-promise": "^3.2.1",
+    "lodash": "^4.6.1",
+    "react": "^0.14",
+    "react-avenger": "github:buildo/react-avenger",
+    "react-container": "github:buildo/react-container",
+    "react-dom": "^0.14",
+    "react-flexview": "^1.0.1",
+    "require-noop": "0.0.2",
+    "revenge": "^0.4.4",
+    "rxjs": "5.0.0-beta.8",
+    "state": "github:buildo/state#v0.1.0",
+    "state-react-router": "github:buildo/state-react-router",
+    "tcomb": "^3.1.0",
+    "tcomb-react": "^0.9.0",
+    "url-loader": "^0.5.6"
+  },
+  "devDependencies": {
+    "babel": "^5.8.23",
+    "babel-core": "^5.8.25",
+    "babel-eslint": "6.1.0",
+    "babel-loader": "^5.3.2",
+    "babel-plugin-tcomb": "^0.1.7",
+    "compression-webpack-plugin": "^0.3.0",
+    "eslint": "~2.4.0",
+    "eslint-config-buildo": "github:buildo/eslint-config",
+    "eslint-loader": "^1.0.0",
+    "expect": "^1.6.0",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "file-loader": "^0.8.1",
+    "html-webpack-plugin": "^1.5.2",
+    "json-loader": "^0.5.1",
+    "jsondiffpatch": "^0.1.33",
+    "metarpheus-tcomb": "^0.1.10",
+    "resolve-url-loader": "^1.4.3",
+    "style-loader": "^0.13.0",
+    "webpack": "^1.12.14",
+    "webpack-dev-server": "^1.10.1"
+  }
+}
