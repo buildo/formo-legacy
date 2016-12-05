@@ -46,6 +46,12 @@ module.exports = {
       test: /\.jsx?$/, // test for both js and jsx
       loaders: ['babel'], // babel config stays in .babelrc
       include: [paths.SRC, paths.TEST]
+    }, {
+      test: /\.css$/,
+      loader: 'style!css'
+    }, {
+      test: /\.scss$/,
+      loader: 'style!css!sass'
     }]
   }
 };

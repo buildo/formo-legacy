@@ -3,23 +3,6 @@
   "version": "1.0.0",
   "description": "Form state management",
   "main": "src/client.js",
-  "dependencies": {},
-  "devDependencies": {},
-  "scripts": {
-    "clean": "rm -rf build/* && mkdir -p build",
-    "start": "npm run clean && cp src/index.html build && webpack-dev-server --config webpack.config.js --hot --inline",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/buildo/formo.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/buildo/formo/issues"
-  },
-  "homepage": "https://github.com/buildo/formo#readme",
   "dependencies": {
     "avenger": "0.2.9",
     "buildo-react-components": "^0.10.0",
@@ -48,6 +31,7 @@
     "babel-loader": "^5.3.2",
     "babel-plugin-tcomb": "^0.1.7",
     "compression-webpack-plugin": "^0.3.0",
+    "css-loader": "^0.26.1",
     "eslint": "~2.4.0",
     "eslint-config-buildo": "github:buildo/eslint-config",
     "eslint-loader": "^1.0.0",
@@ -58,9 +42,26 @@
     "json-loader": "^0.5.1",
     "jsondiffpatch": "^0.1.33",
     "metarpheus-tcomb": "^0.1.10",
+    "node-sass": "^3.13.0",
     "resolve-url-loader": "^1.4.3",
+    "sass-loader": "^4.0.2",
     "style-loader": "^0.13.0",
     "webpack": "^1.12.14",
     "webpack-dev-server": "^1.10.1"
-  }
+  },
+  "scripts": {
+    "clean": "rm -rf build/* && mkdir -p build",
+    "start": "npm run clean && cp src/index.html build && webpack-dev-server --config webpack.config.js --hot --inline",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/buildo/formo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/buildo/formo/issues"
+  },
+  "homepage": "https://github.com/buildo/formo#readme"
 }
