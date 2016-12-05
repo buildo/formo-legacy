@@ -39,8 +39,7 @@ const formo = getOptions => Component => {
         ...value,
         [key]: {
           ...value[key],
-          value: fieldValue,
-          touched: true
+          value: fieldValue
         }
       };
       this.props.onChange(newValue);
@@ -64,7 +63,8 @@ const formo = getOptions => Component => {
         ...value,
         [key]: {
           ...value[key],
-          active: false
+          active: false,
+          touched: true
         }
       };
       this.props.onChange(newValue);

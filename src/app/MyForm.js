@@ -12,8 +12,8 @@ import printJSON from 'printJSON';
 
 import 'buildo-react-components/src/dropdown/dropdown.scss';
 
-const style = ({ isValid, active }) => ({
-  borderColor: isValid ? 'green' : 'red',
+const style = ({ isValid, active, touched }) => ({
+  borderColor: touched ? isValid ? 'green' : 'red' : 'black',
   backgroundColor: active ? 'yellow' : 'white'
 });
 
@@ -80,13 +80,12 @@ export default class MyForm extends React.Component {
             />
             {password.touched && compact(map(password.syncValidationErrors)).join(', ')}
           </View>
-          <View>
+          <View style={style(sex)}>
             <Dropdown
               clearable
               value={sex.value}
               options={sexOptions}
               {...sex.setters}
-              style={style(sex)}
             />
             {sex.touched && compact(map(sex.syncValidationErrors)).join(', ')}
           </View>
