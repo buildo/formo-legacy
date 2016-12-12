@@ -5,9 +5,14 @@ import omit from 'lodash/omit';
 import mapValues from 'lodash/mapValues';
 import map from 'lodash/map';
 
+const set = (key) => (value) => object => ({
+  ...object,
+  [key]: value
+});
+
 const getForm = fields => mapValues(fields, field => ({
   value: field.value || field.initialValue || '',
-  getSyncValidationErrors: field.getSyncValidationErrors || (() => ({}))
+  validations: field.validations || (() => ({}))
 }));
 
 const formo = getOptions => Component => {
@@ -16,6 +21,7 @@ const formo = getOptions => Component => {
     onChange: t.Function
   }, { strict: false })
   class Formo extends React.Component {
+
     state = {
       form: null
     };
@@ -33,28 +39,21 @@ const formo = getOptions => Component => {
       });
     }
 
-    onChange = key => fieldValue => {
-      const value = this.state.form;
-      const newValue = {
-        ...value,
-        [key]: {
-          ...value[key],
-          value: fieldValue
-        }
-      };
-      this.props.onChange(newValue);
+    onChange = fieldName => value => {
+      const { form } = this.state;
+      const { [fieldName]: field } = form;
+      const newField = set('value')(value)(field);
+      const newForm = set(fieldName)(newField)(form);
+      this.props.onChange(newForm);
     };
 
-    onFocus = key => () => {
-      const value = this.state.form;
-      const newValue = {
-        ...value,
-        [key]: {
-          ...value[key],
-          active: true
-        }
-      };
-      this.props.onChange(newValue);
+    onFocus = fieldName => () => {
+      const { form } = this.state;
+      const { [fieldName]: field } = form;
+      const newField = set('active')(true)(field);
+      const activeFalseForm = mapValues(form, set('active')(false));
+      const newForm = set(fieldName)(newField)(activeFalseForm);
+      this.props.onChange(newForm);
     };
 
     onBlur = key => () => {
@@ -84,11 +83,11 @@ const formo = getOptions => Component => {
     });
 
     formWithSyncValidation = form => mapValues(form, field => {
-      const syncValidationErrors = field.getSyncValidationErrors(field.value);
-      const isValid = map(syncValidationErrors).every(x => x === null);
+      const validations = field.validations(field.value);
+      const isValid = map(validations).every(x => x === null);
       return {
         ...field,
-        syncValidationErrors,
+        validations,
         isValid
       };
     });

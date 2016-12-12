@@ -20,7 +20,7 @@ const style = ({ isValid, active, touched }) => ({
 const formoConfig = (props) => ({
   email: {
     initialValue: props.email || '',
-    getSyncValidationErrors: value => {
+    validations: value => {
       const required = !value ? 'email is required' : null;
       return {
         required,
@@ -29,13 +29,13 @@ const formoConfig = (props) => ({
     }
   },
   password: {
-    getSyncValidationErrors: value => ({
+    validations: value => ({
       length: value && value.length > 5 ? null : 'password must be >5'
     })
   },
   sex: {
     initialValue: props.sex || '',
-    getSyncValidationErrors: value => {
+    validations: value => {
       const required = !value ? 'sex is required' : null;
       return {
         required
@@ -68,7 +68,7 @@ export default class MyForm extends React.Component {
               onChange={e => email.onChange(e.target.value)}
               style={style(email)}
             />
-            {email.touched && compact(map(email.syncValidationErrors)).join(', ')}
+            {email.touched && compact(map(email.validations)).join(', ')}
           </View>
           <View>
             <input
@@ -78,7 +78,7 @@ export default class MyForm extends React.Component {
               onChange={e => password.onChange(e.target.value)}
               style={style(password)}
             />
-            {password.touched && compact(map(password.syncValidationErrors)).join(', ')}
+            {password.touched && compact(map(password.validations)).join(', ')}
           </View>
           <View style={style(sex)}>
             <Dropdown
@@ -87,7 +87,7 @@ export default class MyForm extends React.Component {
               options={sexOptions}
               {...sex.setters}
             />
-            {sex.touched && compact(map(sex.syncValidationErrors)).join(', ')}
+            {sex.touched && compact(map(sex.validations)).join(', ')}
           </View>
         </View>
         <View column  marginTop={30}>
