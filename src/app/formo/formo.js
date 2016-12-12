@@ -12,7 +12,8 @@ const set = (key) => (value) => object => ({
 
 const getForm = fields => mapValues(fields, field => ({
   value: field.value || field.initialValue || '',
-  validations: field.validations || (() => ({}))
+  validations: field.validations || (() => ({})),
+  initialValue: field.initialValue || ''
 }));
 
 const formo = getOptions => Component => {

@@ -3,7 +3,9 @@ import MyForm from './MyForm';
 
 export default class App extends React.Component {
   state = {
-    form: null
+    form: {
+      email: { initialValue: 'mario@mario.mario' }
+    }
   };
 
   render() {

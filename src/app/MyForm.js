@@ -19,7 +19,7 @@ const style = ({ isValid, active, touched }) => ({
 
 const formoConfig = (props) => ({
   email: {
-    initialValue: props.email || '',
+    initialValue: props.email.initialValue || '',
     validations: value => {
       const required = !value ? 'email is required' : null;
       return {
@@ -51,8 +51,8 @@ const formoConfig = (props) => ({
   email: t.Object, // specify
   password: t.Object, //specify
   sex: t.Object, //specify
+  initialValueEmail: t.maybe(t.String),
   sexOptions: t.Array
-
 })
 export default class MyForm extends React.Component {
 
