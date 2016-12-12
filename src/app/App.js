@@ -1,17 +1,14 @@
 import React from 'react';
-import MyForm from './MyForm';
+import MyOtherForm from './MyOtherForm';
 
 export default class App extends React.Component {
   state = {
-    form: {
-      email: { initialValue: 'mario@mario.mario' }
-    }
+    form: null
   };
 
   render() {
     return (
-      <MyForm
-        sexOptions={['male', 'female'].map(value => ({ value, label: value }))}
+      <MyOtherForm
         value={this.state.form}
         onChange={value => { this.setState({ form: value }); }}
       />

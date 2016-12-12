@@ -60,7 +60,8 @@ const formo = getOptions => Component => {
     onBlur = fieldName => () => {
       const { form } = this.state;
       const { [fieldName]: field } = form;
-      const newField = set('active')(false)(field);
+      const _newField = set('active')(false)(field);
+      const newField = set('touched')(true)(_newField);
       const newForm = set(fieldName)(newField)(form);
       this.props.onChange(newForm);
     };
