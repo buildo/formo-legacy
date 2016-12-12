@@ -56,17 +56,12 @@ const formo = getOptions => Component => {
       this.props.onChange(newForm);
     };
 
-    onBlur = key => () => {
-      const value = this.state.form;
-      const newValue = {
-        ...value,
-        [key]: {
-          ...value[key],
-          active: false,
-          touched: true
-        }
-      };
-      this.props.onChange(newValue);
+    onBlur = fieldName => () => {
+      const { form } = this.state;
+      const { [fieldName]: field } = form;
+      const newField = set('active')(false)(field);
+      const newForm = set(fieldName)(newField)(form);
+      this.props.onChange(newForm);
     };
 
     formWithSetters = form => mapValues(form, (field, key) => {
