@@ -19,7 +19,7 @@ const style = ({ isValid, active, touched }) => ({
 
 const formoConfig = (props) => ({
   email: {
-    initialValue: props.email.initialValue || '',
+    initialValue: 'mario@gmail.com',
     validations: value => {
       const required = !value ? 'email is required' : null;
       return {
@@ -51,7 +51,6 @@ const formoConfig = (props) => ({
   email: t.Object, // specify
   password: t.Object, //specify
   sex: t.Object, //specify
-  initialValueEmail: t.maybe(t.String),
   sexOptions: t.Array
 })
 export default class MyForm extends React.Component {
@@ -59,7 +58,7 @@ export default class MyForm extends React.Component {
   template({ email, password, sex, sexOptions } ) {
 
     return (
-      <View row>
+      <View basis='50%'>
         <View column width={600}>
           <View>
             <input

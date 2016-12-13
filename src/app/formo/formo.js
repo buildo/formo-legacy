@@ -4,14 +4,17 @@ import { props } from 'tcomb-react';
 import omit from 'lodash/omit';
 import mapValues from 'lodash/mapValues';
 import map from 'lodash/map';
+import find from 'lodash/find';
 
 const set = (key) => (value) => object => ({
   ...object,
   [key]: value
 });
 
+const firstAvailable = (...args) => find(args, x => x !== void 0);
+
 const getForm = fields => mapValues(fields, field => ({
-  value: field.value || field.initialValue || '',
+  value: firstAvailable(field.value, field.initialValue, ''),
   validations: field.validations || (() => ({})),
   initialValue: field.initialValue || ''
 }));

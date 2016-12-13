@@ -86,7 +86,7 @@ export default class MyOtherForm extends React.Component {
   template({ number, cardholder, expirationMonth, expirationYear, cvv, saveData }) {
 
     return (
-      <View row>
+      <View basis='50%'>
         <View column width={600}>
 
           <View>
