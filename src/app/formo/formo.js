@@ -5,6 +5,7 @@ import omit from 'lodash/omit';
 import mapValues from 'lodash/mapValues';
 import map from 'lodash/map';
 import find from 'lodash/find';
+import flowRight from 'lodash/flowRight';
 
 const set = (key) => (value) => object => ({
   ...object,
@@ -71,6 +72,12 @@ const formo = getOptions => Component => {
       this.props.onChange(newForm);
     };
 
+    clearValues = () => {
+      const { form } = this.state;
+      const clearedForm = mapValues(form, set('value')(undefined));
+      this.props.onChange(clearedForm);
+    }
+
     formWithSetters = form => mapValues(form, (field, key) => {
       const setters = {
         update: this.updateValue(key),
@@ -97,7 +104,8 @@ const formo = getOptions => Component => {
       return (
         <Component
           {...omit(this.props, ['onChange', 'value'])}
-          {...this.formWithSetters(this.formWithSyncValidation(this.state.form))}
+          {...flowRight(this.formWithSetters, this.formWithSyncValidation)(this.state.form)}
+          form={{ clearValues: this.clearValues }}
         />
       );
     }
