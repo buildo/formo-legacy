@@ -16,7 +16,7 @@ const formoConfig = () => ({
   rating: {
     initialValue: 0,
     validations: value => ({
-      required: value > 0
+      required: value > 0 ? null : 'this value is required'
     })
   },
   feedback: {
