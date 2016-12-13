@@ -1,20 +1,23 @@
 import React from 'react';
-import * as examples from './examples';
+import * as _examples from './examples';
 import View from 'react-flexview';
 import map from 'lodash/map';
+import omit from 'lodash/omit';
+
+const examples = omit(_examples, ['__esModule']);
 
 import 'react-flexview/src/flexView.scss';
 
 export default class App extends React.Component {
 
-  state = { example: 'MyForm' }
+  state = { example: 'LastOneIPromise' }
 
   render() {
     return (
       <View column>
 
         <View style={{ backgroundColor: '#ddd' }} marginBottom={100}>
-          {'MyForm MyOtherForm AnotherOneOfMyForms'.split(' ').map(x => (
+          {map(examples, (_, x) => (
             <View
               marginRight={30}
               key={x}
