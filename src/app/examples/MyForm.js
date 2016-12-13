@@ -50,12 +50,11 @@ const formoConfig = (props) => ({
 @props({
   email: t.Object, // specify
   password: t.Object, //specify
-  sex: t.Object, //specify
-  sexOptions: t.Array
+  sex: t.Object //specify
 })
 export default class MyForm extends React.Component {
 
-  template({ email, password, sex, sexOptions } ) {
+  template({ email, password, sex } ) {
 
     return (
       <View basis='50%'>
@@ -85,7 +84,7 @@ export default class MyForm extends React.Component {
             <Dropdown
               clearable
               value={sex.value}
-              options={sexOptions}
+              options={'male female'.split(' ').map(x => ({ value: x, label: x }))}
               onChange={sex.update}
             />
             {sex.touched && compact(map(sex.validations)).join(', ')}

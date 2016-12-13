@@ -1,7 +1,7 @@
 import React from 'react';
-import MyOtherForm from './MyOtherForm';
-import MyForm from './MyForm';
+import * as examples from './examples';
 import View from 'react-flexview';
+import map from 'lodash/map';
 
 import 'react-flexview/src/flexView.scss';
 
@@ -12,24 +12,28 @@ export default class App extends React.Component {
   render() {
     return (
       <View column>
+
         <View style={{ backgroundColor: '#ddd' }} marginBottom={100}>
-          {'MyForm MyOtherForm'.split(' ').map(x => (
-            <View marginRight={30} key={x} style={{ cursor: 'pointer', fontWeight: this.state.example === x && 'bold' }} onClick={() => this.setState({ example: x })}>{x}</View>
+          {'MyForm MyOtherForm AnotherOneOfMyForms'.split(' ').map(x => (
+            <View
+              marginRight={30}
+              key={x}
+              style={{ cursor: 'pointer', fontWeight: this.state.example === x && 'bold' }}
+              onClick={() => this.setState({ example: x })}
+            >
+              {x}
+            </View>
           ))}
         </View>
-        {this.state.example === 'MyForm' && (
-          <MyForm
-            sexOptions={'male female'.split(' ').map(x => ({ value: x, label: x }))}
-            value={this.state.form1}
-            onChange={value => { this.setState({ form1: value }); }}
+
+        {map(examples, (Component, name) => this.state.example === name && (
+          <Component
+            key={name}
+            value={this.state[name]}
+            onChange={value => { this.setState({ [name]: value }); }}
           />
-        )}
-        {this.state.example === 'MyOtherForm' && (
-          <MyOtherForm
-            value={this.state.form2}
-            onChange={value => { this.setState({ form2: value }); }}
-          />
-        )}
+        ))}
+
       </View>
     );
   }
