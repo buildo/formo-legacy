@@ -4,7 +4,7 @@ import { props } from 'tcomb-react';
 import { skinnable, pure } from 'revenge';
 import View from 'react-flexview';
 import { Dropdown, Toggle } from 'buildo-react-components';
-import formo from 'formo';
+import formo, { Input } from 'formo';
 import compact from 'lodash/compact';
 import range from 'lodash/range';
 import map from 'lodash/map';
@@ -13,7 +13,15 @@ import printJSON from 'printJSON';
 import 'buildo-react-components/src/dropdown/dropdown.scss';
 import 'buildo-react-components/src/toggle/toggle.scss';
 
+const inputStyle = {
+  fontSize: 18,
+  height: 30,
+  marginBottom: 10,
+  width: '100%'
+};
+
 const style = ({ isValid, active, touched }) => ({
+  ...inputStyle,
   borderColor: touched ? isValid ? 'green' : 'red' : 'black',
   backgroundColor: active ? 'yellow' : 'white'
 });
@@ -61,15 +69,6 @@ const formoConfig = () => ({
   }
 });
 
-const inputStyle = {
-  fontSize: 18,
-  height: 30,
-  marginBottom: 10,
-  width: '100%'
-};
-
-const Input = ({ onChange, style = {}, ...others }) => <input onChange={e => onChange(e.target.value)} {...others} style={{ ...inputStyle, ...style }} />;
-
 @formo(formoConfig)
 @pure
 @skinnable()
@@ -79,7 +78,8 @@ const Input = ({ onChange, style = {}, ...others }) => <input onChange={e => onC
   expirationMonth: t.Object, //specify
   expirationYear: t.Object,
   cvv: t.Object,
-  saveData: t.Object
+  saveData: t.Object,
+  form: t.Object
 })
 export default class MyOtherForm extends React.Component {
 

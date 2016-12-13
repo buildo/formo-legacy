@@ -50,7 +50,8 @@ const formoConfig = (props) => ({
 @props({
   email: t.Object, // specify
   password: t.Object, //specify
-  sex: t.Object //specify
+  sex: t.Object, //specify
+  form: t.Object
 })
 export default class MyForm extends React.Component {
 

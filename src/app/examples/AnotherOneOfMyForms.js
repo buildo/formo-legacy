@@ -3,11 +3,20 @@ import t from 'tcomb';
 import { props } from 'tcomb-react';
 import { skinnable, pure } from 'revenge';
 import View from 'react-flexview';
-import formo from 'formo';
+import formo, { Input } from 'formo';
 import range from 'lodash/range';
 import printJSON from 'printJSON';
+import { Button } from 'buildo-react-components';
+
+const inputStyle = {
+  fontSize: 18,
+  height: 30,
+  marginBottom: 10,
+  width: '100%'
+};
 
 const style = ({ isValid, active, touched }) => ({
+  ...inputStyle,
   borderColor: touched ? isValid ? 'green' : 'red' : 'black',
   backgroundColor: active ? 'yellow' : 'white'
 });
@@ -30,24 +39,15 @@ const formoConfig = () => ({
   }
 });
 
-const inputStyle = {
-  fontSize: 18,
-  height: 30,
-  marginBottom: 10,
-  width: '100%'
-};
-
 const startRatingStyle = {
   fontSize: 32,
   margin: '0 5px',
   cursor: 'pointer'
 };
 
-const Input = ({ onChange, style = {}, ...others }) => <input onChange={e => onChange(e.target.value)} {...others} style={{ ...inputStyle, ...style }} />;
-
 const StarRating = ({ rating, onChange }) => (
   <View>
-    {range(5).map((star, i) => <View style={{ ...startRatingStyle, opacity: rating >= (i + 1) ? 1 : .5 }} onClick={() => { onChange(i + 1); }}>⭐</View>)}
+    {range(5).map((star, i) => <View key={star} style={{ ...startRatingStyle, opacity: rating >= (i + 1) ? 1 : .5 }} onClick={() => { onChange(i + 1); }}>⭐</View>)}
   </View>
 );
 
@@ -55,13 +55,14 @@ const StarRating = ({ rating, onChange }) => (
 @pure
 @skinnable()
 @props({
+  form: t.Object,
   rating: t.Object, // specify
   feedback: t.Object, //specify
   securityQuestion: t.Object
 })
 export default class AnotherOneOfMyForms extends React.Component {
 
-  template({ rating, feedback, securityQuestion }) {
+  template({ rating, feedback, securityQuestion, form }) {
 
     return (
       <View basis='50%'>
@@ -77,8 +78,10 @@ export default class AnotherOneOfMyForms extends React.Component {
 
           <View>
             <label>8 + 5 =</label>
-            <Input style={style(securityQuestion)} type='number' value={securityQuestion.value} onChange={securityQuestion.update} />
+            <Input style={{ ...inputStyle, ...style(securityQuestion) }} type='number' value={securityQuestion.value} onChange={securityQuestion.update} />
           </View>
+
+          <Button onClick={form.clearValues} label='clear'/>
 
         </View>
 
