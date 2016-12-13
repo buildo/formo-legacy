@@ -16,7 +16,7 @@ const firstAvailable = (...args) => find(args, x => x !== void 0);
 const getForm = fields => mapValues(fields, field => ({
   value: firstAvailable(field.value, field.initialValue, ''),
   validations: field.validations || (() => ({})),
-  initialValue: field.initialValue || ''
+  initialValue: firstAvailable(field.initialValue, '')
 }));
 
 const formo = getOptions => Component => {
@@ -43,7 +43,7 @@ const formo = getOptions => Component => {
       });
     }
 
-    onChange = fieldName => value => {
+    updateValue = fieldName => value => {
       const { form } = this.state;
       const { [fieldName]: field } = form;
       const newField = set('value')(value)(field);
@@ -51,7 +51,7 @@ const formo = getOptions => Component => {
       this.props.onChange(newForm);
     };
 
-    onFocus = fieldName => () => {
+    setActive = fieldName => () => {
       const { form } = this.state;
       const { [fieldName]: field } = form;
       const newField = set('active')(true)(field);
@@ -60,7 +60,7 @@ const formo = getOptions => Component => {
       this.props.onChange(newForm);
     };
 
-    onBlur = fieldName => () => {
+    unsetActive = fieldName => () => {
       const { form } = this.state;
       const { [fieldName]: field } = form;
       const _newField = set('active')(false)(field);
@@ -71,14 +71,13 @@ const formo = getOptions => Component => {
 
     formWithSetters = form => mapValues(form, (field, key) => {
       const setters = {
-        onChange: this.onChange(key),
-        onFocus: this.onFocus(key),
-        onBlur: this.onBlur(key)
+        update: this.updateValue(key),
+        setActive: this.setActive(key),
+        unsetActive: this.unsetActive(key)
       };
       return {
         ...field,
-        ...setters,
-        setters
+        ...setters
       };
     });
 

@@ -92,7 +92,9 @@ export default class MyOtherForm extends React.Component {
           <View>
             <Input
               value={cardholder.value}
-              {...cardholder.setters}
+              onFocus={cardholder.setActive}
+              onBlur={cardholder.unsetActive}
+              onChange={cardholder.update}
               style={style(cardholder)}
               placeholder='cardholder'
             />
@@ -102,7 +104,9 @@ export default class MyOtherForm extends React.Component {
           <View>
             <Input
               value={number.value}
-              {...number.setters}
+              onFocus={number.setActive}
+              onBlur={number.unsetActive}
+              onChange={number.update}
               style={style(number)}
               placeholder='card number'
             />
@@ -114,7 +118,9 @@ export default class MyOtherForm extends React.Component {
               clearable
               value={expirationMonth.value}
               options={range(12).map(x => `00${x + 1}`.slice(-2)).map(x => ({ value: x, label: x }))}
-              {...expirationMonth.setters}
+              onFocus={expirationMonth.setActive}
+              onBlur={expirationMonth.unsetActive}
+              onChange={expirationMonth.update}
               placeholder='expiration month'
             />
             {expirationMonth.touched && compact(map(expirationMonth.validations)).join(', ')}
@@ -125,7 +131,9 @@ export default class MyOtherForm extends React.Component {
               clearable
               value={expirationYear.value}
               options={range(2016, 2026).map(x => `${x}`).map(x => ({ value: x, label: x }))}
-              {...expirationYear.setters}
+              onFocus={expirationYear.setActive}
+              onBlur={expirationYear.unsetActive}
+              onChange={expirationYear.update}
               placeholder='expiration year'
             />
             {expirationYear.touched && compact(map(expirationYear.validations)).join(', ')}
@@ -134,7 +142,9 @@ export default class MyOtherForm extends React.Component {
           <View>
             <Input
               value={cvv.value}
-              {...cvv.setters}
+              onFocus={cvv.setActive}
+              onBlur={cvv.unsetActive}
+              onChange={cvv.update}
               style={style(cvv)}
               placeholder='cvv'
             />
@@ -144,8 +154,8 @@ export default class MyOtherForm extends React.Component {
           <View>
             Save Data?
             <Toggle
-              value={Boolean(saveData.value)}
-              onChange={saveData.onChange}
+              value={saveData.value}
+              onChange={saveData.update}
               style={style(saveData)}
             />
             {saveData.touched && compact(map(saveData.validations)).join(', ')}

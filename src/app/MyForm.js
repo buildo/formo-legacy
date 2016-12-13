@@ -63,8 +63,9 @@ export default class MyForm extends React.Component {
           <View>
             <input
               value={email.value}
-              {...email.setters}
-              onChange={e => email.onChange(e.target.value)}
+              onFocus={email.setActive}
+              onBlur={email.unsetActive}
+              onChange={e => email.update(e.target.value)}
               style={style(email)}
             />
             {email.touched && compact(map(email.validations)).join(', ')}
@@ -73,8 +74,9 @@ export default class MyForm extends React.Component {
             <input
               type='password'
               value={password.value}
-              {...password.setters}
-              onChange={e => password.onChange(e.target.value)}
+              onFocus={password.setActive}
+              onBlur={password.unsetActive}
+              onChange={e => password.update(e.target.value)}
               style={style(password)}
             />
             {password.touched && compact(map(password.validations)).join(', ')}
@@ -84,7 +86,7 @@ export default class MyForm extends React.Component {
               clearable
               value={sex.value}
               options={sexOptions}
-              {...sex.setters}
+              onChange={sex.update}
             />
             {sex.touched && compact(map(sex.validations)).join(', ')}
           </View>
