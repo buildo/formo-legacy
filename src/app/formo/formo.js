@@ -78,6 +78,12 @@ const formo = getOptions => Component => {
       this.props.onChange(clearedForm);
     }
 
+    touchAll = () => {
+      const { form } = this.state;
+      const touchedForm =  mapValues(form, set('touched')(true));
+      this.props.onChange(touchedForm);
+    }
+
     formWithSetters = form => mapValues(form, (field, key) => {
       const setters = {
         update: this.updateValue(key),
@@ -105,7 +111,7 @@ const formo = getOptions => Component => {
         <Component
           {...omit(this.props, ['onChange', 'value'])}
           {...flowRight(this.formWithSetters, this.formWithSyncValidation)(this.state.form)}
-          form={{ clearValues: this.clearValues }}
+          form={{ clearValues: this.clearValues, touchAll: this.touchAll }}
         />
       );
     }
