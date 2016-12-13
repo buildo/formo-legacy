@@ -26,6 +26,8 @@ const formo = getOptions => Component => {
   }, { strict: false })
   class Formo extends React.Component {
 
+    static displayName = `Formo${(Component.displayName || Component.name || '')}`
+
     state = {
       form: null
     };
