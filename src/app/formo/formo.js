@@ -15,6 +15,7 @@ const set = (key) => (value) => object => ({
 const firstAvailable = (...args) => find(args, x => x !== void 0);
 
 const getForm = fields => mapValues(fields, field => ({
+  ...field,
   value: firstAvailable(field.value, field.initialValue, ''),
   validations: field.validations || (() => ({})),
   initialValue: firstAvailable(field.initialValue, '')
@@ -30,20 +31,13 @@ const formo = getOptions => Component => {
     static displayName = `Formo${(Component.displayName || Component.name || '')}`
 
     state = {
-      form: null
+      form: getForm(getOptions(this.props))
     };
 
-    componentWillMount() {
-      this.setState({
-        form: getForm(getOptions(this.props.value || {}))
-      });
-    }
-
     componentWillReceiveProps(props) {
-      this.setState({
-        formOptions: getOptions(props.value),
-        form: props.value
-      });
+      const form = getForm(getOptions(props));
+      console.log('there should be something active', { form });
+      this.setState({ form });
     }
 
     updateValue = fieldName => value => {
@@ -60,6 +54,7 @@ const formo = getOptions => Component => {
       const newField = set('active')(true)(field);
       const activeFalseForm = mapValues(form, set('active')(false));
       const newForm = set(fieldName)(newField)(activeFalseForm);
+      console.log(`setting ${fieldName} active`, { newField }, { newForm });
       this.props.onChange(newForm);
     };
 

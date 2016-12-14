@@ -25,7 +25,7 @@ const style = ({ isValid, active, touched }) => ({
   backgroundColor: active ? 'yellow' : 'white'
 });
 
-const formoConfig = () => ({
+const formoConfig = (props) => props.value || ({
   rating: {
     initialValue: 0,
     validations: value => ({

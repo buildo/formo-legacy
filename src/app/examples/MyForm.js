@@ -17,37 +17,41 @@ const style = ({ isValid, active, touched }) => ({
   backgroundColor: active ? 'yellow' : 'white'
 });
 
-const formoConfig = (props) => ({
-  email: {
-    initialValue: 'mario@gmail.com',
-    validations: value => {
-      const required = !value ? 'email is required' : null;
-      return {
-        required,
-        length: !required && value.length > 5 ? null : 'email must be longer than 5 chars'
-      };
+const formoConfig = (props) => {
+  console.log('formoConfig', props.value);
+  return props.value || ({
+    email: {
+      initialValue: props.emailInitialValue,
+      validations: value => {
+        const required = !value ? 'email is required' : null;
+        return {
+          required,
+          length: !required && value.length > 5 ? null : 'email must be longer than 5 chars'
+        };
+      }
+    },
+    password: {
+      validations: value => ({
+        length: value && value.length > 5 ? null : 'password must be >5'
+      })
+    },
+    sex: {
+      initialValue: props.sex || '',
+      validations: value => {
+        const required = !value ? 'sex is required' : null;
+        return {
+          required
+        };
+      }
     }
-  },
-  password: {
-    validations: value => ({
-      length: value && value.length > 5 ? null : 'password must be >5'
-    })
-  },
-  sex: {
-    initialValue: props.sex || '',
-    validations: value => {
-      const required = !value ? 'sex is required' : null;
-      return {
-        required
-      };
-    }
-  }
-});
+  });
+};
 
 @formo(formoConfig)
 @pure
 @skinnable()
 @props({
+  emailInitialValue: t.maybe(t.String),
   email: t.Object, // specify
   password: t.Object, //specify
   sex: t.Object, //specify

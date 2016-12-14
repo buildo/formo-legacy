@@ -15,7 +15,7 @@ import 'buildo-react-components/src/toggle/toggle.scss';
 
 import './lastOneIPromise.scss';
 
-const formoConfig = () => ({
+const formoConfig = (props) => props.value || ({
   favouriteCountries: {},
   preferredConditions: {},
   bestDayOfYourLife: {},

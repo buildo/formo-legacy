@@ -8,6 +8,12 @@ const examples = omit(_examples, ['__esModule']);
 
 import 'react-flexview/src/flexView.scss';
 
+const otherProps = {
+  MyForm: {
+    emailInitialValue: 'mario.poverello@gmail.com'
+  }
+};
+
 export default class App extends React.Component {
 
   state = { example: 'LastOneIPromise' }
@@ -31,6 +37,7 @@ export default class App extends React.Component {
 
         {map(examples, (Component, name) => this.state.example === name && (
           <Component
+            {...otherProps[name]}
             key={name}
             value={this.state[name]}
             onChange={value => { this.setState({ [name]: value }); }}
