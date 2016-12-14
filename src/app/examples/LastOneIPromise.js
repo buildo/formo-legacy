@@ -10,8 +10,10 @@ import { DatePickerInput } from 'rc-datepicker';
 
 import 'buildo-react-components/src/button/button.scss';
 import 'buildo-react-components/src/dropdown/dropdown.scss';
-import 'rc-datepicker/lib/style.css';
+import 'rc-datepicker/src/style.scss';
 import 'buildo-react-components/src/toggle/toggle.scss';
+
+import './lastOneIPromise.scss';
 
 const formoConfig = () => ({
   favouriteCountries: {},
@@ -38,15 +40,16 @@ export default class LastOneIPromise extends React.Component {
   template({ favouriteCountries, bestDayOfYourLife, preferredConditions, doYouLikeTrains, form }) {
 
     return (
-      <View basis='50%'>
-        <View column width={600}>
+      <View grow className='last-one-i-promise'>
 
-          <View>
+        <View column basis='50%'>
+
+          <View className='field' basis={75} column grow vAlignContent='center'>
             Select the best day of your life
             <DatePickerInput value={bestDayOfYourLife.value} onChange={bestDayOfYourLife.update} />
           </View>
 
-          <View>
+          <View className='field' basis={75} column grow vAlignContent='center'>
             Select your favourite countries
             <Dropdown
               multi
@@ -57,7 +60,7 @@ export default class LastOneIPromise extends React.Component {
             />
           </View>
 
-          <View>
+          <View className='field' basis={75} column grow vAlignContent='center'>
             What's your favourite condition
             <Dropdown
               clearable
@@ -67,7 +70,7 @@ export default class LastOneIPromise extends React.Component {
             />
           </View>
 
-          <View>
+          <View className='field' basis={75} column grow vAlignContent='center'>
             Do you like trains?
             <Toggle value={doYouLikeTrains.value} onChange={doYouLikeTrains.update} />
           </View>
@@ -77,7 +80,7 @@ export default class LastOneIPromise extends React.Component {
         </View>
 
 
-        <View column  marginTop={30}>
+        <View column basis='50%' vAlignContent='center' hAlignContent='center'>
           <textarea
             readOnly
             style={{ height: 500, width: 500, fontFamily: 'monospace' }}
