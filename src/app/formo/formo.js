@@ -74,7 +74,7 @@ const formo = getOptions => Component => {
 
     clearValues = () => {
       const { form } = this.state;
-      const clearedForm = mapValues(form, set('value')(undefined));
+      const clearedForm = mapValues(form, field => set('value')(firstAvailable(field.initialValue))(field));
       this.props.onChange(clearedForm);
     }
 
