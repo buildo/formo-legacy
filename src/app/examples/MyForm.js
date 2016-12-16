@@ -18,7 +18,6 @@ const style = ({ isValid, active, touched }) => ({
 });
 
 const formoConfig = (props) => {
-  console.log('formoConfig', props.value);
   return props.value || ({
     email: {
       initialValue: props.emailInitialValue,

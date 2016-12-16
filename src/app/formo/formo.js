@@ -36,7 +36,6 @@ const formo = getOptions => Component => {
 
     componentWillReceiveProps(props) {
       const form = getForm(getOptions(props));
-      console.log('there should be something active', { form });
       this.setState({ form });
     }
 
@@ -54,7 +53,6 @@ const formo = getOptions => Component => {
       const newField = set('active')(true)(field);
       const activeFalseForm = mapValues(form, set('active')(false));
       const newForm = set(fieldName)(newField)(activeFalseForm);
-      console.log(`setting ${fieldName} active`, { newField }, { newForm });
       this.props.onChange(newForm);
     };
 
