@@ -16,9 +16,13 @@ const otherProps = {
 
 export default class App extends React.Component {
 
-  state = { example: 'LastOneIPromise' }
+  state = {
+    example: 'INeverKeepPromisesForm',
+    email: ''
+  }
 
   render() {
+    console.log({ email: this.state.email });
     return (
       <View column>
 
@@ -39,8 +43,9 @@ export default class App extends React.Component {
           <Component
             {...otherProps[name]}
             key={name}
+            emailona={this.state.email}
             value={this.state[name]}
-            onChange={value => { this.setState({ [name]: value }); }}
+            onChange={value => { this.setState({ [name]: value, email: value.email.value }); }}
           />
         ))}
 
