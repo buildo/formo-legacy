@@ -16,9 +16,9 @@ const firstAvailable = (...args) => find(args, x => x !== void 0);
 
 const getForm = fields => mapValues(fields, field => ({
   ...field,
-  value: firstAvailable(field.value, field.initialValue, ''),
+  value: firstAvailable(field.value, field.initialValue),
   validations: field.validations || (() => ({})),
-  initialValue: firstAvailable(field.initialValue, '')
+  initialValue: firstAvailable(field.initialValue)
 }));
 
 const formo = getOptions => Component => {
