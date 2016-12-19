@@ -17,41 +17,10 @@ const style = ({ isValid, active, touched }) => ({
   backgroundColor: active ? 'yellow' : 'white'
 });
 
-const formoConfig = (props) => {
-  return props.value || ({
-    email: {
-      initialValue: props.emailInitialValue,
-      validations: value => {
-        const required = !value ? 'email is required' : null;
-        return {
-          required,
-          length: !required && value.length > 5 ? null : 'email must be longer than 5 chars'
-        };
-      }
-    },
-    password: {
-      validations: value => ({
-        length: value && value.length > 5 ? null : 'password must be >5'
-      })
-    },
-    sex: {
-      initialValue: props.sex || '',
-      validations: value => {
-        const required = !value ? 'sex is required' : null;
-        return {
-          required
-        };
-      }
-    }
-  });
-};
-
-@formo(formoConfig)
+@formo
 @pure
 @skinnable()
 @props({
-  value: t.maybe(t.Object),
-  emailInitialValue: t.maybe(t.String),
   email: t.Object, // specify
   password: t.Object, //specify
   sex: t.Object, //specify
@@ -59,7 +28,7 @@ const formoConfig = (props) => {
 })
 export default class MyForm extends React.Component {
 
-  template({ email, password, sex } ) {
+  template({ email, password, sex, form } ) {
 
     return (
       <View basis='50%'>
@@ -89,6 +58,8 @@ export default class MyForm extends React.Component {
             <Dropdown
               clearable
               value={sex.value}
+              onFocus={sex.setActive}
+              onBlur={sex.unsetActive}
               options={'male female'.split(' ').map(x => ({ value: x, label: x }))}
               onChange={sex.update}
             />
@@ -99,7 +70,7 @@ export default class MyForm extends React.Component {
           <textarea
             readOnly
             style={{ height: 500, width: 500, fontFamily: 'monospace' }}
-            value={printJSON({ email, password, sex })}
+            value={printJSON({ isChanged: form.isChanged, isValid: form.isValid, email, password, sex })}
           />
         </View>
       </View>

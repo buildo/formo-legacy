@@ -6,6 +6,9 @@ import omit from 'lodash/omit';
 import mapValues from 'lodash/mapValues';
 import omitBy from 'lodash/omitBy';
 import map from 'lodash/map';
+import every from 'lodash/every';
+import includes from 'lodash/includes';
+import some from 'lodash/some';
 import find from 'lodash/find';
 import flowRight from 'lodash/flowRight';
 
@@ -16,17 +19,18 @@ const set = (key) => (value) => object => ({
 
 const firstAvailable = (...args) => find(args, x => x !== void 0);
 
-const getForm = fields => mapValues(fields, field => ({
+const getForm = (form) => mapValues(form, field => ({
   ...field,
   value: firstAvailable(field.value, field.initialValue),
   validations: field.validations || (() => ({})),
   initialValue: firstAvailable(field.initialValue)
 }));
 
-const formo = getOptions => Component => {
+const formo = (Component) => {
   @pure
   @skinnable(contains(Component))
   @props({
+    form: t.Object,
     onChange: t.Function
   }, { strict: false })
   class Formo extends React.Component {
@@ -34,11 +38,20 @@ const formo = getOptions => Component => {
     static displayName = `Formo${(Component.displayName || Component.name || '')}`
 
     state = {
-      form: getForm(getOptions(this.props))
+      form: getForm(this.props.form)
     };
 
+    onChange = (newForm) => {
+      this.setState({ form: newForm }, () => {
+        this.props.onChange(this.state.form);
+      });
+    }
+
     componentWillReceiveProps(props) {
-      const form = getForm(getOptions(props));
+      const form = mapValues(this.state.form, (field, fieldName) => ({
+        ...this.state.form[fieldName],
+        ...(props.value || {})[fieldName]
+      }));
       this.setState({ form });
     }
 
@@ -47,7 +60,7 @@ const formo = getOptions => Component => {
       const { [fieldName]: field } = form;
       const newField = set('value')(value)(field);
       const newForm = set(fieldName)(newField)(form);
-      this.props.onChange(newForm);
+      this.onChange(newForm);
     };
 
     setActive = fieldName => () => {
@@ -56,7 +69,7 @@ const formo = getOptions => Component => {
       const newField = set('active')(true)(field);
       const activeFalseForm = mapValues(form, set('active')(false));
       const newForm = set(fieldName)(newField)(activeFalseForm);
-      this.props.onChange(newForm);
+      this.onChange(newForm);
     };
 
     unsetActive = fieldName => () => {
@@ -65,7 +78,7 @@ const formo = getOptions => Component => {
       const _newField = set('active')(false)(field);
       const newField = set('touched')(true)(_newField);
       const newForm = set(fieldName)(newField)(form);
-      this.props.onChange(newForm);
+      this.onChange(newForm);
     };
 
     set = (fieldName) => (prop, value) => {
@@ -73,19 +86,19 @@ const formo = getOptions => Component => {
       const { [fieldName]: field } = form;
       const newField = set(prop)(value)(field);
       const newForm = set(fieldName)(newField)(form);
-      this.props.onChange(newForm);
+      this.onChange(newForm);
     }
 
     clearValues = () => {
       const { form } = this.state;
       const clearedForm = mapValues(form, field => set('value')(firstAvailable(field.initialValue))(field));
-      this.props.onChange(clearedForm);
+      this.onChange(clearedForm);
     }
 
     touchAll = () => {
       const { form } = this.state;
       const touchedForm =  mapValues(form, set('touched')(true));
-      this.props.onChange(touchedForm);
+      this.onChange(touchedForm);
     }
 
     formWithSetters = form => mapValues(form, (field, key) => {
@@ -111,12 +124,24 @@ const formo = getOptions => Component => {
       };
     });
 
+    isAdequatelyEqual = ({ value, initialValue }) => {
+      const similars = ['', undefined, null];
+      return (
+        (includes(similars, value) && includes(similars, initialValue)) ||
+        value === initialValue
+      );
+    }
+
+    isChanged = form => some(map(form, v => !this.isAdequatelyEqual(v)));
+
     getLocals(_props) {
-      const props = omit(_props, ['onChange']);
+      const props = omit(_props, ['onChange', 'form']);
       const fields = flowRight(this.formWithSetters, this.formWithSyncValidation)(this.state.form);
       const form = {
         clearValues: this.clearValues,
-        touchAll: this.touchAll
+        touchAll: this.touchAll,
+        isValid: every(map(fields, f => f.isValid)),
+        isChanged: this.isChanged(fields)
       };
       return {
         ...props,
