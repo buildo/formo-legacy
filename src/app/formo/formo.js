@@ -65,6 +65,14 @@ const formo = getOptions => Component => {
       this.props.onChange(newForm);
     };
 
+    set = (fieldName) => (prop, value) => {
+      const { form } = this.state;
+      const { [fieldName]: field } = form;
+      const newField = set(prop)(value)(field);
+      const newForm = set(fieldName)(newField)(form);
+      this.props.onChange(newForm);
+    }
+
     clearValues = () => {
       const { form } = this.state;
       const clearedForm = mapValues(form, field => set('value')(firstAvailable(field.initialValue))(field));
@@ -79,6 +87,7 @@ const formo = getOptions => Component => {
 
     formWithSetters = form => mapValues(form, (field, key) => {
       const setters = {
+        set: this.set(key),
         update: this.updateValue(key),
         setActive: this.setActive(key),
         unsetActive: this.unsetActive(key)
