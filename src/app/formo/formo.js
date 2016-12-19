@@ -1,6 +1,7 @@
 import React from 'react';
 import t from 'tcomb';
 import { props } from 'tcomb-react';
+import { skinnable, pure, contains } from 'revenge';
 import omit from 'lodash/omit';
 import mapValues from 'lodash/mapValues';
 import omitBy from 'lodash/omitBy';
@@ -23,6 +24,8 @@ const getForm = fields => mapValues(fields, field => ({
 }));
 
 const formo = getOptions => Component => {
+  @pure
+  @skinnable(contains(Component))
   @props({
     value: t.maybe(t.Object), // should be a Formo object,
     onChange: t.Function
@@ -109,15 +112,20 @@ const formo = getOptions => Component => {
       };
     });
 
-    render() {
-      return (
-        <Component
-          {...omit(this.props, ['onChange', 'value'])}
-          {...flowRight(this.formWithSetters, this.formWithSyncValidation)(this.state.form)}
-          form={{ clearValues: this.clearValues, touchAll: this.touchAll }}
-        />
-      );
+    getLocals(_props) {
+      const props = omit(_props, ['onChange', 'value']);
+      const fields = flowRight(this.formWithSetters, this.formWithSyncValidation)(this.state.form);
+      const form = {
+        clearValues: this.clearValues,
+        touchAll: this.touchAll
+      };
+      return {
+        ...props,
+        ...fields,
+        form
+      };
     }
+
   }
 
   return Formo;
