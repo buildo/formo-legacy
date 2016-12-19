@@ -3,6 +3,7 @@ import t from 'tcomb';
 import { props } from 'tcomb-react';
 import omit from 'lodash/omit';
 import mapValues from 'lodash/mapValues';
+import omitBy from 'lodash/omitBy';
 import map from 'lodash/map';
 import find from 'lodash/find';
 import flowRight from 'lodash/flowRight';
@@ -99,7 +100,7 @@ const formo = getOptions => Component => {
     });
 
     formWithSyncValidation = form => mapValues(form, field => {
-      const validations = field.validations(field.value);
+      const validations = omitBy(field.validations(field.value), x => x === null);
       const isValid = map(validations).every(x => x === null);
       return {
         ...field,
