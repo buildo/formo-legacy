@@ -27,7 +27,6 @@ const formo = getOptions => Component => {
   @pure
   @skinnable(contains(Component))
   @props({
-    value: t.maybe(t.Object), // should be a Formo object,
     onChange: t.Function
   }, { strict: false })
   class Formo extends React.Component {
@@ -113,7 +112,7 @@ const formo = getOptions => Component => {
     });
 
     getLocals(_props) {
-      const props = omit(_props, ['onChange', 'value']);
+      const props = omit(_props, ['onChange']);
       const fields = flowRight(this.formWithSetters, this.formWithSyncValidation)(this.state.form);
       const form = {
         clearValues: this.clearValues,

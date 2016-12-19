@@ -50,6 +50,7 @@ const formoConfig = (props) => {
 @pure
 @skinnable()
 @props({
+  value: t.maybe(t.Object),
   emailInitialValue: t.maybe(t.String),
   email: t.Object, // specify
   password: t.Object, //specify

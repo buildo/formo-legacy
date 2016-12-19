@@ -59,6 +59,7 @@ const StarRating = ({ rating, onChange }) => (
 @pure
 @skinnable()
 @props({
+  value: t.maybe(t.Object),
   form: t.Object,
   rating: t.Object, // specify
   feedback: t.Object, //specify

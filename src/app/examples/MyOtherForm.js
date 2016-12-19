@@ -73,6 +73,7 @@ const formoConfig = (props) => props.value || ({
 @pure
 @skinnable()
 @props({
+  value: t.maybe(t.Object),
   number: t.Object, // specify
   cardholder: t.Object, //specify
   expirationMonth: t.Object, //specify

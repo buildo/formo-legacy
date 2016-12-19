@@ -29,6 +29,7 @@ const formoConfig = (props) => props.value || ({
 @pure
 @skinnable()
 @props({
+  value: t.maybe(t.Object),
   form: t.Object,
   favouriteCountries: t.Object, // specify
   preferredConditions: t.Object, //specify
