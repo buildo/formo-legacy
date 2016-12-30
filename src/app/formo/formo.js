@@ -17,6 +17,9 @@ const set = (key) => (value) => object => ({
   [key]: value
 });
 
+//TODO handle when more than one input is passed active -> throw warning
+
+//TODO think about how to handle null in this case
 const firstAvailable = (...args) => find(args, x => x !== void 0);
 
 const getForm = (form) => mapValues(form, field => ({
