@@ -23,12 +23,13 @@ const style = ({ isValid, active, touched }) => ({
 @props({
   email: t.Object, // specify
   password: t.Object, //specify
+  confirmPassword: t.Object, //specify
   sex: t.Object, //specify
   form: t.Object
 })
 export default class MyForm extends React.Component {
 
-  template({ email, password, sex, form } ) {
+  template({ email, password, confirmPassword, sex, form } ) {
 
     return (
       <View basis='50%'>
@@ -53,6 +54,17 @@ export default class MyForm extends React.Component {
               style={style(password)}
             />
             {password.touched && compact(map(password.validations)).join(', ')}
+          </View>
+          <View>
+            <input
+              type='password'
+              value={confirmPassword.value || ''}
+              onFocus={confirmPassword.setActive}
+              onBlur={confirmPassword.unsetActive}
+              onChange={e => confirmPassword.update(e.target.value)}
+              style={style(confirmPassword)}
+            />
+            {confirmPassword.touched && compact(map(confirmPassword.validations)).join(', ')}
           </View>
           <View style={style(sex)}>
             <Dropdown

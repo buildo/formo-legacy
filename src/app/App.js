@@ -26,6 +26,11 @@ const otherProps = {
           length: value && value.length > 5 ? null : 'password must be >5'
         })
       },
+      confirmPassword: {
+        validations: (value, { password }) => ({
+          same: value === password ? null : 'passwords must be the same'
+        })
+      },
       sex: {
         initialValue: 'male',
         validations: value => {

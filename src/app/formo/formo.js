@@ -45,7 +45,7 @@ const formo = (Component) => {
 
     formWithValidations = form => {
       return mapValues(form, (field) => {
-        const validations = omitBy(field.validations(field.value), x => x === null);
+        const validations = omitBy(field.validations(field.value, mapValues(form, 'value')), x => x === null);
         const isValid = map(validations).every(x => x === null);
         return {
           ...field,
