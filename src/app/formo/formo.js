@@ -53,7 +53,7 @@ const formo = (Component) => {
     componentWillReceiveProps(props) {
       const form = mapValues(this.state.form, (field, fieldName) => ({
         ...this.state.form[fieldName],
-        ...(props.value || {})[fieldName]
+        ...(props.form || {})[fieldName]
       }));
       this.setState({ form });
     }
