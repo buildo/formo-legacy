@@ -21,6 +21,7 @@ const style = ({ isValid, active, touched }) => ({
 @pure
 @skinnable()
 @props({
+  title: t.String,
   email: t.Object, // specify
   password: t.Object, //specify
   confirmPassword: t.Object, //specify
@@ -29,11 +30,12 @@ const style = ({ isValid, active, touched }) => ({
 })
 export default class MyForm extends React.Component {
 
-  template({ email, password, confirmPassword, sex, form } ) {
+  template({ title, email, password, confirmPassword, sex, form } ) {
 
     return (
       <View basis='50%'>
         <View column width={600}>
+          {title}
           <View>
             <input
               value={email.value || ''}

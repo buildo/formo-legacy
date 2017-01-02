@@ -10,6 +10,7 @@ import 'react-flexview/src/flexView.scss';
 
 const otherProps = {
   MyForm: {
+    title: 'My Form',
     form: {
       email: {
         initialValue: 'mario.poverello@gmail.com',
