@@ -159,7 +159,7 @@ const formo = (Component) => {
       const form = {
         clearValues: this.clearValues,
         touchAll: this.touchAll,
-        isValid: every(map(fields, f => f.isValid)), // try every(fields, 'isValid')
+        isValid: every(fields, 'isValid'),
         isChanged: this.isChanged(fields)
       };
       return {
