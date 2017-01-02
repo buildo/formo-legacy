@@ -16,12 +16,43 @@ import constant from 'lodash/constant';
 
 const returnEmpty = constant({});
 
-const set = (key) => (value) => object => ({
+const set = (key) => (value) => (object) => ({
   ...object,
   [key]: value
 });
 
 const firstDefined = (...args) => find(args, x => x !== void 0);
+
+const innerSet = (object) => (firstKey) => (secondKey) => (value) => {
+  const newFirstKeyObject = set(secondKey)(value)(object[firstKey]);
+  return set(firstKey)(newFirstKeyObject)(object);
+};
+
+const updateValue = (fields) => (fieldName) => (value) => {
+  return innerSet(fields)(fieldName)('value')(value);
+};
+
+const setActive = (fields) => (fieldName) => {
+  // set all fields to active: false
+  const activeFalseFields = mapValues(fields, set('active')(false));
+  // set fieldName field to active: true
+  return innerSet(activeFalseFields)(fieldName)('active')(true);
+};
+
+const unsetActive = (fields) => (fieldName) => {
+  // set the field to active: false
+  const deactivated = innerSet(fields)(fieldName)('active')(false);
+  // set the field to touched: true
+  return innerSet(deactivated)(fieldName)('touched')(true);
+};
+
+const clearValues = (fields) => {
+  return mapValues(fields, field => set('value')(field.initialValue)(field));
+};
+
+const touchAll = (fields) => {
+  return mapValues(fields, set('touched')(true));
+};
 
 const formo = (Component) => {
   @pure
@@ -80,49 +111,27 @@ const formo = (Component) => {
     }
 
     updateValue = fieldName => value => {
-      const { fields } = this.state;
-      const { [fieldName]: field } = fields;
-      const newField = set('value')(value)(field);
-      const newFields = set(fieldName)(newField)(fields);
-      this.onChange(newFields);
+      this.onChange(updateValue(this.state.fields)(fieldName)(value));
     };
 
     setActive = fieldName => () => {
-      const { fields } = this.state;
-      const { [fieldName]: field } = fields;
-      const newField = set('active')(true)(field);
-      const activeFalseFields = mapValues(fields, set('active')(false));
-      const newFields = set(fieldName)(newField)(activeFalseFields);
-      this.onChange(newFields);
+      this.onChange(setActive(this.state.fields)(fieldName));
     };
 
     unsetActive = fieldName => () => {
-      const { fields } = this.state;
-      const { [fieldName]: field } = fields;
-      const _newField = set('active')(false)(field);
-      const newField = set('touched')(true)(_newField);
-      const newFields = set(fieldName)(newField)(fields);
-      this.onChange(newFields);
+      this.onChange(unsetActive(this.state.fields)(fieldName));
     };
 
     set = (fieldName) => (prop, value) => {
-      const { fields } = this.state;
-      const { [fieldName]: field } = fields;
-      const newField = set(prop)(value)(field);
-      const newFields = set(fieldName)(newField)(fields);
-      this.onChange(newFields);
+      this.onChange(innerSet(this.state.fields)(fieldName)(prop)(value));
     }
 
     clearValues = () => {
-      const { fields } = this.state;
-      const clearedFields = mapValues(fields, field => set('value')(firstDefined(field.initialValue))(field));
-      this.onChange(clearedFields);
+      this.onChange(clearValues(this.state.fields));
     }
 
     touchAll = () => {
-      const { fields } = this.state;
-      const touchedFields =  mapValues(fields, set('touched')(true));
-      this.onChange(touchedFields);
+      this.onChange(touchAll(this.state.fields));
     }
 
     formWithSetters = fields => mapValues(fields, (field, key) => {

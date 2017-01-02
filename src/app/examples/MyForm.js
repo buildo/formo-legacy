@@ -85,6 +85,9 @@ export default class MyForm extends React.Component {
           <View>
             <button onClick={form.clearValues}>Clear</button>
           </View>
+          <View>
+            <button onClick={form.touchAll}>Validate</button>
+          </View>
         </View>
         <View column  marginTop={30}>
           <textarea
