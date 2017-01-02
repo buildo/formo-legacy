@@ -142,7 +142,86 @@ describe('[field].isValid', () => {
 
 });
 
-describe('form.clearValues', () => {
+describe('[field].touched', () => {
+
+  it('defaults to false for every field', () => {
+    const rendered = shallow({ email: { touched: true }, password: { } });
+    expect(rendered.props().email.touched).toBe(true);
+    expect(rendered.props().password.touched).toBe(false);
+  });
+
+  it('is true after an unsetActive()', () => {
+    const rendered = shallow({ email: { } });
+    rendered.props().email.unsetActive();
+    expect(rendered.props().email.touched).toBe(true);
+  });
+
+  it('can be updated via props', () => {
+    const rendered = shallow({ email: { } });
+    rendered.setProps({ email: { touched: true } });
+    expect(rendered.props().email.touched).toBe(true);
+  });
+
+});
+
+describe('[field].active', () => {
+
+  it('defaults to false for every field', () => {
+    const rendered = shallow({ email: { }, password: { active: true } });
+    expect(rendered.props().email.active).toBe(false);
+    expect(rendered.props().password.active).toBe(true);
+  });
+
+  it('is true after a setActive()', () => {
+    const rendered = shallow({ email: { } });
+    rendered.props().email.setActive();
+    expect(rendered.props().email.active).toBe(true);
+  });
+
+  it('can be updated via props', () => {
+    const rendered = shallow({ email: { } });
+    rendered.setProps({ email: { active: true } });
+    expect(rendered.props().email.active).toBe(true);
+  });
+
+  describe('is true for at most a single field simultaneously', () => {
+
+    it('defaults to the first active field to be considered active', () => {
+      const rendered = shallow({ email: { active: true }, password: { active: true } });
+      expect(rendered.props().email.active).toBe(true);
+      expect(rendered.props().password.active).toBe(false);
+    });
+
+    it('is updated accordingly on all fields when activating a field', () => {
+      const rendered = shallow({ email: { active: true }, password: { } });
+      rendered.props().password.setActive();
+      expect(rendered.props().email.active).toBe(false);
+      expect(rendered.props().password.active).toBe(true);
+    });
+
+    it('defaults to the first active field to be considered active, when updated via props', () => {
+      const rendered = shallow({ email: { }, password: { active: true } });
+      rendered.setProps({ form: { email: { active: true }, password: { active: true } } });
+      expect(rendered.props().email.active).toBe(true);
+      expect(rendered.props().password.active).toBe(false);
+    });
+
+  });
+
+});
+
+describe('form.touchAll()', () => {
+
+  it('sets every field as touched', () => {
+    const rendered = shallow({ email: { }, password: { } });
+    rendered.props().form.touchAll();
+    expect(rendered.props().email.touched).toBe(true);
+    expect(rendered.props().password.touched).toBe(true);
+  });
+
+});
+
+describe('form.clearValues()', () => {
 
   it('should reset a value to initialValue', () => {
     const rendered = shallow({ email: { initialValue: 'initial' } });
