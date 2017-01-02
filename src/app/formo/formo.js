@@ -5,7 +5,7 @@ import { skinnable, pure, contains } from 'revenge';
 import omit from 'lodash/omit';
 import mapValues from 'lodash/mapValues';
 import omitBy from 'lodash/omitBy';
-import map from 'lodash/map';
+import isNull from 'lodash/isNull';
 import every from 'lodash/every';
 import includes from 'lodash/includes';
 import some from 'lodash/some';
@@ -46,7 +46,7 @@ const formo = (Component) => {
     formWithValidations = form => {
       return mapValues(form, (field) => {
         const validations = omitBy(field.validations(field.value, mapValues(form, 'value')), x => x === null);
-        const isValid = map(validations).every(x => x === null);
+        const isValid = every(validations, isNull);
         return {
           ...field,
           validations,
