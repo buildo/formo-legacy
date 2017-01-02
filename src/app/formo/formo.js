@@ -39,13 +39,11 @@ const formo = (Component) => {
 
     static displayName = `Formo${(Component.displayName || Component.name || '')}`
 
-    validations = mapValues(this.props.form, field => field.validations || returnEmpty)
-
     getForm = (form) => mapValues(form, (field, fieldName) => ({
       ...field,
       value: firstDefined(field.value, field.initialValue),
-      initialValue: firstDefined(field.initialValue),
-      validations: field.validations || this.validations[fieldName] || returnEmpty
+      validations: this.props.validations[fieldName] || returnEmpty,
+      initialValue: firstDefined(field.initialValue)
     }))
 
     formWithValidations = form => {

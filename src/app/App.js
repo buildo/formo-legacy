@@ -14,37 +14,35 @@ const otherProps = {
     validations: {
       form: ({ email, sex }) => ({
         stupidRequirement: (sex === 'male' && email.slice(-1) !== 'o') ? 'Males\' mails should finish with "o"' : null
-      })
+      }),
+      email: (value) => {
+        const required = !value ? 'email is required' : null;
+        return {
+          required,
+          length: !required && value.length > 5 ? null : 'email must be longer than 5 chars'
+        };
+      },
+      password: (value) => ({
+        length: value && value.length > 5 ? null : 'password must be >5'
+      }),
+      confirmPassword: (value, { password }) => ({
+        same: value === password ? null : 'passwords must be the same'
+      }),
+      sex: (value) => {
+        const required = !value ? 'sex is required' : null;
+        return {
+          required
+        };
+      }
     },
     form: {
       email: {
-        initialValue: 'mario.poverello@gmail.com',
-        validations: (value) => {
-          const required = !value ? 'email is required' : null;
-          return {
-            required,
-            length: !required && value.length > 5 ? null : 'email must be longer than 5 chars'
-          };
-        }
+        initialValue: 'mario.poverello@gmail.com'
       },
-      password: {
-        validations: value => ({
-          length: value && value.length > 5 ? null : 'password must be >5'
-        })
-      },
-      confirmPassword: {
-        validations: (value, { password }) => ({
-          same: value === password ? null : 'passwords must be the same'
-        })
-      },
+      password: {},
+      confirmPassword: {},
       sex: {
-        initialValue: 'male',
-        validations: value => {
-          const required = !value ? 'sex is required' : null;
-          return {
-            required
-          };
-        }
+        initialValue: 'male'
       }
     }
   }
