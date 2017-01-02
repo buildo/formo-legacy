@@ -10,6 +10,7 @@ import every from 'lodash/every';
 import includes from 'lodash/includes';
 import some from 'lodash/some';
 import find from 'lodash/find';
+import findKey from 'lodash/findKey';
 import flowRight from 'lodash/flowRight';
 
 const set = (key) => (value) => object => ({
@@ -144,9 +145,17 @@ const formo = (Component) => {
 
     isChanged = form => some(map(form, v => !this.isAdequatelyEqual(v)));
 
+    enforceOnlyOneActive = (form) => {
+      const firstFieldActive = findKey(form, 'active');
+      return mapValues(form, (field, fieldName) => ({
+        ...field,
+        active: fieldName === firstFieldActive
+      }));
+    }
+
     getLocals(_props) {
       const props = omit(_props, ['onChange', 'form']);
-      const fields = flowRight(this.formWithSetters)(this.state.form);
+      const fields = flowRight(this.formWithSetters, this.enforceOnlyOneActive)(this.state.form);
       const form = {
         clearValues: this.clearValues,
         touchAll: this.touchAll,
