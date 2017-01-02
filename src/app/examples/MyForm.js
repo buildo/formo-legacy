@@ -56,6 +56,7 @@ export default class MyForm extends React.Component {
               style={style(password)}
             />
             {password.touched && map(password.validations).join(', ')}
+            {password.isChanged && <button onClick={password.clear}>CLEAR</button>}
           </View>
           <View>
             <input

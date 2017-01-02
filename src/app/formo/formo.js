@@ -46,6 +46,10 @@ const unsetActive = (fields) => (fieldName) => {
   return innerSet(deactivated)(fieldName)('touched')(true);
 };
 
+const clearValue = (fields) => (fieldName) => {
+  return innerSet(fields)(fieldName)('value')(undefined);
+};
+
 const clearValues = (fields) => {
   return mapValues(fields, field => set('value')(field.initialValue)(field));
 };
@@ -126,6 +130,10 @@ const formo = (Component) => {
       this.onChange(innerSet(this.state.fields)(fieldName)(prop)(value));
     }
 
+    clearValue = (fieldName) => () => {
+      this.onChange(clearValue(this.state.fields)(fieldName));
+    }
+
     clearValues = () => {
       this.onChange(clearValues(this.state.fields));
     }
@@ -134,12 +142,13 @@ const formo = (Component) => {
       this.onChange(touchAll(this.state.fields));
     }
 
-    formWithSetters = fields => mapValues(fields, (field, key) => {
+    formWithSetters = fields => mapValues(fields, (field, fieldName) => {
       const setters = {
-        set: this.set(key),
-        update: this.updateValue(key),
-        setActive: this.setActive(key),
-        unsetActive: this.unsetActive(key)
+        set: this.set(fieldName),
+        clear: this.clearValue(fieldName),
+        update: this.updateValue(fieldName),
+        setActive: this.setActive(fieldName),
+        unsetActive: this.unsetActive(fieldName)
       };
       return {
         ...field,
@@ -153,6 +162,10 @@ const formo = (Component) => {
         value !== initialValue &&
         !(includes(similarlyNil, value) && includes(similarlyNil, initialValue))
       );
+    }
+
+    fieldsAreChanged = (fields) => {
+      return mapValues(fields, (field) => ({ ...field, isChanged: this.isChanged(field) }));
     }
 
     formIsChanged = fields => some(fields, this.isChanged);
@@ -171,7 +184,7 @@ const formo = (Component) => {
 
     getLocals(_props) {
       const props = omit(_props, ['onChange', 'fields', 'validations']);
-      const fields = flowRight(this.formWithSetters, this.enforceOnlyOneActive)(this.state.fields);
+      const fields = flowRight(this.formWithSetters, this.enforceOnlyOneActive, this.fieldsAreChanged)(this.state.fields);
       const formValidations = (this.props.validations.form || returnEmpty)(mapValues(fields, 'value'));
       const form = {
         clearValues: this.clearValues,
