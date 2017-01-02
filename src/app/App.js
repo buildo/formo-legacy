@@ -11,6 +11,11 @@ import 'react-flexview/src/flexView.scss';
 const otherProps = {
   MyForm: {
     title: 'My Form',
+    validations: {
+      form: ({ email, sex }) => ({
+        stupidRequirement: (sex === 'male' && email.slice(-1) !== 'o') ? 'Males\' mails should finish with "o"' : null
+      })
+    },
     form: {
       email: {
         initialValue: 'mario.poverello@gmail.com',

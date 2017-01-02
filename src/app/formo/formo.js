@@ -12,6 +12,9 @@ import some from 'lodash/some';
 import find from 'lodash/find';
 import findKey from 'lodash/findKey';
 import flowRight from 'lodash/flowRight';
+import constant from 'lodash/constant';
+
+const returnEmpty = constant({});
 
 const set = (key) => (value) => object => ({
   ...object,
@@ -27,20 +30,25 @@ const formo = (Component) => {
   @pure
   @skinnable(contains(Component))
   @props({
+    validations: t.maybe(t.dict(t.String, t.Function)), //TODO use this object for all the fields validations
     form: t.Object,
     onChange: t.Function// should it be maybe? it works also in full stateful mode
   }, { strict: false })
   class Formo extends React.Component {
 
+    static defaultProps = {
+      validations: {}
+    }
+
     static displayName = `Formo${(Component.displayName || Component.name || '')}`
 
-    validations = mapValues(this.props.form, field => field.validations || (() => {}))
+    validations = mapValues(this.props.form, field => field.validations || returnEmpty)
 
     getForm = (form) => mapValues(form, (field, fieldName) => ({
       ...field,
       value: firstDefined(field.value, field.initialValue),
       initialValue: firstDefined(field.initialValue),
-      validations: field.validations || this.validations[fieldName] || (() => ({}))
+      validations: field.validations || this.validations[fieldName] || returnEmpty
     }))
 
     formWithValidations = form => {
@@ -145,6 +153,10 @@ const formo = (Component) => {
 
     formIsChanged = form => some(form, this.isChanged);
 
+    formIsValid = (fields, formValidations) => {
+      return every(fields, 'isValid') && every(formValidations, x => x === null);
+    }
+
     enforceOnlyOneActive = (form) => {
       const firstFieldActive = findKey(form, 'active');
       return mapValues(form, (field, fieldName) => ({
@@ -154,12 +166,16 @@ const formo = (Component) => {
     }
 
     getLocals(_props) {
-      const props = omit(_props, ['onChange', 'form']);
+      const props = omit(_props, ['onChange', 'form', 'validations']);
       const fields = flowRight(this.formWithSetters, this.enforceOnlyOneActive)(this.state.form);
+      const formValidations = (this.props.validations.form || returnEmpty)(mapValues(fields, 'value'));
       const form = {
         clearValues: this.clearValues,
         touchAll: this.touchAll,
-        isValid: every(fields, 'isValid'),
+        touched: some(fields, 'touched'),
+        allTouched: every(fields, 'touched'),
+        validations: omitBy(formValidations, x => x === null),
+        isValid: this.formIsValid(fields, formValidations),
         isChanged: this.formIsChanged(fields)
       };
       return {

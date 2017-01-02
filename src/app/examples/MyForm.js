@@ -6,7 +6,7 @@ import { skinnable, pure } from 'revenge';
 import View from 'react-flexview';
 import { Dropdown } from 'buildo-react-components';
 import formo from 'formo';
-import compact from 'lodash/compact';
+import every from 'lodash/every';
 import map from 'lodash/map';
 import printJSON from 'printJSON';
 
@@ -44,7 +44,7 @@ export default class MyForm extends React.Component {
               onChange={e => email.update(e.target.value)}
               style={style(email)}
             />
-            {email.touched && compact(map(email.validations)).join(', ')}
+            {email.touched && map(email.validations).join(', ')}
           </View>
           <View>
             <input
@@ -55,7 +55,7 @@ export default class MyForm extends React.Component {
               onChange={e => password.update(e.target.value)}
               style={style(password)}
             />
-            {password.touched && compact(map(password.validations)).join(', ')}
+            {password.touched && map(password.validations).join(', ')}
           </View>
           <View>
             <input
@@ -66,7 +66,7 @@ export default class MyForm extends React.Component {
               onChange={e => confirmPassword.update(e.target.value)}
               style={style(confirmPassword)}
             />
-            {confirmPassword.touched && compact(map(confirmPassword.validations)).join(', ')}
+            {confirmPassword.touched && map(confirmPassword.validations).join(', ')}
           </View>
           <View style={style(sex)}>
             <Dropdown
@@ -77,7 +77,10 @@ export default class MyForm extends React.Component {
               options={'male female'.split(' ').map(x => ({ value: x, label: x }))}
               onChange={sex.update}
             />
-            {sex.touched && compact(map(sex.validations)).join(', ')}
+            {sex.touched && map(sex.validations).join(', ')}
+          </View>
+          <View>
+            {every({ email, password, confirmPassword, sex }, 'isValid') && map(form.validations).join(', ')}
           </View>
           <View>
             <button onClick={form.clearValues}>Clear</button>
@@ -87,7 +90,7 @@ export default class MyForm extends React.Component {
           <textarea
             readOnly
             style={{ height: 500, width: 500, fontFamily: 'monospace' }}
-            value={printJSON({ isChanged: form.isChanged, isValid: form.isValid, email, password, sex })}
+            value={printJSON({ form, email, password, confirmPassword, sex })}
           />
         </View>
       </View>
