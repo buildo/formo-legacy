@@ -1,8 +1,5 @@
 {
-  "globals": {
-    "it": false,
-    "xit": false,
-    "describe": false,
-    "expect": false
+  "env": {
+    "jest": true
   }
 }
