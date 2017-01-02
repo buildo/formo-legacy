@@ -21,7 +21,7 @@ const set = (key) => (value) => object => ({
 //TODO handle when more than one input is passed active -> throw warning
 
 //TODO think about how to handle null in this case
-const firstAvailable = (...args) => find(args, x => x !== void 0);
+const firstDefined = (...args) => find(args, x => x !== void 0);
 
 const formo = (Component) => {
   @pure
@@ -38,8 +38,8 @@ const formo = (Component) => {
 
     getForm = (form) => mapValues(form, (field, fieldName) => ({
       ...field,
-      value: firstAvailable(field.value, field.initialValue),
-      initialValue: firstAvailable(field.initialValue),
+      value: firstDefined(field.value, field.initialValue),
+      initialValue: firstDefined(field.initialValue),
       validations: field.validations || this.validations[fieldName] || (() => ({}))
     }))
 
@@ -112,7 +112,7 @@ const formo = (Component) => {
 
     clearValues = () => {
       const { form } = this.state;
-      const clearedForm = mapValues(form, field => set('value')(firstAvailable(field.initialValue))(field));
+      const clearedForm = mapValues(form, field => set('value')(firstDefined(field.initialValue))(field));
       this.onChange(clearedForm);
     }
 
