@@ -3,7 +3,6 @@ import * as _examples from './examples';
 import View from 'react-flexview';
 import map from 'lodash/map';
 import omit from 'lodash/omit';
-import mapValues from 'lodash/mapValues';
 
 const examples = omit(_examples, ['__esModule']);
 
@@ -67,11 +66,9 @@ export default class App extends React.Component {
         {map(examples, (Component, name) => this.state.example === name && (
           <Component
             key={name}
-            onChange={newForm => {
-              const newState = mapValues(newForm, (field) => ({ value: field.value }));
-              this.setState({ [name]: newState });
-            }}
+            onChange={newForm => {this.setState({ [name]: newForm });}}
             {...otherProps[name]}
+            form={(this.state[name] || {}).form || (otherProps[name] || {}).form}
           />
         ))}
 

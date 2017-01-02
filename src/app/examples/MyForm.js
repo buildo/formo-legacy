@@ -35,7 +35,7 @@ export default class MyForm extends React.Component {
         <View column width={600}>
           <View>
             <input
-              value={email.value}
+              value={email.value || ''}
               onFocus={email.setActive}
               onBlur={email.unsetActive}
               onChange={e => email.update(e.target.value)}
@@ -46,7 +46,7 @@ export default class MyForm extends React.Component {
           <View>
             <input
               type='password'
-              value={password.value}
+              value={password.value || ''}
               onFocus={password.setActive}
               onBlur={password.unsetActive}
               onChange={e => password.update(e.target.value)}
@@ -57,13 +57,16 @@ export default class MyForm extends React.Component {
           <View style={style(sex)}>
             <Dropdown
               clearable
-              value={sex.value}
+              value={sex.value || ''}
               onFocus={sex.setActive}
               onBlur={sex.unsetActive}
               options={'male female'.split(' ').map(x => ({ value: x, label: x }))}
               onChange={sex.update}
             />
             {sex.touched && compact(map(sex.validations)).join(', ')}
+          </View>
+          <View>
+            <button onClick={form.clearValues}>Clear</button>
           </View>
         </View>
         <View column  marginTop={30}>
