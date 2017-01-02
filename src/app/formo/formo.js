@@ -22,31 +22,47 @@ const set = (key) => (value) => object => ({
 //TODO think about how to handle null in this case
 const firstAvailable = (...args) => find(args, x => x !== void 0);
 
-const getForm = (form) => mapValues(form, field => ({
-  ...field,
-  value: firstAvailable(field.value, field.initialValue),
-  validations: field.validations || (() => ({})),
-  initialValue: firstAvailable(field.initialValue)
-}));
-
 const formo = (Component) => {
   @pure
   @skinnable(contains(Component))
   @props({
     form: t.Object,
-    onChange: t.Function
+    onChange: t.Function// should it be maybe? it works also in full stateful mode
   }, { strict: false })
   class Formo extends React.Component {
 
     static displayName = `Formo${(Component.displayName || Component.name || '')}`
 
-    state = {
-      form: getForm(this.props.form)
-    };
+    validations = mapValues(this.props.form, field => field.validations || (() => {}))
 
-    onChange = (newForm) => {
-      this.setState({ form: newForm }, () => {
-        this.props.onChange(this.state.form);
+    getForm = (form) => mapValues(form, (field, fieldName) => ({
+      ...field,
+      value: firstAvailable(field.value, field.initialValue),
+      initialValue: firstAvailable(field.initialValue),
+      validations: field.validations || this.validations[fieldName] || (() => ({}))
+    }))
+
+    formWithValidations = form => {
+      return mapValues(form, (field) => {
+        const validations = omitBy(field.validations(field.value), x => x === null);
+        const isValid = map(validations).every(x => x === null);
+        return {
+          ...field,
+          validations,
+          isValid
+        };
+      });
+    }
+
+    state = {
+      form: flowRight(this.formWithValidations, this.getForm)(this.props.form)
+    }
+
+    onChange = (_newForm) => {
+      const newForm = mapValues(_newForm, field => omit(field, ['validations', 'isValid']));
+      const form = flowRight(this.formWithValidations, this.getForm)(newForm);
+      this.setState({ form }, () => {
+        this.props.onChange(newForm);
       });
     }
 
@@ -55,7 +71,8 @@ const formo = (Component) => {
         ...this.state.form[fieldName],
         ...(props.form || {})[fieldName]
       }));
-      this.setState({ form });
+      const newForm = flowRight(this.formWithValidations, this.getForm)(form);
+      this.setState({ form: newForm });
     }
 
     updateValue = fieldName => value => {
@@ -117,16 +134,6 @@ const formo = (Component) => {
       };
     });
 
-    formWithSyncValidation = form => mapValues(form, field => {
-      const validations = omitBy(field.validations(field.value), x => x === null);
-      const isValid = map(validations).every(x => x === null);
-      return {
-        ...field,
-        validations,
-        isValid
-      };
-    });
-
     isAdequatelyEqual = ({ value, initialValue }) => {
       const similars = ['', undefined, null];
       return (
@@ -139,11 +146,11 @@ const formo = (Component) => {
 
     getLocals(_props) {
       const props = omit(_props, ['onChange', 'form']);
-      const fields = flowRight(this.formWithSetters, this.formWithSyncValidation)(this.state.form);
+      const fields = flowRight(this.formWithSetters)(this.state.form);
       const form = {
         clearValues: this.clearValues,
         touchAll: this.touchAll,
-        isValid: every(map(fields, f => f.isValid)),
+        isValid: every(map(fields, f => f.isValid)), // try every(fields, 'isValid')
         isChanged: this.isChanged(fields)
       };
       return {
