@@ -3,7 +3,7 @@ import formo from '../src/app/formo';
 import renderer from 'react-test-renderer';
 import { shallow } from 'enzyme';
 
-const getProps = ({ fields = {}, validations, onChange = () => {} } = {}) => {
+const getProps = ({ fields, validations, onChange = () => {} } = {}) => {
   const C = formo(props => <div {...props} />);
   return renderer.create(<C fields={fields} validations={validations} onChange={onChange} />).toJSON().props;
 };
@@ -13,12 +13,29 @@ const shallowRender = ({ fields = {}, validations, onChange = () => {} } = {}) =
   return shallow(<C fields={fields} validations={validations} onChange={onChange} />);
 };
 
+let consoleWarn, consoleError;
+const throwLog = (...args) => {
+  throw new Error(args.join(','));
+};
+
+beforeEach(() => {
+  consoleWarn = console.warn;
+  consoleError = console.error;
+  console.warn = throwLog;
+  console.error = throwLog;
+});
+
+afterEach(() => {
+  console.warn = consoleWarn;
+  console.error = consoleError;
+});
+
 it('can be rendered', () => {
-  getProps();
+  getProps({ fields: {} });
 });
 
 it('always passes the form meta prop', () => {
-  const props = getProps();
+  const props = getProps({ fields: {} });
   expect(props.form).toBeDefined();
 });
 
@@ -266,6 +283,33 @@ describe('form.isChanged', () => {
   it('should be false if value and initial value are "adequately equal": \'\' and undefined', () => {
     expect(getProps({ fields: { email: { value: '', initialValue: undefined } } }).form.isChanged).toBe(false);
     expect(getProps({ fields: { email: { initialValue: '', value: undefined } } }).form.isChanged).toBe(false);
+  });
+
+});
+
+describe('onChange', () => {
+
+  it('should be called with the updated value after an update() call', () => {
+    const onChange = jest.fn();
+    const rendered = shallowRender({ onChange, fields: { email: { value: 'foo' } } });
+    rendered.props().email.update('bar');
+    expect(onChange.mock.calls.length).toBe(1);
+    expect(onChange.mock.calls[0].length).toBe(1);
+    expect(onChange.mock.calls[0][0].email.value).toBe('bar');
+  });
+
+  it('should be called with an updated isValid after an update() call', () => {
+    const onChange = jest.fn();
+    const rendered = shallowRender({
+      onChange,
+      fields: { email: { value: 'foo' } },
+      validations: { email: v => v === 'error' ? 'error' : false }
+    });
+    rendered.props().email.update('error');
+    expect(onChange.mock.calls.length).toBe(1);
+    expect(onChange.mock.calls[0].length).toBe(1);
+    expect(onChange.mock.calls[0][0].email.isValid).toBe(false);
+    expect(onChange.mock.calls[0][0].form.isValid).toBe(false);
   });
 
 });
