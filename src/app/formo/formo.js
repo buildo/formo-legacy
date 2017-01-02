@@ -28,7 +28,7 @@ const formo = (Component) => {
   @skinnable(contains(Component))
   @props({
     validations: t.maybe(t.dict(t.String, t.Function)),
-    form: t.Object,
+    fields: t.Object,
     onChange: t.Function// should it be maybe? it works also in full stateful mode
   }, { strict: false })
   class Formo extends React.Component {
@@ -39,16 +39,16 @@ const formo = (Component) => {
 
     static displayName = `Formo${(Component.displayName || Component.name || '')}`
 
-    getForm = (form) => mapValues(form, (field, fieldName) => ({
+    getFields = (fields) => mapValues(fields, (field, fieldName) => ({
       ...field,
       value: firstDefined(field.value, field.initialValue),
       validations: this.props.validations[fieldName] || returnEmpty,
       initialValue: firstDefined(field.initialValue)
     }))
 
-    formWithValidations = form => {
-      return mapValues(form, (field) => {
-        const validations = omitBy(field.validations(field.value, mapValues(form, 'value')), x => x === null);
+    fieldsWithValidations = fields => {
+      return mapValues(fields, (field) => {
+        const validations = omitBy(field.validations(field.value, mapValues(fields, 'value')), x => x === null);
         const isValid = every(validations, isNull);
         return {
           ...field,
@@ -59,73 +59,73 @@ const formo = (Component) => {
     }
 
     state = {
-      form: flowRight(this.formWithValidations, this.getForm)(this.props.form)
+      fields: flowRight(this.fieldsWithValidations, this.getFields)(this.props.fields)
     }
 
-    onChange = (_newForm) => {
-      const newForm = mapValues(_newForm, field => omit(field, ['validations', 'isValid']));
-      const form = flowRight(this.formWithValidations, this.getForm)(newForm);
-      this.setState({ form }, () => {
-        this.props.onChange(newForm);
+    onChange = (_newFields) => {
+      const newFields = mapValues(_newFields, field => omit(field, ['validations', 'isValid']));
+      const fields = flowRight(this.fieldsWithValidations, this.getFields)(newFields);
+      this.setState({ fields }, () => {
+        this.props.onChange(newFields);
       });
     }
 
     componentWillReceiveProps(props) {
-      const form = mapValues(this.state.form, (field, fieldName) => ({
-        ...this.state.form[fieldName],
-        ...(props.form || {})[fieldName]
+      const fields = mapValues(this.state.fields, (field, fieldName) => ({
+        ...this.state.fields[fieldName],
+        ...(props.fields || {})[fieldName]
       }));
-      const newForm = flowRight(this.formWithValidations, this.getForm)(form);
-      this.setState({ form: newForm });
+      const newFields = flowRight(this.fieldsWithValidations, this.getFields)(fields);
+      this.setState({ fields: newFields });
     }
 
     updateValue = fieldName => value => {
-      const { form } = this.state;
-      const { [fieldName]: field } = form;
+      const { fields } = this.state;
+      const { [fieldName]: field } = fields;
       const newField = set('value')(value)(field);
-      const newForm = set(fieldName)(newField)(form);
-      this.onChange(newForm);
+      const newFields = set(fieldName)(newField)(fields);
+      this.onChange(newFields);
     };
 
     setActive = fieldName => () => {
-      const { form } = this.state;
-      const { [fieldName]: field } = form;
+      const { fields } = this.state;
+      const { [fieldName]: field } = fields;
       const newField = set('active')(true)(field);
-      const activeFalseForm = mapValues(form, set('active')(false));
-      const newForm = set(fieldName)(newField)(activeFalseForm);
-      this.onChange(newForm);
+      const activeFalseFields = mapValues(fields, set('active')(false));
+      const newFields = set(fieldName)(newField)(activeFalseFields);
+      this.onChange(newFields);
     };
 
     unsetActive = fieldName => () => {
-      const { form } = this.state;
-      const { [fieldName]: field } = form;
+      const { fields } = this.state;
+      const { [fieldName]: field } = fields;
       const _newField = set('active')(false)(field);
       const newField = set('touched')(true)(_newField);
-      const newForm = set(fieldName)(newField)(form);
-      this.onChange(newForm);
+      const newFields = set(fieldName)(newField)(fields);
+      this.onChange(newFields);
     };
 
     set = (fieldName) => (prop, value) => {
-      const { form } = this.state;
-      const { [fieldName]: field } = form;
+      const { fields } = this.state;
+      const { [fieldName]: field } = fields;
       const newField = set(prop)(value)(field);
-      const newForm = set(fieldName)(newField)(form);
-      this.onChange(newForm);
+      const newFields = set(fieldName)(newField)(fields);
+      this.onChange(newFields);
     }
 
     clearValues = () => {
-      const { form } = this.state;
-      const clearedForm = mapValues(form, field => set('value')(firstDefined(field.initialValue))(field));
-      this.onChange(clearedForm);
+      const { fields } = this.state;
+      const clearedFields = mapValues(fields, field => set('value')(firstDefined(field.initialValue))(field));
+      this.onChange(clearedFields);
     }
 
     touchAll = () => {
-      const { form } = this.state;
-      const touchedForm =  mapValues(form, set('touched')(true));
-      this.onChange(touchedForm);
+      const { fields } = this.state;
+      const touchedFields =  mapValues(fields, set('touched')(true));
+      this.onChange(touchedFields);
     }
 
-    formWithSetters = form => mapValues(form, (field, key) => {
+    formWithSetters = fields => mapValues(fields, (field, key) => {
       const setters = {
         set: this.set(key),
         update: this.updateValue(key),
@@ -146,23 +146,23 @@ const formo = (Component) => {
       );
     }
 
-    formIsChanged = form => some(form, this.isChanged);
+    formIsChanged = fields => some(fields, this.isChanged);
 
     formIsValid = (fields, formValidations) => {
       return every(fields, 'isValid') && every(formValidations, x => x === null);
     }
 
-    enforceOnlyOneActive = (form) => {
-      const firstFieldActive = findKey(form, 'active');
-      return mapValues(form, (field, fieldName) => ({
+    enforceOnlyOneActive = (fields) => {
+      const firstFieldActive = findKey(fields, 'active');
+      return mapValues(fields, (field, fieldName) => ({
         ...field,
         active: fieldName === firstFieldActive
       }));
     }
 
     getLocals(_props) {
-      const props = omit(_props, ['onChange', 'form', 'validations']);
-      const fields = flowRight(this.formWithSetters, this.enforceOnlyOneActive)(this.state.form);
+      const props = omit(_props, ['onChange', 'fields', 'validations']);
+      const fields = flowRight(this.formWithSetters, this.enforceOnlyOneActive)(this.state.fields);
       const formValidations = (this.props.validations.form || returnEmpty)(mapValues(fields, 'value'));
       const form = {
         clearValues: this.clearValues,

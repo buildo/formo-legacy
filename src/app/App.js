@@ -35,7 +35,7 @@ const otherProps = {
         };
       }
     },
-    form: {
+    fields: {
       email: {
         initialValue: 'mario.poverello@gmail.com'
       },
@@ -77,7 +77,7 @@ export default class App extends React.Component {
             key={name}
             onChange={newForm => {this.setState({ [name]: newForm });}}
             {...otherProps[name]}
-            form={(this.state[name] || {}).form || (otherProps[name] || {}).form}
+            fields={(this.state[name] || {}).fields || (otherProps[name] || {}).fields}
           />
         ))}
 
