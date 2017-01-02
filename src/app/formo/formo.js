@@ -135,15 +135,15 @@ const formo = (Component) => {
       };
     });
 
-    isAdequatelyEqual = ({ value, initialValue }) => {
-      const similars = ['', undefined, null];
+    isChanged = ({ value, initialValue }) => {
+      const similarlyNil = ['', undefined, null];
       return (
-        (includes(similars, value) && includes(similars, initialValue)) ||
-        value === initialValue
+        value !== initialValue &&
+        !(includes(similarlyNil, value) && includes(similarlyNil, initialValue))
       );
     }
 
-    isChanged = form => some(map(form, v => !this.isAdequatelyEqual(v)));
+    formIsChanged = form => some(form, this.isChanged);
 
     enforceOnlyOneActive = (form) => {
       const firstFieldActive = findKey(form, 'active');
@@ -160,7 +160,7 @@ const formo = (Component) => {
         clearValues: this.clearValues,
         touchAll: this.touchAll,
         isValid: every(fields, 'isValid'),
-        isChanged: this.isChanged(fields)
+        isChanged: this.formIsChanged(fields)
       };
       return {
         ...props,
