@@ -159,6 +159,27 @@ describe('[field].isValid', () => {
 
 });
 
+describe('[field].validations', () => {
+
+  it('are returned for each field only if !== null', () => {
+    const props = getProps({
+      fields: { email: { value: 'test' }, password: { value: 'valid' } },
+      validations: {
+        email: value => ({
+          longerThan5: value.length >= 5 ? null : 'longer than 5'
+        }),
+        password: value => ({
+          valid: value !== 'valid' ? 'invalid' : null
+        })
+      }
+    });
+    expect(props.email.validations).toEqual({ longerThan5: 'longer than 5' });
+    expect(props.password.validations).toEqual({});
+  });
+
+});
+
+
 describe('[field].touched', () => {
 
   it('defaults to false for every field', () => {
@@ -227,6 +248,72 @@ describe('[field].active', () => {
 
 });
 
+describe('[field].isChanged', () => {
+
+  it('should be false if value and initial value are the same', () => {
+    expect(getProps({ fields: { email: { value: '', initialValue: '' } } }).email.isChanged).toBe(false);
+  });
+
+  it('should be false if value and initial value are the same, non falsy', () => {
+    expect(getProps({ fields: { email: { value: 'a', initialValue: 'a' } } }).email.isChanged).toBe(false);
+  });
+
+  it('should be false if value and initial value are "adequately equal": \'\' and null', () => {
+    expect(getProps({ fields: { email: { value: '', initialValue: null } } }).email.isChanged).toBe(false);
+    expect(getProps({ fields: { email: { initialValue: '', value: null } } }).email.isChanged).toBe(false);
+  });
+
+  it('should be false if value and initial value are "adequately equal": \'\' and undefined', () => {
+    expect(getProps({ fields: { email: { value: '', initialValue: undefined } } }).email.isChanged).toBe(false);
+    expect(getProps({ fields: { email: { initialValue: '', value: undefined } } }).email.isChanged).toBe(false);
+  });
+
+});
+
+describe('[field].clear()', () => {
+
+  it('should reset a value to initialValue', () => {
+    const rendered = shallowRender({ fields: { email: { initialValue: 'initial' } } });
+    rendered.props().email.update('new');
+    expect(rendered.props().email.value).toBe('new');
+    rendered.props().email.clear();
+    expect(rendered.props().email.value).toBe('initial');
+  });
+
+  it('should reset a value to undefined if no initialValue is provided', () => {
+    const rendered = shallowRender({ fields: { email: { } } });
+    rendered.props().email.update('new');
+    expect(rendered.props().email.value).toBe('new');
+    rendered.props().email.clear();
+    expect(rendered.props().email.value).toBe(undefined);
+  });
+
+  it('should reset a value to initialValue even if a value is passed initially', () => {
+    const rendered = shallowRender({ fields: { email: { initialValue: 'initial', value: 'initialValue' } } });
+    expect(rendered.props().email.value).toBe('initialValue');
+    rendered.props().email.clear();
+    expect(rendered.props().email.value).toBe('initial');
+  });
+
+});
+
+describe('form.validations', () => {
+
+  it('are returned only if !== null', () => {
+    const props = getProps({
+      fields: { email: { value: 'test' }, password: { value: 'valid' } },
+      validations: {
+        form: values => ({
+          different: values.email !== values.password ? 'different' : null,
+          neverFailing: null
+        })
+      }
+    });
+    expect(props.form.validations).toEqual({ different: 'different' });
+  });
+
+});
+
 describe('form.touchAll()', () => {
 
   it('sets every field as touched', () => {
@@ -240,7 +327,7 @@ describe('form.touchAll()', () => {
 
 describe('form.clearValues()', () => {
 
-  it('should reset a value to initialValue', () => {
+  it('should reset values to initialValue', () => {
     const rendered = shallowRender({ fields: { email: { initialValue: 'initial' } } });
     rendered.props().email.update('new');
     expect(rendered.props().email.value).toBe('new');
@@ -248,7 +335,7 @@ describe('form.clearValues()', () => {
     expect(rendered.props().email.value).toBe('initial');
   });
 
-  it('should reset a value to undefined if no initialValue is provided', () => {
+  it('should reset values to undefined if no initialValue is provided', () => {
     const rendered = shallowRender({ fields: { email: { } } });
     rendered.props().email.update('new');
     expect(rendered.props().email.value).toBe('new');
@@ -256,7 +343,7 @@ describe('form.clearValues()', () => {
     expect(rendered.props().email.value).toBe(undefined);
   });
 
-  it('should reset a value to initialValue even if a value is passed initially', () => {
+  it('should reset values to initialValue even if a value is passed initially', () => {
     const rendered = shallowRender({ fields: { email: { initialValue: 'initial', value: 'initialValue' } } });
     expect(rendered.props().email.value).toBe('initialValue');
     rendered.props().form.clearValues();
