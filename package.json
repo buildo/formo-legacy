@@ -61,7 +61,8 @@
   "scripts": {
     "clean": "rm -rf build/* && mkdir -p build",
     "start": "npm run clean && cp src/index.html build && webpack-dev-server --config webpack.config.js --hot --inline",
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint src/app/formo"
   },
   "repository": {
     "type": "git",
