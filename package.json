@@ -1,0 +1,46 @@
+{
+  "name": "formo",
+  "version": "0.0.1",
+  "description": "Form state management",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rm -rf examples/build/ && mkdir examples/build",
+    "move-index": "cp examples/index.html examples/build/index.html",
+    "watch-example": "webpack-dev-server --watch --config examples/webpack/webpack.config.js --hot --inline",
+    "start-example": "npm run clean && npm run move-index && npm run watch-example"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/buildo/formo.git"
+  },
+  "author": "Andrea Ascari <dev.ascariandrea@gmail.com> (http://www.ascariandrea.com/)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/buildo/formo/issues"
+  },
+  "homepage": "https://github.com/buildo/formo#readme",
+  "devDependencies": {
+    "babel-cli": "^6.16.0",
+    "babel-eslint": "^6.1.2",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-es2015-classes": "^6.14.0",
+    "babel-preset-es2015": "^6.16.0",
+    "babel-preset-stage-0": "^6.16.0",
+    "eslint": "^3.7.1",
+    "eslint-config-buildo": "github:buildo/eslint-config",
+    "eslint-loader": "^1.5.0",
+    "react-redux": "^4.4.5",
+    "redux": "^3.6.0",
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.16.1"
+  },
+  "dependencies": {
+    "react": "^0.14.8",
+    "redux-form": "^6.0.5",
+    "revenge": "^0.4.5"
+  }
+}
