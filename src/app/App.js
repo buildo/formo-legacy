@@ -3,6 +3,7 @@ import * as _examples from './examples';
 import View from 'react-flexview';
 import map from 'lodash/map';
 import omit from 'lodash/omit';
+import isUndefined from 'lodash/isUndefined';
 
 const examples = omit(_examples, ['__esModule']);
 
@@ -76,10 +77,33 @@ export default class App extends React.Component {
         {map(examples, (Component, name) => this.state.example === name && (
           <Component
             key={name}
-            onChange={newForm => {this.setState({ [name]: newForm });}}
+            onChange={(newForm, meta) => {
+              this.setState({
+                [name]: newForm,
+                [`${name}IsValid`]: meta.form.isValid,
+                [`${name}IsChanged`]: meta.form.isChanged,
+                [`${name}IsTouched`]: meta.form.touched,
+                [`${name}IsAllTouched`]: meta.form.allTouched
+              });
+            }}
             {...otherProps[name]}
             fields={this.state[name] || (otherProps[name] || {}).fields}
           />
+        ))}
+
+        {map(examples, (Component, name) => this.state.example === name && (
+          <div key={name}>
+            This is a sibling of the form {name}
+            {!isUndefined(this.state[`${name}IsValid`]) && !isUndefined(this.state[`${name}IsChanged`]) && (
+              <div>
+                Still, it knows that the form
+                <div> {this.state[`${name}IsChanged`] ? 'is changed' : 'didn\'t change'}</div>
+                <div>{this.state[`${name}IsValid`] ? 'is valid' : 'is not valid'}</div>
+                <div>{this.state[`${name}IsTouched`] ? 'has been touched' : 'has\'t been touched'}</div>
+                <div>{this.state[`${name}IsAllTouched`] ? 'has been touched everywhere' : 'hasn\'t been touched everywhere'}</div>
+              </div>
+            )}
+          </div>
         ))}
 
       </View>
