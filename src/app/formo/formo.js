@@ -63,13 +63,13 @@ const formo = (Component) => {
   @skinnable(contains(Component))
   @props({
     validations: t.maybe(t.dict(t.String, t.Function)),
-    fields: t.Object,
+    fields: t.Object, // dict(t.String, t.Object) or dict(t.String, Field)
     onChange: t.Function// should it be maybe? it works also in full stateful mode
   }, { strict: false })
   class Formo extends React.Component {
 
     static defaultProps = {
-      validations: {}
+      validations: {}// add onChange: () => {}
     }
 
     static displayName = `Formo${(Component.displayName || Component.name || '')}`
