@@ -106,10 +106,10 @@ const formo = (Component) => {
       });
     }
 
-    componentWillReceiveProps(props) {
-      const fields = mapValues(this.state.fields, (field, fieldName) => ({
-        ...this.state.fields[fieldName],
-        ...(props.fields || {})[fieldName]
+    componentWillReceiveProps({ fields }) {
+      const fields = mapValues(fields, (field, fieldName) => ({
+        ...field,
+        ...this.state.fields[fieldName]
       }));
       const newFields = flowRight(this.fieldsWithValidations, this.getFields)(fields);
       this.setState({ fields: newFields });
