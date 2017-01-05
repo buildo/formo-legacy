@@ -111,12 +111,19 @@ const formo = (Component) => {
       });
     }
 
-    componentWillReceiveProps({ fields }) {
-      const mergedFields = mapValues(fields, (field, fieldName) => ({
-        ...this.state.fields[fieldName],
+    mergeFields = (fieldsFromProps, fieldsFromState) => {
+      //the source of truths of which fields are in the form come from the props (they can be removed, or new ones added)
+      return mapValues(fieldsFromProps, (field, fieldName) => ({
+        //still, bits of form state can be managed just from formo component state
+        ...fieldsFromState[fieldName],
         ...field
       }));
-      this.setState({ fields: mergedFields });
+    }
+
+    componentWillReceiveProps({ fields }) {
+      this.setState({
+        fields: this.mergeFields(fields, this.state.fields)
+      });
     }
 
     updateValue = fieldName => value => {
