@@ -107,12 +107,11 @@ const formo = (Component) => {
     }
 
     componentWillReceiveProps({ fields }) {
-      const fields = mapValues(fields, (field, fieldName) => ({
-        ...field,
-        ...this.state.fields[fieldName]
+      const mergedFields = mapValues(fields, (field, fieldName) => ({
+        ...this.state.fields[fieldName],
+        ...field
       }));
-      const newFields = flowRight(this.fieldsWithValidations, this.getFields)(fields);
-      this.setState({ fields: newFields });
+      this.setState({ fields: mergedFields });
     }
 
     updateValue = fieldName => value => {
@@ -185,7 +184,7 @@ const formo = (Component) => {
 
     getLocals(_props) {
       const props = omit(_props, ['onChange', 'fields', 'validations']);
-      const fields = flowRight(this.fieldsWithSetters, this.enforceOnlyOneActive, this.fieldsAreChanged)(this.state.fields);
+      const fields = flowRight(this.fieldsWithSetters, this.fieldsWithValidations, this.enforceOnlyOneActive, this.fieldsAreChanged, this.getFields)(this.state.fields);
       const formValidations = (this.props.validations.form || returnEmpty)(mapValues(fields, 'value'));
       const form = {
         clearValues: this.clearValues,
