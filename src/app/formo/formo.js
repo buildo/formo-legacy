@@ -100,7 +100,7 @@ const formo = (Component) => {
 
     onChange = (newFields) => {
       const fields = mapValues(newFields, omitF(['validations', 'isValid']));
-      const meta = flowRight(this.fieldsWithValidations, this.getFields)(fields);
+      const meta = flowRight(this.fieldsAreChanged, this.fieldsWithValidations, this.getFields)(fields);
       this.setState({ fields }, () => {
         this.props.onChange(fields, meta);
       });
