@@ -102,7 +102,10 @@ const formo = (Component) => {
     onChange = (newFields) => {
       const fields = mapValues(newFields, omitF(['validations', 'isValid']));
       const richFields = flowRight(this.fieldsAreChanged, this.fieldsWithValidations, this.enforceOnlyOneActive, this.getFields)(fields);
-      const meta = mapValues(richFields, pickF(['validations', 'isValid']));//todo add form level meta info
+      const meta = {
+        ...mapValues(richFields, pickF(['validations', 'isValid'])),
+        form: this.makeForm({ fields, validations: this.props.validations })
+      };
       this.setState({ fields }, () => {
         this.props.onChange(fields, meta);
       });
@@ -184,19 +187,28 @@ const formo = (Component) => {
       }));
     }
 
-    getLocals(_props) {
-      const props = omit(_props, ['onChange', 'fields', 'validations']);
-      const fields = flowRight(this.fieldsWithSetters, this.fieldsWithValidations, this.enforceOnlyOneActive, this.fieldsAreChanged, this.getFields)(this.state.fields);
-      const formValidations = (this.props.validations.form || returnEmpty)(mapValues(fields, 'value'));
-      const form = {
-        clearValues: this.clearValues,
-        touchAll: this.touchAll,
+    makeForm = ({ fields: rawFields, validations }) => {
+      const fields = flowRight(this.fieldsWithValidations, this.enforceOnlyOneActive, this.fieldsAreChanged, this.getFields)(rawFields);
+      const formValidations = (validations.form || returnEmpty)(mapValues(fields, 'value'));
+      return {
         touched: some(fields, 'touched'),
         allTouched: every(fields, 'touched'),
         validations: omitBy(formValidations, x => x === null),
         isValid: this.formIsValid(fields, formValidations),
         isChanged: this.formIsChanged(fields)
       };
+    }
+
+    formWithSetters = (form) => ({
+      ...form,
+      clearValues: this.clearValues,
+      touchAll: this.touchAll
+    })
+
+    getLocals(_props) {
+      const props = omit(_props, ['onChange', 'fields', 'validations']);
+      const fields = flowRight(this.fieldsWithSetters, this.fieldsWithValidations, this.enforceOnlyOneActive, this.fieldsAreChanged, this.getFields)(this.state.fields);
+      const form = flowRight(this.formWithSetters, this.makeForm)({ fields: this.state.fields, validations: this.props.validations });
       return {
         ...props,
         ...fields,
