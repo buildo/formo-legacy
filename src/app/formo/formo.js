@@ -3,6 +3,7 @@ import t from 'tcomb';
 import { props } from 'tcomb-react';
 import { skinnable, pure, contains } from 'revenge';
 import omit from 'lodash/omit';
+import omitF from 'lodash/fp/omit';
 import mapValues from 'lodash/mapValues';
 import omitBy from 'lodash/omitBy';
 import isNull from 'lodash/isNull';
@@ -94,14 +95,14 @@ const formo = (Component) => {
     }
 
     state = {
-      fields: flowRight(this.fieldsWithValidations, this.getFields)(this.props.fields)
+      fields: this.props.fields
     }
 
-    onChange = (_newFields) => {
-      const newFields = mapValues(_newFields, field => omit(field, ['validations', 'isValid']));
-      const fields = flowRight(this.fieldsWithValidations, this.getFields)(newFields);
+    onChange = (newFields) => {
+      const fields = mapValues(newFields, omitF(['validations', 'isValid']));
+      const meta = flowRight(this.fieldsWithValidations, this.getFields)(fields);
       this.setState({ fields }, () => {
-        this.props.onChange(newFields);
+        this.props.onChange(fields, meta);
       });
     }
 
