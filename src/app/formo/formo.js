@@ -4,6 +4,7 @@ import { props } from 'tcomb-react';
 import { skinnable, pure, contains } from 'revenge';
 import omit from 'lodash/omit';
 import omitF from 'lodash/fp/omit';
+import pickF from 'lodash/fp/pick';
 import mapValues from 'lodash/mapValues';
 import omitBy from 'lodash/omitBy';
 import isNull from 'lodash/isNull';
@@ -100,7 +101,8 @@ const formo = (Component) => {
 
     onChange = (newFields) => {
       const fields = mapValues(newFields, omitF(['validations', 'isValid']));
-      const meta = flowRight(this.fieldsAreChanged, this.fieldsWithValidations, this.getFields)(fields);
+      const richFields = flowRight(this.fieldsAreChanged, this.fieldsWithValidations, this.enforceOnlyOneActive, this.getFields)(fields);
+      const meta = mapValues(richFields, pickF(['validations', 'isValid']));//todo add form level meta info
       this.setState({ fields }, () => {
         this.props.onChange(fields, meta);
       });
