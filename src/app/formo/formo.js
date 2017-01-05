@@ -142,7 +142,7 @@ const formo = (Component) => {
       this.onChange(touchAll(this.state.fields));
     }
 
-    formWithSetters = fields => mapValues(fields, (field, fieldName) => {
+    fieldsWithSetters = fields => mapValues(fields, (field, fieldName) => {
       const setters = {
         set: this.set(fieldName),
         clear: this.clearValue(fieldName),
@@ -184,7 +184,7 @@ const formo = (Component) => {
 
     getLocals(_props) {
       const props = omit(_props, ['onChange', 'fields', 'validations']);
-      const fields = flowRight(this.formWithSetters, this.enforceOnlyOneActive, this.fieldsAreChanged)(this.state.fields);
+      const fields = flowRight(this.fieldsWithSetters, this.enforceOnlyOneActive, this.fieldsAreChanged)(this.state.fields);
       const formValidations = (this.props.validations.form || returnEmpty)(mapValues(fields, 'value'));
       const form = {
         clearValues: this.clearValues,
