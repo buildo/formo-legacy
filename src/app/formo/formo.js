@@ -23,7 +23,7 @@ const set = (key) => (value) => (object) => ({
   [key]: value
 });
 
-const firstDefined = (...args) => find(args, x => x !== void 0);
+const firstDefined = (...args) => find(args, x => x !== void 0 && x !== null);
 
 const innerSet = (object) => (firstKey) => (secondKey) => (value) => {
   const newFirstKeyObject = set(secondKey)(value)(object[firstKey]);
