@@ -38,7 +38,6 @@ const otherProps = {
     },
     fields: {
       email: {
-        value: 'mario@cicci.it',
         initialValue: 'mario.poverello@gmail.com'
       },
       password: {},

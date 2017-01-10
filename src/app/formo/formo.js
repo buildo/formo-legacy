@@ -66,12 +66,13 @@ const formo = (Component) => {
   @props({
     validations: t.maybe(t.dict(t.String, t.Function)),
     fields: t.Object, // dict(t.String, t.Object) or dict(t.String, Field)
-    onChange: t.Function// should it be maybe? it works also in full stateful mode
+    onChange: t.maybe(t.Function)
   }, { strict: false })
   class Formo extends React.Component {
 
     static defaultProps = {
-      validations: {}// add onChange: () => {}
+      validations: {},
+      onChange: () => {}
     }
 
     static displayName = `Formo${(Component.displayName || Component.name || '')}`
