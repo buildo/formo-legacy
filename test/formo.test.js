@@ -57,19 +57,19 @@ describe('[field].value', () => {
     expect(email.value).toBe('test');
   });
 
-  xit('defaults to initialValue if value is null', () => {
+  it('defaults to initialValue if value is null', () => {
     const { email } = getProps({ fields: { email: { initialValue: 'test', value: null } } });
-    expect(email.value).toBe('test');
-  });
-
-  xit('defaults to initialValue if value is \'\'', () => {
-    const { email } = getProps({ fields: { email: { initialValue: 'test', value: '' } } });
     expect(email.value).toBe('test');
   });
 
   it('defaults to undefined if no value or initialValue are provided', () => {
     const { email } = getProps({ fields: { email: { } } });
     expect(email.value).toBe(undefined);
+  });
+
+  it('set to \'\' if initialValue is provided and if value is \'\'', () => {
+    const { email } = getProps({ fields: { email: { initialValue: 'test', value: '' } } });
+    expect(email.value).toBe('');
   });
 
   it('can be updated', () => {
@@ -196,7 +196,7 @@ describe('[field].touched', () => {
 
   it('can be updated via props', () => {
     const rendered = shallowRender({ fields: { email: { } } });
-    rendered.setProps({ email: { touched: true } });
+    rendered.setProps({ fields: { email: { touched: true } } });
     expect(rendered.props().email.touched).toBe(true);
   });
 
@@ -218,7 +218,7 @@ describe('[field].active', () => {
 
   it('can be updated via props', () => {
     const rendered = shallowRender({ fields: { email: { } } });
-    rendered.setProps({ email: { active: true } });
+    rendered.setProps({ fields: { email: { active: true } } });
     expect(rendered.props().email.active).toBe(true);
   });
 
@@ -376,12 +376,12 @@ describe('form.isChanged', () => {
 
 describe('onChange', () => {
 
-  it('should be called with the updated value after an update() call', () => {
+  it('should be called with the updated value (and a meta object as a second argument) after an update() call', () => {
     const onChange = jest.fn();
     const rendered = shallowRender({ onChange, fields: { email: { value: 'foo' } } });
     rendered.props().email.update('bar');
     expect(onChange.mock.calls.length).toBe(1);
-    expect(onChange.mock.calls[0].length).toBe(1);
+    expect(onChange.mock.calls[0].length).toBe(2);
     expect(onChange.mock.calls[0][0].email.value).toBe('bar');
   });
 
@@ -390,13 +390,13 @@ describe('onChange', () => {
     const rendered = shallowRender({
       onChange,
       fields: { email: { value: 'foo' } },
-      validations: { email: v => v === 'error' ? 'error' : false }
+      validations: { email: v => ({ error: v === 'error' ? 'error' : null }) }
     });
     rendered.props().email.update('error');
     expect(onChange.mock.calls.length).toBe(1);
-    expect(onChange.mock.calls[0].length).toBe(1);
-    expect(onChange.mock.calls[0][0].email.isValid).toBe(false);
-    expect(onChange.mock.calls[0][0].form.isValid).toBe(false);
+    expect(onChange.mock.calls[0].length).toBe(2);
+    expect(onChange.mock.calls[0][1].email.isValid).toBe(false);
+    expect(onChange.mock.calls[0][1].form.isValid).toBe(false);
   });
 
 });
