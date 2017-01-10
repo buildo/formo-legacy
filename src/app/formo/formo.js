@@ -195,6 +195,13 @@ const formo = (Component) => {
       }));
     }
 
+    fieldsWithTouched = (fields) => {
+      return mapValues(fields, (field) => ({
+        ...field,
+        touched: !!field.touched
+      }));
+    }
+
     makeForm = ({ fields: rawFields, validations }) => {
       const fields = flowRight(this.fieldsWithValidations, this.enforceOnlyOneActive, this.fieldsAreChanged, this.getFields)(rawFields);
       const formValidations = (validations.form || returnEmpty)(mapValues(fields, 'value'));
@@ -215,7 +222,7 @@ const formo = (Component) => {
 
     getLocals(_props) {
       const props = omit(_props, ['onChange', 'fields', 'validations']);
-      const fields = flowRight(this.fieldsWithSetters, this.fieldsWithValidations, this.enforceOnlyOneActive, this.fieldsAreChanged, this.getFields)(this.state.fields);
+      const fields = flowRight(this.fieldsWithTouched, this.fieldsWithSetters, this.fieldsWithValidations, this.enforceOnlyOneActive, this.fieldsAreChanged, this.getFields)(this.state.fields);
       const form = flowRight(this.formWithSetters, this.makeForm)({ fields: this.state.fields, validations: this.props.validations });
       return {
         ...props,
