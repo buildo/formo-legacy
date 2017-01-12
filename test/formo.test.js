@@ -385,6 +385,18 @@ describe('onChange', () => {
     expect(onChange.mock.calls[0][0].email.value).toBe('bar');
   });
 
+  it('should be called with a second argument meta containing `isChanged`, `isValid` and `validations` for each field', () => {
+    const onChange = jest.fn();
+    const rendered = shallowRender({ onChange, fields: { email: { value: 'foo' } } });
+    rendered.props().email.update('bar');
+    expect(onChange.mock.calls.length).toBe(1);
+    expect(onChange.mock.calls[0].length).toBe(2);
+    expect(onChange.mock.calls[0][1].email.isValid).toBe(true);
+    expect(onChange.mock.calls[0][1].email.isChanged).toBe(true);
+    expect(onChange.mock.calls[0][1].email.validations).toEqual({});
+  });
+
+
   it('should be called with an updated isValid after an update() call', () => {
     const onChange = jest.fn();
     const rendered = shallowRender({
