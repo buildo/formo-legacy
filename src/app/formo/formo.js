@@ -7,7 +7,6 @@ import omitF from 'lodash/fp/omit';
 import pickF from 'lodash/fp/pick';
 import mapValues from 'lodash/mapValues';
 import omitBy from 'lodash/omitBy';
-import isNull from 'lodash/isNull';
 import every from 'lodash/every';
 import includes from 'lodash/includes';
 import some from 'lodash/some';
