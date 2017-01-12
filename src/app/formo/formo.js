@@ -170,7 +170,7 @@ const formo = (Component) => {
     });
 
     isChanged = ({ value, initialValue }) => {
-      const similarlyNil = ['', undefined, null];
+      const similarlyNil = ['', undefined, null, NaN];
       return (
         value !== initialValue &&
         !(includes(similarlyNil, value) && includes(similarlyNil, initialValue))
