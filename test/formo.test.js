@@ -161,15 +161,15 @@ describe('[field].isValid', () => {
 
 describe('[field].validations', () => {
 
-  it('are returned for each field only if !== null', () => {
+  it('are returned for each field only if not empty strings', () => {
     const props = getProps({
       fields: { email: { value: 'test' }, password: { value: 'valid' } },
       validations: {
         email: value => ({
-          longerThan5: value.length >= 5 ? null : 'longer than 5'
+          longerThan5: value.length >= 5 || 'longer than 5'
         }),
         password: value => ({
-          valid: value !== 'valid' ? 'invalid' : null
+          valid: value !== 'valid' && 'invalid'
         })
       }
     });
@@ -305,13 +305,15 @@ describe('[field].clear()', () => {
 
 describe('form.validations', () => {
 
-  it('are returned only if !== null', () => {
+  it('are returned only if not empty strings', () => {
     const props = getProps({
       fields: { email: { value: 'test' }, password: { value: 'valid' } },
       validations: {
         form: values => ({
-          different: values.email !== values.password ? 'different' : null,
-          neverFailing: null
+          different: values.email !== values.password && 'different',
+          neverFailing: false,
+          neverFailingNeither: true,
+          likewiseNeverFailing: ''
         })
       }
     });
