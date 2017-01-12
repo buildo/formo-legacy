@@ -2,7 +2,6 @@ import React from 'react';
 import t, { maybe, union } from 'tcomb';
 import { props } from 'tcomb-react';
 import { skinnable, pure } from 'revenge';
-import isNil from 'lodash/isNil';
 
 @pure
 @skinnable()
@@ -15,7 +14,7 @@ export default class Input extends React.Component {
   template({ value, onChange, ...others }) {
     return (
       <input
-        value={isNil(value) ? '' : value}
+        value={t.Nil.is(value) ? '' : value}
         onChange={(e) => { onChange(e.target.value); }}
         {...others}
       />
