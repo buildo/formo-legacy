@@ -104,7 +104,7 @@ const formo = (Component) => {
       const fields = mapValues(newFields, omitF(['validations', 'isValid']));
       const richFields = flowRight(this.fieldsAreChanged, this.fieldsWithValidations, this.enforceOnlyOneActive, this.getFields)(fields);
       const meta = {
-        ...mapValues(richFields, pickF(['validations', 'isValid'])),
+        ...mapValues(richFields, pickF(['validations', 'isValid', 'isChanged'])),
         form: this.makeForm({ fields, validations: this.props.validations })
       };
       this.setState({ fields }, () => {
