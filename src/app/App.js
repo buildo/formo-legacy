@@ -9,6 +9,9 @@ const examples = omit(_examples, ['__esModule']);
 
 import 'react-flexview/src/flexView.scss';
 
+const integerPattern = /^([+-]?[1-9]\d*|0)$/;
+const isInteger = (value) => integerPattern.test(value);
+
 const otherProps = {
   MyForm: {
     title: 'My Form',
@@ -23,9 +26,16 @@ const otherProps = {
           length: !required && value.length > 5 ? null : 'email must be longer than 5 chars'
         };
       },
-      password: (value) => ({
-        length: value && value.length > 5 ? null : 'password must be >5'
+      password: (value, { favouriteNumber }) => ({
+        length: value && value.length > 5 ? null : 'password must be >5',
+        unsafePassword: isInteger(favouriteNumber) && value === favouriteNumber ? 'Your password should not be your favourite number' : null
       }),
+      favouriteNumber: (value) => {
+        return {
+          isNumber: isInteger(value) ? null : 'Please an integer',
+          tooSmall: (isInteger(value) && value < 10) ? 'Please an integer >= 10' : null
+        };
+      },
       confirmPassword: (value, { password }) => ({
         same: value === password ? null : 'passwords must be the same'
       }),
@@ -40,6 +50,7 @@ const otherProps = {
       email: {
         initialValue: 'mario.poverello@gmail.com'
       },
+      favouriteNumber: {},
       password: {},
       confirmPassword: {},
       sex: {

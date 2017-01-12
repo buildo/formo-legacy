@@ -9,6 +9,7 @@ import formo from 'formo';
 import every from 'lodash/every';
 import map from 'lodash/map';
 import printJSON from 'printJSON';
+import { Input } from 'formo/dom';
 
 import 'buildo-react-components/src/dropdown/dropdown.scss';
 
@@ -23,6 +24,7 @@ const style = ({ isValid, active, touched }) => ({
 @props({
   title: t.String,
   email: t.Object, // specify
+  favouriteNumber: t.Object,
   password: t.Object, //specify
   confirmPassword: t.Object, //specify
   sex: t.Object, //specify
@@ -30,41 +32,57 @@ const style = ({ isValid, active, touched }) => ({
 })
 export default class MyForm extends React.Component {
 
-  template({ title, email, password, confirmPassword, sex, form } ) {
+  template({ title, email, password, confirmPassword, sex, form, favouriteNumber } ) {
 
     return (
       <View basis='50%'>
         <View column width={600}>
           {title}
           <View>
-            <input
-              value={email.value || ''}
+            <Input
+              type='email'
+              placeholder='Insert your email'
+              value={email.value}
               onFocus={email.setActive}
               onBlur={email.unsetActive}
-              onChange={e => email.update(e.target.value)}
+              onChange={email.update}
               style={style(email)}
             />
             {email.touched && map(email.validations).join(', ')}
           </View>
           <View>
-            <input
+            <Input
+              type='text'
+              placeholder='Type your favourite number'
+              value={favouriteNumber.value}
+              onFocus={favouriteNumber.setActive}
+              onBlur={favouriteNumber.unsetActive}
+              onChange={favouriteNumber.update}
+              style={style(favouriteNumber)}
+            />
+            {favouriteNumber.touched && map(favouriteNumber.validations).join(', ')}
+          </View>
+          <View>
+            <Input
               type='password'
-              value={password.value || ''}
+              placeholder='Choose a password'
+              value={password.value}
               onFocus={password.setActive}
               onBlur={password.unsetActive}
-              onChange={e => password.update(e.target.value)}
+              onChange={password.update}
               style={style(password)}
             />
             {password.touched && map(password.validations).join(', ')}
             {password.isChanged && <button onClick={password.clear}>CLEAR</button>}
           </View>
           <View>
-            <input
+            <Input
               type='password'
-              value={confirmPassword.value || ''}
+              placeholder='Repeat the password'
+              value={confirmPassword.value}
               onFocus={confirmPassword.setActive}
               onBlur={confirmPassword.unsetActive}
-              onChange={e => confirmPassword.update(e.target.value)}
+              onChange={confirmPassword.update}
               style={style(confirmPassword)}
             />
             {confirmPassword.touched && map(confirmPassword.validations).join(', ')}
@@ -72,7 +90,8 @@ export default class MyForm extends React.Component {
           <View style={style(sex)}>
             <Dropdown
               clearable
-              value={sex.value || ''}
+              placeholder='your sex'
+              value={sex.value}
               onFocus={sex.setActive}
               onBlur={sex.unsetActive}
               options={'male female'.split(' ').map(x => ({ value: x, label: x }))}
@@ -94,7 +113,7 @@ export default class MyForm extends React.Component {
           <textarea
             readOnly
             style={{ height: 500, width: 500, fontFamily: 'monospace' }}
-            value={printJSON({ form, email, password, confirmPassword, sex })}
+            value={printJSON({ email, favouriteNumber, password, confirmPassword, sex, form })}
           />
         </View>
       </View>
