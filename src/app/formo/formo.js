@@ -15,6 +15,7 @@ import find from 'lodash/find';
 import findKey from 'lodash/findKey';
 import flowRight from 'lodash/flowRight';
 import constant from 'lodash/constant';
+import isEqual from 'lodash/isEqual';
 
 const returnEmpty = constant({});
 
@@ -172,7 +173,7 @@ const formo = (Component) => {
     isChanged = ({ value, initialValue }) => {
       const similarlyNil = ['', undefined, null, NaN];
       return (
-        value !== initialValue &&
+        !isEqual(value, initialValue) &&
         !(includes(similarlyNil, value) && includes(similarlyNil, initialValue))
       );
     }

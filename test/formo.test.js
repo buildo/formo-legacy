@@ -268,6 +268,12 @@ describe('[field].isChanged', () => {
     expect(getProps({ fields: { email: { initialValue: '', value: undefined } } }).email.isChanged).toBe(false);
   });
 
+  it('should be false if value and initial value are equal with respect to `lodash.isEqual`', () => {
+    expect(getProps({ fields: { birthDay: { value: new Date('1987-07-14'), initialValue: new Date('1987-07-14') } } }).birthDay.isChanged).toBe(false);
+    expect(getProps({ fields: { favouriteColors: { initialValue: ['red', 'blue'], value: ['red', 'blue'] } } }).favouriteColors.isChanged).toBe(false);
+    expect(getProps({ fields: { something: { initialValue: { foo: 'bar' }, value: { foo: 'bar' } } } }).something.isChanged).toBe(false);
+  });
+
 });
 
 describe('[field].clear()', () => {
