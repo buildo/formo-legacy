@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './app';
 import t from 'tcomb';
 
-// set structs strict by default
-t.struct.strict = true;
+// set interfaces strict by default
+t.inter.strict = true;
 
 ReactDOM.render(<App />, document.getElementById('app'));

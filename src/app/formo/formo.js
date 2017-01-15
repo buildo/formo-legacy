@@ -1,5 +1,5 @@
 import React from 'react';
-import t, { dict, maybe, struct } from 'tcomb';
+import t, { dict, maybe, inter } from 'tcomb';
 import { props } from 'tcomb-react';
 import { skinnable, pure, contains } from 'revenge';
 import omit from 'lodash/omit';
@@ -16,7 +16,7 @@ import findKey from 'lodash/findKey';
 import flowRight from 'lodash/flowRight';
 import constant from 'lodash/constant';
 
-const FormoField = struct({
+const FormoField = inter({
   value: t.Any,
   initialValue: t.Any,
   touched: maybe(t.Boolean),
@@ -27,7 +27,7 @@ const FormoFields = dict(t.String, FormoField, 'FormoFields');
 
 const FormoValidations = dict(t.String, t.Function, 'FormoValidations');
 
-export const Field = struct({
+export const Field = inter({
   value: t.Any,
   initialValue: t.Any,
   touched: t.Boolean,
@@ -43,7 +43,7 @@ export const Field = struct({
   set: t.Function
 }, { strict: false, name: 'Field' });
 
-export const Form = struct({
+export const Form = inter({
   validations: dict(t.String, t.String),
   isValid: t.Boolean,
   isChanged: t.Boolean,
