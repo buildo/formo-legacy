@@ -18,8 +18,6 @@ const style = ({ isValid, active, touched }) => ({
   backgroundColor: active ? 'yellow' : 'white'
 });
 
-console.log({ Field, Form });
-
 @formo
 @pure
 @skinnable()
