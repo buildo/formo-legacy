@@ -1,5 +1,5 @@
 import React from 'react';
-import t from 'tcomb';
+import t, { dict, maybe, inter } from 'tcomb';
 import { props } from 'tcomb-react';
 import { skinnable, pure, contains } from 'revenge';
 import omit from 'lodash/omit';
@@ -16,6 +16,43 @@ import findKey from 'lodash/findKey';
 import flowRight from 'lodash/flowRight';
 import constant from 'lodash/constant';
 import isEqual from 'lodash/isEqual';
+
+const FormoField = inter({
+  value: t.Any,
+  initialValue: t.Any,
+  touched: maybe(t.Boolean),
+  active: maybe(t.Boolean)
+}, { strict: false, name: 'FormoField' });
+
+const FormoFields = dict(t.String, FormoField, 'FormoFields');
+
+const FormoValidations = dict(t.String, t.Function, 'FormoValidations');
+
+export const Field = inter({
+  value: t.Any,
+  initialValue: t.Any,
+  touched: t.Boolean,
+  active: t.Boolean,
+  validations: dict(t.String, t.String),
+  isValid: t.Boolean,
+  isChanged: t.Boolean,
+  touch: t.Function,
+  setActive: t.Function,
+  unsetActive: t.Function,
+  update: t.Function,
+  clear: t.Function,
+  set: t.Function
+}, { strict: false, name: 'Field' });
+
+export const Form = inter({
+  validations: dict(t.String, t.String),
+  isValid: t.Boolean,
+  isChanged: t.Boolean,
+  touched: t.Boolean,
+  allTouched: t.Boolean,
+  clearValues: t.Function,
+  touchAll: t.Function
+}, { strict: false, name: 'Form' });
 
 const returnEmpty = constant({});
 
@@ -42,11 +79,15 @@ const setActive = (fields) => (fieldName) => {
   return innerSet(activeFalseFields)(fieldName)('active')(true);
 };
 
+const touch = (fields) => (fieldName) => {
+  return innerSet(fields)(fieldName)('touched')(true);
+};
+
 const unsetActive = (fields) => (fieldName) => {
   // set the field to active: false
   const deactivated = innerSet(fields)(fieldName)('active')(false);
   // set the field to touched: true
-  return innerSet(deactivated)(fieldName)('touched')(true);
+  return touch(deactivated)(fieldName);
 };
 
 const clearValue = (fields) => (fieldName) => {
@@ -65,9 +106,9 @@ const formo = (Component) => {
   @pure
   @skinnable(contains(Component))
   @props({
-    validations: t.maybe(t.dict(t.String, t.Function)),
-    fields: t.Object, // dict(t.String, t.Object) or dict(t.String, Field)
-    onChange: t.maybe(t.Function)
+    validations: maybe(FormoValidations),
+    fields: FormoFields,
+    onChange: maybe(t.Function)
   }, { strict: false })
   class Formo extends React.Component {
 
@@ -128,12 +169,16 @@ const formo = (Component) => {
       });
     }
 
-    updateValue = fieldName => value => {
+    updateValue = (fieldName) => value => {
       this.onChange(updateValue(this.state.fields)(fieldName)(value));
     };
 
-    setActive = fieldName => () => {
+    setActive = (fieldName) => () => {
       this.onChange(setActive(this.state.fields)(fieldName));
+    };
+
+    touch = (fieldName) => () => {
+      this.onChange(touch(this.state.fields)(fieldName));
     };
 
     unsetActive = fieldName => () => {
@@ -159,6 +204,7 @@ const formo = (Component) => {
     fieldsWithSetters = fields => mapValues(fields, (field, fieldName) => {
       const setters = {
         set: this.set(fieldName),
+        touch: this.clearValue(fieldName),
         clear: this.clearValue(fieldName),
         update: this.updateValue(fieldName),
         setActive: this.setActive(fieldName),
@@ -196,7 +242,7 @@ const formo = (Component) => {
       }));
     }
 
-    fieldsWithTouched = (fields) => {
+    fieldsAreTouched = (fields) => {
       return mapValues(fields, (field) => ({
         ...field,
         touched: !!field.touched
@@ -223,7 +269,7 @@ const formo = (Component) => {
 
     getLocals(_props) {
       const props = omit(_props, ['onChange', 'fields', 'validations']);
-      const fields = flowRight(this.fieldsWithTouched, this.fieldsWithSetters, this.fieldsWithValidations, this.enforceOnlyOneActive, this.fieldsAreChanged, this.getFields)(this.state.fields);
+      const fields = flowRight(this.fieldsAreTouched, this.fieldsWithSetters, this.fieldsWithValidations, this.enforceOnlyOneActive, this.fieldsAreChanged, this.getFields)(this.state.fields);
       const form = flowRight(this.formWithSetters, this.makeForm)({ fields: this.state.fields, validations: this.props.validations });
       return {
         ...props,

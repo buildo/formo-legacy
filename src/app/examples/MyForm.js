@@ -5,7 +5,7 @@ import { props } from 'tcomb-react';
 import { skinnable, pure } from 'revenge';
 import View from 'react-flexview';
 import { Dropdown } from 'buildo-react-components';
-import formo from 'formo';
+import formo, { Field, Form } from 'formo';
 import every from 'lodash/every';
 import map from 'lodash/map';
 import printJSON from 'printJSON';
@@ -23,12 +23,12 @@ const style = ({ isValid, active, touched }) => ({
 @skinnable()
 @props({
   title: t.String,
-  email: t.Object, // specify
-  favouriteNumber: t.Object,
-  password: t.Object, //specify
-  confirmPassword: t.Object, //specify
-  sex: t.Object, //specify
-  form: t.Object
+  email: Field,
+  favouriteNumber: Field,
+  password: Field,
+  confirmPassword: Field,
+  sex: Field,
+  form: Form
 })
 export default class MyForm extends React.Component {
 
