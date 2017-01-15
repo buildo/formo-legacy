@@ -7,7 +7,6 @@ import omitF from 'lodash/fp/omit';
 import pickF from 'lodash/fp/pick';
 import mapValues from 'lodash/mapValues';
 import omitBy from 'lodash/omitBy';
-import isNull from 'lodash/isNull';
 import every from 'lodash/every';
 import includes from 'lodash/includes';
 import some from 'lodash/some';
@@ -62,6 +61,13 @@ const set = (key) => (value) => (object) => ({
 });
 
 const firstDefined = (...args) => find(args, x => x !== void 0 && x !== null);
+
+const isNotEmptyString = (value) => !t.String.is(value) || value === '';
+const Validations = dict(t.String, t.String, 'Validations');
+const evalValidations = (validationsFn, value, otherValues) => {
+  const evaluated = validationsFn(value, otherValues);
+  return Validations(omitBy(evaluated, isNotEmptyString));
+};
 
 const innerSet = (object) => (firstKey) => (secondKey) => (value) => {
   const newFirstKeyObject = set(secondKey)(value)(object[firstKey]);
@@ -128,8 +134,8 @@ const formo = (Component) => {
 
     fieldsWithValidations = fields => {
       return mapValues(fields, (field) => {
-        const validations = omitBy(field.validations(field.value, mapValues(fields, 'value')), x => x === null);
-        const isValid = every(validations, isNull);
+        const validations = evalValidations(field.validations, field.value, mapValues(fields, 'value'));
+        const isValid = isEqual(validations, {});
         return {
           ...field,
           validations,
@@ -231,7 +237,7 @@ const formo = (Component) => {
     formIsChanged = fields => some(fields, this.isChanged);
 
     formIsValid = (fields, formValidations) => {
-      return every(fields, 'isValid') && every(formValidations, x => x === null);
+      return every(fields, 'isValid') && isEqual(formValidations, {});
     }
 
     enforceOnlyOneActive = (fields) => {
@@ -251,11 +257,11 @@ const formo = (Component) => {
 
     makeForm = ({ fields: rawFields, validations }) => {
       const fields = flowRight(this.fieldsWithValidations, this.enforceOnlyOneActive, this.fieldsAreChanged, this.getFields)(rawFields);
-      const formValidations = (validations.form || returnEmpty)(mapValues(fields, 'value'));
+      const formValidations = evalValidations(validations.form || returnEmpty, mapValues(fields, 'value'));
       return {
         touched: some(fields, 'touched'),
         allTouched: every(fields, 'touched'),
-        validations: omitBy(formValidations, x => x === null),
+        validations: formValidations,
         isValid: this.formIsValid(fields, formValidations),
         isChanged: this.formIsChanged(fields)
       };
