@@ -1,8 +1,8 @@
 {
-  "name": "formo",
-  "version": "1.0.0",
-  "description": "Form state management",
-  "main": "src/client.js",
+  "name": "react-formo",
+  "version": "0.0.1",
+  "description": "Formo ~ another form state management for React",
+  "main": "lib/index.js",
   "dependencies": {
     "avenger": "0.2.9",
     "buildo-react-components": "^0.10.0",
@@ -62,7 +62,10 @@
     "clean": "rm -rf build/* && mkdir -p build",
     "start": "npm run clean && cp src/index.html build && webpack-dev-server --config webpack.config.js --hot --inline",
     "test": "jest",
-    "lint": "eslint src/app/formo"
+    "lint": "eslint src/app/formo",
+    "preversion": "npm run lint && npm run test",
+    "prepublish": "npm run build",
+    "build": "rm -rf lib && mkdir lib && babel src/formo -d lib"
   },
   "repository": {
     "type": "git",
