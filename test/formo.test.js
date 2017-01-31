@@ -1,5 +1,5 @@
 import React from 'react';
-import formo from '../src/app/formo';
+import formo from '../src/formo';
 import renderer from 'react-test-renderer';
 import { shallow } from 'enzyme';
 
