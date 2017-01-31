@@ -1,6 +1,7 @@
 {
   "name": "react-formo",
   "version": "0.0.1",
+  "files": ["lib"],
   "description": "Formo ~ another form state management for React",
   "main": "lib/index.js",
   "dependencies": {
