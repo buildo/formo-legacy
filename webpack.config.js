@@ -12,7 +12,7 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 module.exports = {
 
   resolve: {
-    root: [paths.APP]
+    root: [paths.APP, paths.SRC]
   },
 
   stats: {
