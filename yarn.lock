@@ -4025,7 +4025,7 @@ lodash.uniq@^4.3.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
 
-lodash@4.6.1, lodash@^4.6.1:
+lodash@4.6.1, lodash@^4.2.0, lodash@^4.6.1:
   version "4.6.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.6.1.tgz#df00c1164ad236b183cfc3887a5e8d38cc63cbbc"
 
@@ -4037,7 +4037,7 @@ lodash@^3.2.0, lodash@~3.9.3:
   version "3.9.3"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.9.3.tgz#0159e86832feffc6d61d852b12a953b99496bd32"
 
-lodash@^4.0.0, lodash@^4.11.2, lodash@^4.14.0, lodash@^4.15.0, lodash@^4.16.4, lodash@^4.17.2, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0:
+lodash@^4.0.0, lodash@^4.11.2, lodash@^4.14.0, lodash@^4.15.0, lodash@^4.16.4, lodash@^4.17.2, lodash@^4.2.1, lodash@^4.3.0:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
@@ -5662,7 +5662,7 @@ slice-ansi@0.0.4:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/slice-ansi/-/slice-ansi-0.0.4.tgz#edbf8903f66f7ce2f8eafd6ceed65e264c831b35"
 
-smooth-release@^7.0.0:
+smooth-release@7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/smooth-release/-/smooth-release-7.0.0.tgz#bd41b2b9fc76397aa6dbecfd2a268dd1c848b844"
   dependencies:
@@ -6029,7 +6029,7 @@ tcomb-doc@^0.5.0:
   dependencies:
     tcomb "^3.0.0"
 
-tcomb-react@0.9.0:
+tcomb-react@0.9.0, tcomb-react@^0.9.0:
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/tcomb-react/-/tcomb-react-0.9.0.tgz#1294340b45b0d0e54a9b298f1adea8d2e6bfc581"
   dependencies:
@@ -6039,7 +6039,7 @@ tcomb-react@0.9.0:
     tcomb-doc "^0.5.0"
     tcomb-validation "^3.0.0"
 
-tcomb-react@^0.9.0, tcomb-react@^0.9.3:
+tcomb-react@^0.9.3:
   version "0.9.3"
   resolved "https://registry.yarnpkg.com/tcomb-react/-/tcomb-react-0.9.3.tgz#44713e1d2e8c2ff744b8ed6579bf77aed23b0efc"
   dependencies:
