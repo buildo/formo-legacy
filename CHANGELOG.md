@@ -1,6 +1,13 @@
 #  Change Log
 
 ## [Unreleased](https://github.com/buildo/formo/tree/HEAD)
+[Full Changelog](https://github.com/buildo/formo/compare/v0.0.2...HEAD)
+
+#### New features:
+
+- move `smooth-release` to devDependencies [#31](https://github.com/buildo/formo/issues/31)
+
+## [v0.0.2](https://github.com/buildo/formo/tree/v0.0.2) (2017-01-31)
 
 
 #### Fixes (bugs & defects):
