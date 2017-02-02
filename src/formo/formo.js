@@ -1,13 +1,12 @@
 import React from 'react';
-import t, { dict, maybe, inter } from 'tcomb';
+import t, { dict, maybe, inter, list } from 'tcomb';
 import { props } from 'tcomb-react';
 import { skinnable, pure, contains } from 'revenge';
 import omit from 'lodash/omit';
 import omitF from 'lodash/fp/omit';
 import pickF from 'lodash/fp/pick';
 import mapValues from 'lodash/mapValues';
-import omitBy from 'lodash/omitBy';
-import isNull from 'lodash/isNull';
+import pickBy from 'lodash/pickBy';
 import every from 'lodash/every';
 import includes from 'lodash/includes';
 import some from 'lodash/some';
@@ -16,6 +15,7 @@ import findKey from 'lodash/findKey';
 import flowRight from 'lodash/flowRight';
 import constant from 'lodash/constant';
 import isEqual from 'lodash/isEqual';
+import formoStateHandler from './formo-state-handler';
 
 const FormoField = inter({
   value: t.Any,
@@ -26,14 +26,17 @@ const FormoField = inter({
 
 const FormoFields = dict(t.String, FormoField, 'FormoFields');
 
-const FormoValidations = dict(t.String, t.Function, 'FormoValidations');
+const FormoValidations = dict(t.String, dict(t.String, t.Function), 'FormoValidations');
+const Validations = list(t.String, 'Validations');
+const Validating = list(t.String, 'Validating');
 
 export const Field = inter({
   value: t.Any,
   initialValue: t.Any,
   touched: t.Boolean,
   active: t.Boolean,
-  validations: dict(t.String, t.String),
+  validationErrors: Validations,
+  validating: Validating,
   isValid: t.Boolean,
   isChanged: t.Boolean,
   touch: t.Function,
@@ -45,7 +48,8 @@ export const Field = inter({
 }, { strict: false, name: 'Field' });
 
 export const Form = inter({
-  validations: dict(t.String, t.String),
+  validationErrors: Validations,
+  validating: Validating,
   isValid: t.Boolean,
   isChanged: t.Boolean,
   touched: t.Boolean,
@@ -61,7 +65,7 @@ const set = (key) => (value) => (object) => ({
   [key]: value
 });
 
-const firstDefined = (...args) => find(args, x => x !== void 0 && x !== null);
+const firstDefined = (...args) => find(args, x => x !== void 0);
 
 const innerSet = (object) => (firstKey) => (secondKey) => (value) => {
   const newFirstKeyObject = set(secondKey)(value)(object[firstKey]);
@@ -103,102 +107,87 @@ const touchAll = (fields) => {
 };
 
 const formo = (Component) => {
+  @formoStateHandler
   @pure
   @skinnable(contains(Component))
   @props({
     validations: maybe(FormoValidations),
     fields: FormoFields,
-    onChange: maybe(t.Function)
+    setValidating: t.Function,
+    onChange: t.Function
   }, { strict: false })
   class Formo extends React.Component {
 
-    static defaultProps = {
-      validations: {},
-      onChange: () => {}
-    }
-
     static displayName = `Formo${(Component.displayName || Component.name || '')}`
+
+    evalValidations = (validations, value, otherValues, fieldName) => {
+      const evaluated = mapValues(validations, validationFn => validationFn(value, otherValues));
+      const validationErrors = pickBy(evaluated, x => x === false);
+      const validating = pickBy(evaluated, x => x instanceof Promise);
+      this.props.setValidating(fieldName, validating);
+      return mapValues({ validationErrors, validating }, Object.keys);
+    };
 
     getFields = (fields) => mapValues(fields, (field, fieldName) => ({
       ...field,
       value: firstDefined(field.value, field.initialValue),
-      validations: this.props.validations[fieldName] || returnEmpty,
+      validations: this.props.validations[fieldName] || {},
       initialValue: firstDefined(field.initialValue)
     }))
 
     fieldsWithValidations = fields => {
-      return mapValues(fields, (field) => {
-        const validations = omitBy(field.validations(field.value, mapValues(fields, 'value')), x => x === null);
-        const isValid = every(validations, isNull);
+      return mapValues(fields, (field, fieldName) => {
+        const { validationErrors, validating } = this.evalValidations(field.validations, field.value, mapValues(fields, 'value'), fieldName);
+        const isValid = validationErrors.length === 0;
         return {
-          ...field,
-          validations,
+          ...omit(field, 'validations'),
+          validationErrors,
+          validating,
           isValid
         };
       });
     }
 
-    state = {
-      fields: this.props.fields
-    }
-
     onChange = (newFields) => {
-      const fields = mapValues(newFields, omitF(['validations', 'isValid']));
+      const fields = mapValues(newFields, omitF(['validationErrors', 'isValid', 'validating', 'isChanged']));
       const richFields = flowRight(this.fieldsAreChanged, this.fieldsWithValidations, this.enforceOnlyOneActive, this.getFields)(fields);
       const meta = {
-        ...mapValues(richFields, pickF(['validations', 'isValid', 'isChanged'])),
+        ...mapValues(richFields, pickF(['validationErrors', 'isValid', 'validating', 'isChanged'])),
         form: this.makeForm({ fields, validations: this.props.validations })
       };
-      this.setState({ fields }, () => {
-        this.props.onChange(fields, meta);
-      });
-    }
-
-    mergeFields = (fieldsFromProps, fieldsFromState) => {
-      //the source of truths of which fields are in the form come from the props (they can be removed, or new ones added)
-      return mapValues(fieldsFromProps, (field, fieldName) => ({
-        //still, bits of form state can be managed just from formo component state
-        ...fieldsFromState[fieldName],
-        ...field
-      }));
-    }
-
-    componentWillReceiveProps({ fields }) {
-      this.setState({
-        fields: this.mergeFields(fields, this.state.fields)
-      });
+      this.props.onChange(fields, meta);
     }
 
     updateValue = (fieldName) => value => {
-      this.onChange(updateValue(this.state.fields)(fieldName)(value));
+      this.onChange(updateValue(this.props.fields)(fieldName)(value));
     };
 
     setActive = (fieldName) => () => {
-      this.onChange(setActive(this.state.fields)(fieldName));
+      this.onChange(setActive(this.props.fields)(fieldName));
     };
 
     touch = (fieldName) => () => {
-      this.onChange(touch(this.state.fields)(fieldName));
+      this.onChange(touch(this.props.fields)(fieldName));
     };
 
     unsetActive = fieldName => () => {
-      this.onChange(unsetActive(this.state.fields)(fieldName));
+      this.onChange(unsetActive(this.props.fields)(fieldName));
     };
 
     set = (fieldName) => (prop, value) => {
-      this.onChange(innerSet(this.state.fields)(fieldName)(prop)(value));
+      this.onChange(innerSet(this.props.fields)(fieldName)(prop)(value));
     }
 
     clearValue = (fieldName) => () => {
-      this.onChange(clearValue(this.state.fields)(fieldName));
+      this.onChange(clearValue(this.props.fields)(fieldName));
     }
 
     clearValues = () => {
-      this.onChange(clearValues(this.state.fields));
+      this.onChange(clearValues(this.props.fields));
     }
 
     touchAll = () => {
-      this.onChange(touchAll(this.state.fields));
+      this.onChange(touchAll(this.props.fields));
     }
 
     fieldsWithSetters = fields => mapValues(fields, (field, fieldName) => {
@@ -217,7 +206,7 @@ const formo = (Component) => {
     });
 
     isChanged = ({ value, initialValue }) => {
-      const similarlyNil = ['', undefined, null, NaN];
+      const similarlyNil = ['', undefined, null];
       return (
         !isEqual(value, initialValue) &&
         !(includes(similarlyNil, value) && includes(similarlyNil, initialValue))
@@ -230,8 +219,8 @@ const formo = (Component) => {
 
     formIsChanged = fields => some(fields, this.isChanged);
 
-    formIsValid = (fields, formValidations) => {
-      return every(fields, 'isValid') && every(formValidations, x => x === null);
+    formIsValid = (fields, validationErrors) => {
+      return every(fields, 'isValid') && (validationErrors.length  === 0);
     }
 
     enforceOnlyOneActive = (fields) => {
@@ -251,12 +240,13 @@ const formo = (Component) => {
 
     makeForm = ({ fields: rawFields, validations }) => {
       const fields = flowRight(this.fieldsWithValidations, this.enforceOnlyOneActive, this.fieldsAreChanged, this.getFields)(rawFields);
-      const formValidations = (validations.form || returnEmpty)(mapValues(fields, 'value'));
+      const { validationErrors, validating } = this.evalValidations(validations.form || returnEmpty, mapValues(fields, 'value'));
       return {
         touched: some(fields, 'touched'),
         allTouched: every(fields, 'touched'),
-        validations: omitBy(formValidations, x => x === null),
-        isValid: this.formIsValid(fields, formValidations),
+        validationErrors,
+        validating,
+        isValid: this.formIsValid(fields,  validationErrors),
         isChanged: this.formIsChanged(fields)
       };
     }
@@ -268,9 +258,9 @@ const formo = (Component) => {
     })
 
     getLocals(_props) {
-      const props = omit(_props, ['onChange', 'fields', 'validations']);
-      const fields = flowRight(this.fieldsAreTouched, this.fieldsWithSetters, this.fieldsWithValidations, this.enforceOnlyOneActive, this.fieldsAreChanged, this.getFields)(this.state.fields);
-      const form = flowRight(this.formWithSetters, this.makeForm)({ fields: this.state.fields, validations: this.props.validations });
+      const props = omit(_props, ['onChange', 'fields', 'validations', 'setValidating']);
+      const fields = flowRight(this.fieldsAreTouched, this.fieldsWithSetters, this.fieldsWithValidations, this.enforceOnlyOneActive, this.fieldsAreChanged, this.getFields)(this.props.fields);
+      const form = flowRight(this.formWithSetters, this.makeForm)({ fields: this.props.fields, validations: this.props.validations });
       return {
         ...props,
         ...fields,
