@@ -13,14 +13,6 @@ const shallowRender = ({ fields = {}, validations, onChange = () => {} } = {}) =
   return shallow(<C fields={fields} validations={validations} onChange={onChange} />);
 };
 
-const makePromise = (fn, time) => (...args) => {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve(fn(...args));
-    }, time);
-  });
-};
-
 let consoleWarn, consoleError;
 const throwLog = (...args) => {
   throw new Error(args.join(','));
@@ -162,28 +154,6 @@ describe('[field].validationErrors', () => {
     });
     expect(props.email.validationErrors).toEqual(['longerThan5']);
     expect(props.password.validationErrors).toEqual([]);
-  });
-
-});
-
-describe('[field].validating', () => {
-
-  it('are returned for each field only if validations[field] contains functions that return promises', () => {
-    const props = getProps({
-      fields: { email: { value: 'already@registered.io' }, password: { value: 'sicura!1' } },
-      validations: {
-        email: {
-          containsAt: email => email.indexOf('@') > -1,
-          isAvailable: makePromise(email => email !== 'already@registered.io', 200)
-        },
-        password: {
-          containsNumbers: makePromise(password => /^.*\d.*$/.test(password), 100),
-          isSafe: password => /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/.test(password)
-        }
-      }
-    });
-    expect(props.email.validating).toEqual(['isAvailable']);
-    expect(props.password.validating).toEqual(['containsNumbers']);
   });
 
 });
