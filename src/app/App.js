@@ -12,14 +12,6 @@ import 'react-flexview/src/flexView.scss';
 const integerPattern = /^([+-]?[1-9]\d*|0)$/;
 const isInteger = (value) => integerPattern.test(value);
 
-const makePromise = (fn, time) => (...args) => {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve(fn(...args));
-    }, time);
-  });
-};
-
 const checkEmail = (email) => {
   return email !== 'esistegia@gmail.com';
 };
@@ -32,8 +24,8 @@ const otherProps = {
         ifMaleMustFinishWithO: ({ email, sex }) => sex !== 'male' || (email || '').slice(-1) === 'o'
       },
       email: {
-        isAvailable: makePromise(checkEmail, 2000),
-        isBeautiful: makePromise(e => e === 'beautiful', 4000),
+        isAvailable: checkEmail,
+        isBeautiful: e => e === 'beautiful',
         required: (value) => !!value,
         lengthMoreThan5: (value) => !!value && value.length > 5
       },

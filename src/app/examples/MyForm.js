@@ -4,7 +4,7 @@ import t from 'tcomb';
 import { props } from 'tcomb-react';
 import { skinnable, pure } from 'revenge';
 import View from 'react-flexview';
-import { Dropdown, LoadingSpinner as LoadingSpinnerBRC } from 'buildo-react-components';
+import { Dropdown } from 'buildo-react-components';
 import formo, { Field, Form } from 'formo';
 import every from 'lodash/every';
 import printJSON from 'printJSON';
@@ -18,8 +18,6 @@ const style = ({ isValid, active, touched }) => ({
   borderColor: touched ? isValid ? 'green' : 'red' : 'black',
   backgroundColor: active ? 'yellow' : 'white'
 });
-
-const LoadingSpinner = () => <LoadingSpinnerBRC size='small' message={{ content: 'validating' }} overlayColor='transparent' />;
 
 @formo
 @pure
@@ -51,7 +49,6 @@ export default class MyForm extends React.Component {
               onChange={email.update}
               style={style(email)}
             />
-            {email.validating.length > 0 && <LoadingSpinner />}
             {email.touched && email.validationErrors.join(', ')}
           </View>
           <View style={{ position: 'relative' }}>
@@ -64,7 +61,6 @@ export default class MyForm extends React.Component {
               onChange={favouriteNumber.update}
               style={style(favouriteNumber)}
             />
-            {favouriteNumber.validating.length > 0 && <LoadingSpinner />}
             {favouriteNumber.touched && favouriteNumber.validationErrors.join(', ')}
           </View>
           <View style={{ position: 'relative' }}>
@@ -77,7 +73,6 @@ export default class MyForm extends React.Component {
               onChange={password.update}
               style={style(password)}
             />
-            {password.validating.length > 0 && <LoadingSpinner />}
             {password.touched && password.validationErrors.join(', ')}
             {password.isChanged && <button onClick={password.clear}>CLEAR</button>}
           </View>
@@ -91,7 +86,6 @@ export default class MyForm extends React.Component {
               onChange={confirmPassword.update}
               style={style(confirmPassword)}
             />
-            {confirmPassword.validating.length > 0 && <LoadingSpinner />}
             {confirmPassword.touched && confirmPassword.validationErrors.join(', ')}
           </View>
           <View style={{ position: 'relative', ...style(sex) }}>
@@ -104,7 +98,6 @@ export default class MyForm extends React.Component {
               options={'male female'.split(' ').map(x => ({ value: x, label: x }))}
               onChange={sex.update}
             />
-            {sex.validating.length > 0 && <LoadingSpinner />}
             {sex.touched && sex.validationErrors.join(', ')}
           </View>
           <View>
