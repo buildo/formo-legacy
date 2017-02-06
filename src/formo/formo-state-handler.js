@@ -13,7 +13,7 @@ import includes from 'lodash/includes';
 const getValues = mapValuesF('value');
 
 const isEqual = (a, b) => {
-  const similarlyNil = ['', undefined, null, NaN];//TODO think about this NaN, maybe remove?
+  const similarlyNil = ['', undefined, null, NaN];// TODO think about this NaN, maybe remove?
   return _isEqual(a, b) || (includes(similarlyNil, a) && includes(similarlyNil, b));
 };
 
@@ -82,23 +82,23 @@ const formoStateHandler = (Component) => {
     }
 
     mergeFields = (fieldsFromProps, fieldsFromState) => {
-      //the source of truths of which fields are in the form come from the props (they can be removed, or new ones added)
+      // the source of truths of which fields are in the form come from the props (they can be removed, or new ones added)
       return mapValues(fieldsFromProps, (_, fieldName) => ({
-        //still, bits of form state can be managed just from formo component state
+        // still, bits of form state can be managed just from formo component state
         ...fieldsFromState[fieldName],
         ...fieldsFromProps[fieldName] // it would be the first argument, but for symmetry...
       }));
     }
 
     mergeValidations = (newValues, oldValues) => (validationsFromProps, validationsFromState) => {
-      //PROBLEM: it would be good to know if the async validation depends only from the field's own value
-      //FOR now let's assume yes
+      // PROBLEM: it would be good to know if the async validation depends only from the field's own value
+      // FOR now let's assume yes
       return mapValues(validationsFromProps, (_, fieldNameOrForm) => {
         const newValue = newValues[fieldNameOrForm];
         const oldValue = oldValues[fieldNameOrForm];
         const valueDidntChange = isEqual(oldValue, newValue);
 
-        return (valueDidntChange && fieldNameOrForm !== 'form') ? { //form validations should be updated since at least one value changed
+        return (valueDidntChange && fieldNameOrForm !== 'form') ? { // form validations should be updated since at least one value changed
           ...validationsFromState[fieldNameOrForm]
         } : {
           ...validationsFromState[fieldNameOrForm],
@@ -115,9 +115,9 @@ const formoStateHandler = (Component) => {
       const maybeMergedValidations = valuesDidntChange ? undefined : this.mergeValidations(newValues, oldValues)(validations, this.state.validations);
 
       this.setState({
-        //if values didn't change, do not merge the validations
+        // if values didn't change, do not merge the validations
         ...pickBy({ validations: maybeMergedValidations }),
-        fields: mergedFields //TODO move out from class
+        fields: mergedFields // TODO move out from class
       });
     }
 
