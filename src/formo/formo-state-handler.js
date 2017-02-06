@@ -70,9 +70,10 @@ const formoStateHandler = (Component) => {
       const newValues = getValues(fields);
       const oldValues = getValues(this.state.fields);
       const valuesDidntChange = isEqual(oldValues, newValues);
+      const maybeMergedValidations = valuesDidntChange ? undefined : this.mergeValidations(newValues, oldValues)(this.props.validations, this.state.validations);
 
       this.setState({
-        ...pickBy({ validations: valuesDidntChange ? undefined : this.mergeValidations(newValues, oldValues)(this.props.validations, this.state.validations) }), //TODO move out from class
+        ...pickBy({ validations: maybeMergedValidations }),
         fields,
         oldFields: this.state.fields
       }, () => {
@@ -111,10 +112,11 @@ const formoStateHandler = (Component) => {
       const newValues = getValues(mergedFields);
       const oldValues = getValues(this.state.fields);
       const valuesDidntChange = isEqual(newValues, oldValues);
+      const maybeMergedValidations = valuesDidntChange ? undefined : this.mergeValidations(newValues, oldValues)(validations, this.state.validations);
 
       this.setState({
         //if values didn't change, do not merge the validations
-        ...pickBy({ validations: valuesDidntChange ? undefined : this.mergeValidations(newValues, oldValues)(validations, this.state.validations) }), //TODO move out from class
+        ...pickBy({ validations: maybeMergedValidations }),
         fields: mergedFields //TODO move out from class
       });
     }
