@@ -50,7 +50,7 @@ const formoStateHandler = (Component) => {
 
     static displayName = `FormoStateHandler${(Component.displayName || Component.name || '')}`
 
-    setValidating = (fieldName, validating) => {
+    resolveValidating = (fieldName, validating) => {
       forEach(validating, (promise, validationName) => {
         promise.then(resolvedValue => {
           this.setState({
@@ -120,13 +120,13 @@ const formoStateHandler = (Component) => {
     }
 
     getLocals(props) {
-      const { onChange, setValidating } = this;
+      const { onChange, resolveValidating } = this;
       const { fields = props.fields, validations = props.validations } = this.state;
       return {
         ...props,
         fields,
         validations,
-        setValidating,
+        resolveValidating,
         onChange
       };
     }

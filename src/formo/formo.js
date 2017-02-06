@@ -113,7 +113,7 @@ const formo = (Component) => {
   @props({
     validations: maybe(FormoValidations),
     fields: FormoFields,
-    setValidating: t.Function,
+    resolveValidating: t.Function,
     onChange: t.Function
   }, { strict: false })
   class Formo extends React.Component {
@@ -124,7 +124,7 @@ const formo = (Component) => {
       const evaluated = mapValues(validations, validationFn => validationFn(value, otherValues));
       const validationErrors = pickBy(evaluated, x => x === false);
       const validating = pickBy(evaluated, x => x instanceof Promise);
-      this.props.setValidating(fieldName, validating);
+      this.props.resolveValidating(fieldName, validating);
       return mapValues({ validationErrors, validating }, Object.keys);
     };
 
@@ -258,7 +258,7 @@ const formo = (Component) => {
     })
 
     getLocals(_props) {
-      const props = omit(_props, ['onChange', 'fields', 'validations', 'setValidating']);
+      const props = omit(_props, ['onChange', 'fields', 'validations', 'resolveValidating']);
       const fields = flowRight(this.fieldsAreTouched, this.fieldsWithSetters, this.fieldsWithValidations, this.enforceOnlyOneActive, this.fieldsAreChanged, this.getFields)(this.props.fields);
       const form = flowRight(this.formWithSetters, this.makeForm)({ fields: this.props.fields, validations: this.props.validations });
       return {
