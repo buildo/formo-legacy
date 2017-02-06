@@ -74,8 +74,8 @@ const formoStateHandler = (Component) => {
 
       this.setState({
         ...pickBy({ validations: maybeMergedValidations }),
-        fields,
-        oldFields: this.state.fields
+        fields
+        // oldFields: this.state.fields // TODO should this be used in `cwrp` to avoid useless setState?
       }, () => {
         this.props.onChange(fields, meta);
       });
