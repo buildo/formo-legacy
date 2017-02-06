@@ -193,8 +193,8 @@ type | name/usage | description
 `function` | `form.touchAll()` | Sets every field as "touched". Useful if we have a validation UI rendering logic similar to `touched && errors && renderErrors()` and we want to force errors rendering after a certain event (e.g. user clicks on "submit")
 `boolean` | `form.isChanged` | Is any field changed?
 `boolean` | `form.isValid` | Is the form as a whole "valid" (no validation errors)?
-`list(string)` | `form.validationErrors` | validation failing
-`list(string)` | `form.validating` | validation being validated
+`list(string)` | `form.validationErrors` | validations failing
+`list(string)` | `form.validating` | validations being validated
 
 #### Form-level prop usage example
 
@@ -226,8 +226,8 @@ type | name/usage | description
 `boolean` | `[field].touched` | `true` if input has been `unsetActive()` in the past (typically after a blur, or, as always, if the field is configured as `touched=true` in config)
 `function` | `[field].clear()` | Set field `value` to `initialValue || undefined`
 `boolean` | `[field].isChanged` | `true` if input `value` is the same as `initialValue` (or "adequately equal")
-`list(string)` | `form.validationErrors` | validation failing
-`list(string)` | `form.validating` | validation being validated
+`list(string)` | `form.validationErrors` | validations failing
+`list(string)` | `form.validating` | validations being validated
 `any` | `[field].[<any other key>]` | Any other field key provided in form config is just passed down
 `function(string, any)` | `[field].set('prop', value)` | Any other field key can be changed using `.set`
 
