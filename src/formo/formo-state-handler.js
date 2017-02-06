@@ -113,7 +113,7 @@ const formoStateHandler = (Component) => {
 
     getLocals(props) {
       const { onChange, resolveValidating } = this;
-      const { fields = props.fields, validations = props.validations } = this.state;
+      const { fields, validations } = this.state;
       return {
         ...props,
         fields,
