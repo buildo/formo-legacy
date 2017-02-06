@@ -28,7 +28,6 @@ const FormoFields = dict(t.String, FormoField, 'FormoFields');
 
 const FormoValidations = dict(t.String, dict(t.String, t.Function), 'FormoValidations');
 const Validations = list(t.String, 'Validations');
-const Validating = list(t.String, 'Validating');
 
 export const Field = inter({
   value: t.Any,
@@ -36,7 +35,6 @@ export const Field = inter({
   touched: t.Boolean,
   active: t.Boolean,
   validationErrors: Validations,
-  validating: Validating,
   isValid: t.Boolean,
   isChanged: t.Boolean,
   touch: t.Function,
@@ -49,7 +47,6 @@ export const Field = inter({
 
 export const Form = inter({
   validationErrors: Validations,
-  validating: Validating,
   isValid: t.Boolean,
   isChanged: t.Boolean,
   touched: t.Boolean,
@@ -113,19 +110,20 @@ const formo = (Component) => {
   @props({
     validations: maybe(FormoValidations),
     fields: FormoFields,
-    resolveValidating: t.Function,
     onChange: t.Function
   }, { strict: false })
   class Formo extends React.Component {
 
     static displayName = `Formo${(Component.displayName || Component.name || '')}`
 
-    evalValidations = (validations, value, otherValues, fieldName) => {
+    static defaultProps = {
+      validations: {}
+    }
+
+    evalValidations = (validations, value, otherValues) => {
       const evaluated = mapValues(validations, validationFn => validationFn(value, otherValues));
       const validationErrors = pickBy(evaluated, x => x === false);
-      const validating = pickBy(evaluated, x => x instanceof Promise);
-      this.props.resolveValidating(fieldName, validating);
-      return mapValues({ validationErrors, validating }, Object.keys);
+      return mapValues({ validationErrors }, Object.keys);
     };
 
     getFields = (fields) => mapValues(fields, (field, fieldName) => ({
@@ -136,23 +134,22 @@ const formo = (Component) => {
     }))
 
     fieldsWithValidations = fields => {
-      return mapValues(fields, (field, fieldName) => {
-        const { validationErrors, validating } = this.evalValidations(field.validations, field.value, mapValues(fields, 'value'), fieldName);
+      return mapValues(fields, (field) => {
+        const { validationErrors } = this.evalValidations(field.validations, field.value, mapValues(fields, 'value'));
         const isValid = validationErrors.length === 0;
         return {
           ...omit(field, 'validations'),
           validationErrors,
-          validating,
           isValid
         };
       });
     }
 
     onChange = (newFields) => {
-      const fields = mapValues(newFields, omitF(['validationErrors', 'isValid', 'validating', 'isChanged']));
+      const fields = mapValues(newFields, omitF(['validationErrors', 'isValid', 'isChanged']));
       const richFields = flowRight(this.fieldsAreChanged, this.fieldsWithValidations, this.enforceOnlyOneActive, this.getFields)(fields);
       const meta = {
-        ...mapValues(richFields, pickF(['validationErrors', 'isValid', 'validating', 'isChanged'])),
+        ...mapValues(richFields, pickF(['validationErrors', 'isValid', 'isChanged'])),
         form: this.makeForm({ fields, validations: this.props.validations })
       };
       this.props.onChange(fields, meta);
@@ -240,12 +237,11 @@ const formo = (Component) => {
 
     makeForm = ({ fields: rawFields, validations }) => {
       const fields = flowRight(this.fieldsWithValidations, this.enforceOnlyOneActive, this.fieldsAreChanged, this.getFields)(rawFields);
-      const { validationErrors, validating } = this.evalValidations(validations.form || returnEmpty, mapValues(fields, 'value'));
+      const { validationErrors } = this.evalValidations(validations.form || returnEmpty, mapValues(fields, 'value'));
       return {
         touched: some(fields, 'touched'),
         allTouched: every(fields, 'touched'),
         validationErrors,
-        validating,
         isValid: this.formIsValid(fields,  validationErrors),
         isChanged: this.formIsChanged(fields)
       };
@@ -258,7 +254,7 @@ const formo = (Component) => {
     })
 
     getLocals(_props) {
-      const props = omit(_props, ['onChange', 'fields', 'validations', 'resolveValidating']);
+      const props = omit(_props, ['onChange', 'fields', 'validations']);
       const fields = flowRight(this.fieldsAreTouched, this.fieldsWithSetters, this.fieldsWithValidations, this.enforceOnlyOneActive, this.fieldsAreChanged, this.getFields)(this.props.fields);
       const form = flowRight(this.formWithSetters, this.makeForm)({ fields: this.props.fields, validations: this.props.validations });
       return {

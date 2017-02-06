@@ -3,19 +3,6 @@ import t, { dict, maybe, inter } from 'tcomb';
 import { props } from 'tcomb-react';
 import { skinnable, pure, contains } from 'revenge';
 import mapValues from 'lodash/mapValues';
-import mapValuesF from 'lodash/fp/mapValues';
-import constant from 'lodash/constant';
-import forEach from 'lodash/forEach';
-import _isEqual from 'lodash/isEqual';
-import pickBy from 'lodash/pickBy';
-import includes from 'lodash/includes';
-
-const getValues = mapValuesF('value');
-
-const isEqual = (a, b) => {
-  const similarlyNil = ['', undefined, null];
-  return _isEqual(a, b) || (includes(similarlyNil, a) && includes(similarlyNil, b));
-};
 
 const FormoField = inter({
   value: t.Any,
@@ -26,56 +13,29 @@ const FormoField = inter({
 
 const FormoFields = dict(t.String, FormoField, 'FormoFields');
 
-const FormoValidations = dict(t.String, dict(t.String, t.Function), 'FormoValidations');
-
 const formoStateHandler = (Component) => {
   @pure
   @skinnable(contains(Component))
   @props({
-    validations: maybe(FormoValidations),
     fields: FormoFields,
     onChange: maybe(t.Function)
   }, { strict: false })
   class FormoStateHandler extends React.Component {
 
     static defaultProps = {
-      validations: {},
       onChange: () => {}
     }
 
     state = {
-      validations: this.props.validations,
       fields: this.props.fields
     };
 
     static displayName = `FormoStateHandler${(Component.displayName || Component.name || '')}`
 
-    resolveValidating = (fieldName, validating) => {
-      forEach(validating, (promise, validationName) => {
-        promise.then(resolvedValue => {
-          this.setState({
-            validations: {
-              ...this.state.validations,
-              [fieldName]: {
-                ...this.state.validations[fieldName],
-                [validationName]: constant(resolvedValue)
-              }
-            }
-          });
-        });
-      });
-    };
-
     onChange = (fields, meta) => {
-      const newValues = getValues(fields);
-      const oldValues = getValues(this.state.fields);
-      const valuesDidntChange = isEqual(oldValues, newValues);
-      const maybeMergedValidations = valuesDidntChange ? undefined : this.mergeValidations(this.props.validations, this.state.validations);
-
       this.setState({
-        ...pickBy({ validations: maybeMergedValidations }),
         fields
-        // oldFields: this.state.fields // TODO should this be used in `cwrp` to avoid useless setState?
+        // oldFields: this.state.fields // TODO should this be used in `cwrp` to avoid useless setState/(or to optimize componentShouldUpdate)?
       }, () => {
         this.props.onChange(fields, meta);
       });
@@ -90,35 +50,20 @@ const formoStateHandler = (Component) => {
       }));
     }
 
-    mergeValidations = (validationsFromProps, validationsFromState) => {
-      return mapValues(validationsFromProps, (_, fieldNameOrForm) => ({
-        ...validationsFromState[fieldNameOrForm],
-        ...validationsFromProps[fieldNameOrForm]// it would be the first argument of mapValues callback, but for symmetry...
-      }));
-    }
-
-    componentWillReceiveProps({ fields, validations }) {
+    componentWillReceiveProps({ fields }) {
       const mergedFields = this.mergeFields(fields, this.state.fields);
-      const newValues = getValues(mergedFields);
-      const oldValues = getValues(this.state.fields);
-      const valuesDidntChange = isEqual(newValues, oldValues);
-      const maybeMergedValidations = valuesDidntChange ? undefined : this.mergeValidations(validations, this.state.validations);
 
       this.setState({
-        // if values didn't change, do not merge the validations
-        ...pickBy({ validations: maybeMergedValidations }),
-        fields: mergedFields // TODO move out from class
+        fields: mergedFields
       });
     }
 
     getLocals(props) {
-      const { onChange, resolveValidating } = this;
-      const { fields, validations } = this.state;
+      const { onChange } = this;
+      const { fields } = this.state;
       return {
         ...props,
         fields,
-        validations,
-        resolveValidating,
         onChange
       };
     }
