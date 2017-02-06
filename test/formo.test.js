@@ -123,9 +123,9 @@ describe('[field].isValid', () => {
     expect(rendered.dive().node.props.email.isValid).toBe(false);
     rendered.dive().node.props.email.update('foo');
     expect(rendered.dive().node.props.email.value).toBe('foo');
-    // expect(rendered.dive().node.props.email.isValid).toBe(true);
-    // rendered.dive().node.props.email.update('error');
-    // expect(rendered.dive().node.props.email.isValid).toBe(false);
+    expect(rendered.dive().node.props.email.isValid).toBe(true);
+    rendered.dive().node.props.email.update('error');
+    expect(rendered.dive().node.props.email.isValid).toBe(false);
   });
 
   it('is recomputed changing value via props', () => {
