@@ -131,14 +131,13 @@ onChange | | `function<Value>` | Optionally provide an `onChange` callback, will
 
 `FieldNameOrForm = FieldName | 'form'`: form-level validations are specified using the special string "form".
 
-`Validations`: a `dict(string, function)` with each function, returning a Boolean or a promise resolving a Boolean.
+`Validations`: a `dict(string, function)` with each function, returning a Boolean.
 
 Each function is called with two arguments (field `value` and all form `values`) if applied to a field, with a single value (all form `values`) if it is applied at form-level.
 
 In other words, a validation function should be treated like a test that the field or the form should pass.
 
 `formo` will list the failed `validation` function names in the `validationErrors` array.
-The asynchronous validations will be listed in the `validating` array.
 
 Validity for single fields and for the global form is computed based on presence (absence) of these errors.
 
@@ -194,7 +193,6 @@ type | name/usage | description
 `boolean` | `form.isChanged` | Is any field changed?
 `boolean` | `form.isValid` | Is the form as a whole "valid" (no validation errors)?
 `list(string)` | `form.validationErrors` | validations failing
-`list(string)` | `form.validating` | validations being validated
 
 #### Form-level prop usage example
 
@@ -227,7 +225,6 @@ type | name/usage | description
 `function` | `[field].clear()` | Set field `value` to `initialValue || undefined`
 `boolean` | `[field].isChanged` | `true` if input `value` is the same as `initialValue` (or "adequately equal")
 `list(string)` | `form.validationErrors` | validations failing
-`list(string)` | `form.validating` | validations being validated
 `any` | `[field].[<any other key>]` | Any other field key provided in form config is just passed down
 `function(string, any)` | `[field].set('prop', value)` | Any other field key can be changed using `.set`
 
