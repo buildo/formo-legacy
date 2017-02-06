@@ -13,7 +13,7 @@ import includes from 'lodash/includes';
 const getValues = mapValuesF('value');
 
 const isEqual = (a, b) => {
-  const similarlyNil = ['', undefined, null, NaN];// TODO think about this NaN, maybe remove?
+  const similarlyNil = ['', undefined, null];
   return _isEqual(a, b) || (includes(similarlyNil, a) && includes(similarlyNil, b));
 };
 
