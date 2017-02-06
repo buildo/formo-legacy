@@ -25,8 +25,8 @@ const MyFormoComponent = formo(
             value={email.value || ''}
             onChange={e => email.update(e.target.value)}
           />
-          {email.touched && email.validations.invalidEmail && (
-            <div className='error'>{email.validations.invalidEmail}</div>
+          {email.touched && email.validationErrors.map(error => (
+            <div className='error'>{error}</div>
           )}
           <input
             type='password'
@@ -46,9 +46,9 @@ const fields = {
 }
 
 const validations = {
-  email: v => ({
-    invalidEmail: validEmailRegex.match(v) ? null : 'you must provide a valid email'
-  })
+  email: {
+    invalidEmail: v => validEmailRegex.test(v)
+  }
 }
 
 export default class MyComponent {
@@ -112,8 +112,8 @@ import MyFormoComponent from './MyFormoComponent'
 name | required | type | description
 ---|---|---|---
 fields | required | `dict(FieldName, Field)` | Configure form fields
-validations | | `dict(FieldNameOrForm, Validations)` | Optionally configure form-level and field-level validations
-onChange | | `function<Value>` | Optionally provide an `onChange` callback, will be called with the new values and validation errors after every change
+validations | | `dict(FieldNameOrForm, dict(validationName, Validations))` | Optionally configure form-level and field-level validations
+onChange | | `function<Value>` | Optionally provide an `onChange` callback, will be called with the new values after every change
 
 `FieldName`: a string representing a field, e.g. "email".
 
@@ -131,13 +131,13 @@ onChange | | `function<Value>` | Optionally provide an `onChange` callback, will
 
 `FieldNameOrForm = FieldName | 'form'`: form-level validations are specified using the special string "form".
 
-`Validations`: a function, returning a `dict(string, ?string)`.
+`Validations`: a `dict(string, function)` with each function, returning a Boolean.
 
-It is called with two arguments (field `value` and all form `values`) if applied to a field, with a single value (all form `values`) if it is applied at form-level.
+Each function is called with two arguments (field `value` and all form `values`) if applied to a field, with a single value (all form `values`) if it is applied at form-level.
 
-In other words, a validation function should return an object where every key represents an optional validation error. The error is considered when `!== null`, otherwise treated as "no error".
+In other words, a validation function should be treated like a test that the field or the form should pass.
 
-For instance, for every key, you can return a string with the error description to be rendered in your form UI, or a component rendering the error.
+`formo` will list the failed `validation` function names in the `validationErrors` array.
 
 Validity for single fields and for the global form is computed based on presence (absence) of these errors.
 
@@ -163,16 +163,16 @@ fields = {
 
 ```js
 validations = {
-  password: value => ({
-    minLength: value.length <= 8 ? 'password must be at least 8 characters long' : null,
-    numeric: value.match(/\d/) ? null : 'password must contain at least a digit'
-  }),
-  repeatPassword: (value, values) => ({
-    passwordMatch: value !== values.password ? 'must be the same as "password"' : null
-  }),
-  form: values => ({
-    fooBar: !value.foo && !value.bar ? 'at least one of "foo" and "bar" must be selected' : null
-  })
+  password: {
+    minLength: value => value.length > 8,
+    numeric: value => value.test(/\d/)
+  },
+  repeatPassword: {
+    passwordMatch: (repeatPassword, { password }) => repeatPassword === password
+  },
+  form: {
+    atLestOneFooOrBar: values => !value.foo && !value.bar
+  }
 }
 ```
 
@@ -192,7 +192,7 @@ type | name/usage | description
 `function` | `form.touchAll()` | Sets every field as "touched". Useful if we have a validation UI rendering logic similar to `touched && errors && renderErrors()` and we want to force errors rendering after a certain event (e.g. user clicks on "submit")
 `boolean` | `form.isChanged` | Is any field changed?
 `boolean` | `form.isValid` | Is the form as a whole "valid" (no validation errors)?
-`dict(string, string)` | `form.validations` | validation results for each validation defined at form level
+`list(string)` | `form.validationErrors` | validations failing
 
 #### Form-level prop usage example
 
@@ -200,7 +200,7 @@ type | name/usage | description
 // ...
 render() {
   const submitEnabled = this.props.form.isValid && this.props.form.isChanged;
-  const errors = mapValues(this.props.form.validations, err => <Error>{err}</Error>)
+  const errors = map(this.props.form.validations, err => <Error>{err}</Error>)
   return (
     // ...
     {errors}
@@ -224,7 +224,7 @@ type | name/usage | description
 `boolean` | `[field].touched` | `true` if input has been `unsetActive()` in the past (typically after a blur, or, as always, if the field is configured as `touched=true` in config)
 `function` | `[field].clear()` | Set field `value` to `initialValue || undefined`
 `boolean` | `[field].isChanged` | `true` if input `value` is the same as `initialValue` (or "adequately equal")
-`dict(string, string)` | `[field].validations` | validation results for each validation defined at field level
+`list(string)` | `form.validationErrors` | validations failing
 `any` | `[field].[<any other key>]` | Any other field key provided in form config is just passed down
 `function(string, any)` | `[field].set('prop', value)` | Any other field key can be changed using `.set`
 

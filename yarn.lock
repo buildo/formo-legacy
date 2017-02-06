@@ -82,7 +82,7 @@ amdefine@>=0.0.4:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
 
-ansi-escapes@^1.0.0, ansi-escapes@^1.1.0, ansi-escapes@^1.4.0:
+ansi-escapes@^1.1.0, ansi-escapes@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/ansi-escapes/-/ansi-escapes-1.4.0.tgz#d3a8a83b319aa67793662b13e761c7911422306e"
 
@@ -307,7 +307,7 @@ babel-code-frame@^6.11.0, babel-code-frame@^6.16.0, babel-code-frame@^6.20.0, ba
     esutils "^2.0.2"
     js-tokens "^3.0.0"
 
-babel-core@6.21.0:
+babel-core@6.21.0, babel-core@^6.0.0:
   version "6.21.0"
   resolved "https://registry.yarnpkg.com/babel-core/-/babel-core-6.21.0.tgz#75525480c21c803f826ef3867d22c19f080a3724"
   dependencies:
@@ -382,7 +382,7 @@ babel-core@^5.6.21:
     trim-right "^1.0.0"
     try-resolve "^1.0.0"
 
-babel-core@^6.0.0, babel-core@^6.22.0, babel-core@^6.22.1:
+babel-core@^6.22.0, babel-core@^6.22.1:
   version "6.22.1"
   resolved "https://registry.yarnpkg.com/babel-core/-/babel-core-6.22.1.tgz#9c5fd658ba1772d28d721f6d25d968fc7ae21648"
   dependencies:
@@ -1232,13 +1232,6 @@ better-assert@~1.0.0:
   dependencies:
     callsite "1.0.0"
 
-better-console@^0.2.4:
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/better-console/-/better-console-0.2.4.tgz#7403b7cdc8a2a2ea2586b259fd80cf9cc3eda346"
-  dependencies:
-    cli-table "~0.2.0"
-    colors "~0.6.0-1"
-
 big.js@^3.1.3:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/big.js/-/big.js-3.1.3.tgz#4cada2193652eb3ca9ec8e55c9015669c9806978"
@@ -1549,7 +1542,7 @@ clean-css@3.1.x:
     commander "2.6.x"
     source-map ">=0.1.43 <0.2"
 
-cli-cursor@^1.0.1, cli-cursor@^1.0.2:
+cli-cursor@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/cli-cursor/-/cli-cursor-1.0.2.tgz#64da3f7d56a54412e59794bd62dc35295e8f2987"
   dependencies:
@@ -1560,12 +1553,6 @@ cli-table@^0.3.1:
   resolved "https://registry.yarnpkg.com/cli-table/-/cli-table-0.3.1.tgz#f53b05266a8b1a0b934b3d0821e6e2dc5914ae23"
   dependencies:
     colors "1.0.3"
-
-cli-table@~0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/cli-table/-/cli-table-0.2.0.tgz#34c63eb532c206e9e5e4ae0cb0104bd1fd27317c"
-  dependencies:
-    colors "0.3.0"
 
 cli-usage@^0.1.1:
   version "0.1.4"
@@ -1655,17 +1642,9 @@ colormin@^1.0.5:
     css-color-names "0.0.4"
     has "^1.0.1"
 
-colors@0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/colors/-/colors-0.3.0.tgz#c247d64d34db0ca4dc8e43f3ecd6da98d0af94e7"
-
 colors@1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/colors/-/colors-1.0.3.tgz#0433f44d809680fdeb60ed260f1b0c262e82a40b"
-
-colors@~0.6.0-1:
-  version "0.6.2"
-  resolved "https://registry.yarnpkg.com/colors/-/colors-0.6.2.tgz#2423fe6678ac0c5dae8852e5d0e5be08c997abcc"
 
 colors@~1.1.2:
   version "1.1.2"
@@ -2179,19 +2158,6 @@ electron-to-chromium@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.2.1.tgz#63ac7579a1c5bedb296c8607621f2efc9a54b968"
 
-elegant-spinner@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/elegant-spinner/-/elegant-spinner-1.0.1.tgz#db043521c95d7e303fd8f345bedc3349cfb0729e"
-
-elegant-status@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/elegant-status/-/elegant-status-1.1.0.tgz#41ef4a5f2d03642983babb4f64a4b576b1155215"
-  dependencies:
-    chalk "^1.1.1"
-    elegant-spinner "^1.0.1"
-    log-update "^1.0.2"
-    os-family "^1.0.0"
-
 emojis-list@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/emojis-list/-/emojis-list-2.1.0.tgz#4daa4d9db00f9819880c79fa457ae5b09a1fd389"
@@ -2277,7 +2243,7 @@ enzyme@2.7.0:
   dependencies:
     prr "~0.0.0"
 
-error-ex@^1.2.0, error-ex@^1.3.0:
+error-ex@^1.2.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/error-ex/-/error-ex-1.3.0.tgz#e67b43f3e82c96ea3a584ffee0b9fc3325d802d9"
   dependencies:
@@ -2325,10 +2291,6 @@ es6-map@^0.1.3:
     es6-set "~0.1.3"
     es6-symbol "~3.1.0"
     event-emitter "~0.3.4"
-
-es6-promise@3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-3.0.2.tgz#010d5858423a5f118979665f46486a95c6ee2bb6"
 
 es6-promise@3.2.1:
   version "3.2.1"
@@ -4029,7 +3991,7 @@ lodash@4.6.1, lodash@^4.2.0, lodash@^4.6.1:
   version "4.6.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.6.1.tgz#df00c1164ad236b183cfc3887a5e8d38cc63cbbc"
 
-lodash@^3.10.0, lodash@^3.3.1, lodash@^3.9.3:
+lodash@^3.10.0, lodash@^3.9.3:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
 
@@ -4044,13 +4006,6 @@ lodash@^4.0.0, lodash@^4.11.2, lodash@^4.14.0, lodash@^4.15.0, lodash@^4.16.4, l
 lodash@~4.16.4:
   version "4.16.6"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.16.6.tgz#d22c9ac660288f3843e16ba7d2b5d06cca27d777"
-
-log-update@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/log-update/-/log-update-1.0.2.tgz#19929f64c4093d2d2e7075a1dad8af59c296b8d1"
-  dependencies:
-    ansi-escapes "^1.0.0"
-    cli-cursor "^1.0.2"
 
 longest@^1.0.1:
   version "1.0.1"
@@ -4523,13 +4478,6 @@ object.values@^1.0.3:
     function-bind "^1.1.0"
     has "^1.0.1"
 
-octokat@^0.4.18:
-  version "0.4.18"
-  resolved "https://registry.yarnpkg.com/octokat/-/octokat-0.4.18.tgz#afa7e52654b5464923f801917b3a31cff7a6848d"
-  dependencies:
-    es6-promise "3.0.2"
-    xmlhttprequest "~1.8.0"
-
 on-finished@~2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/on-finished/-/on-finished-2.3.0.tgz#20f1336481b083cd75337992a16971aa2d906947"
@@ -4577,10 +4525,6 @@ options@>=0.0.5:
 os-browserify@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/os-browserify/-/os-browserify-0.1.2.tgz#49ca0293e0b19590a5f5de10c7f265a617d8fe54"
-
-os-family@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/os-family/-/os-family-1.0.0.tgz#d12308c424a36302a1c106a95287bbdd5ca2477f"
 
 os-homedir@^1.0.0:
   version "1.0.2"
@@ -5841,13 +5785,6 @@ stable@~0.1.3:
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/stable/-/stable-0.1.5.tgz#08232f60c732e9890784b5bed0734f8b32a887b9"
 
-staggerjs@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/staggerjs/-/staggerjs-1.1.0.tgz#dd5a282e28613b5be2db7a52cc9a364e4f08a781"
-  dependencies:
-    tcomb "^3"
-    throttle-function "^0.1.0"
-
 "statuses@>= 1.3.1 < 2", statuses@~1.3.1:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/statuses/-/statuses-1.3.1.tgz#faf51b9eb74aaef3b3acf4ad5f61abf24cb7b93e"
@@ -6059,10 +5996,6 @@ tcomb@3.1.0, tcomb@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/tcomb/-/tcomb-3.1.0.tgz#1f26a78491eb1540248e8d4f6297567bbedcfcdb"
 
-tcomb@^3, tcomb@^3.2.15:
-  version "3.2.16"
-  resolved "https://registry.yarnpkg.com/tcomb/-/tcomb-3.2.16.tgz#345782f2f060839a2df30480209b1afc8b16e1fa"
-
 test-exclude@^3.3.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/test-exclude/-/test-exclude-3.3.0.tgz#7a17ca1239988c98367b0621456dbb7d4bc38977"
@@ -6080,10 +6013,6 @@ text-table@~0.2.0:
 throat@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/throat/-/throat-3.0.0.tgz#e7c64c867cbb3845f10877642f7b60055b8ec0d6"
-
-throttle-function@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/throttle-function/-/throttle-function-0.1.0.tgz#8931a87f57a95c439227d77052247e04c63cf28c"
 
 through@^2.3.6, through@~2.3.8:
   version "2.3.8"
@@ -6502,10 +6431,6 @@ wtf-8@1.0.0:
 xmlhttprequest-ssl@1.5.3:
   version "1.5.3"
   resolved "https://registry.yarnpkg.com/xmlhttprequest-ssl/-/xmlhttprequest-ssl-1.5.3.tgz#185a888c04eca46c3e4070d99f7b49de3528992d"
-
-xmlhttprequest@~1.8.0:
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/xmlhttprequest/-/xmlhttprequest-1.8.0.tgz#67fe075c5c24fef39f9d65f5f7b7fe75171968fc"
 
 "xtend@>=4.0.0 <4.1.0-0", xtend@^4.0.0:
   version "4.0.1"

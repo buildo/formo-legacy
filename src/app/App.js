@@ -12,50 +12,44 @@ import 'react-flexview/src/flexView.scss';
 const integerPattern = /^([+-]?[1-9]\d*|0)$/;
 const isInteger = (value) => integerPattern.test(value);
 
+const checkEmail = (email) => {
+  return email !== 'esistegia@gmail.com';
+};
+
 const otherProps = {
   MyForm: {
     title: 'My Form',
     validations: {
-      form: ({ email, sex }) => ({
-        stupidRequirement: (sex === 'male' && email.slice(-1) !== 'o') ? 'Males\' mails should finish with "o"' : null
-      }),
-      email: (value) => {
-        const required = !value ? 'email is required' : null;
-        return {
-          required,
-          length: !required && value.length > 5 ? null : 'email must be longer than 5 chars'
-        };
+      form: {
+        ifMaleMustFinishWithO: ({ email, sex }) => sex !== 'male' || (email || '').slice(-1) === 'o'
       },
-      password: (value, { favouriteNumber }) => ({
-        length: value && value.length > 5 ? null : 'password must be >5',
-        unsafePassword: isInteger(favouriteNumber) && value === favouriteNumber ? 'Your password should not be your favourite number' : null
-      }),
-      favouriteNumber: (value) => {
-        return {
-          isNumber: isInteger(value) ? null : 'Please an integer',
-          tooSmall: (isInteger(value) && value < 10) ? 'Please an integer >= 10' : null
-        };
+      email: {
+        isAvailable: checkEmail,
+        isBeautiful: e => e === 'beautiful',
+        required: (value) => !!value,
+        lengthMoreThan5: (value) => !!value && value.length > 5
       },
-      confirmPassword: (value, { password }) => ({
-        same: value === password ? null : 'passwords must be the same'
-      }),
-      sex: (value) => {
-        const required = !value ? 'sex is required' : null;
-        return {
-          required
-        };
+      password: {
+        lengthMoreThan5: (value) => !!value && value.length > 5,
+        unsafePassword: (value, { favouriteNumber }) => value !== favouriteNumber
+      },
+      favouriteNumber: {
+        isInteger,
+        bigEnough: (value) => isInteger(value) && value > 10
+      },
+      confirmPassword: {
+        sameAsPassword: (value, { password }) => value === password
+      },
+      sex: {
+        required: (value) => !!value
       }
     },
     fields: {
-      email: {
-        initialValue: 'mario.poverello@gmail.com'
-      },
+      email: {},
       favouriteNumber: {},
       password: {},
       confirmPassword: {},
-      sex: {
-        initialValue: 'male'
-      }
+      sex: { initialValue: 'male' }
     }
   }
 };
