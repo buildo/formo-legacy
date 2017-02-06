@@ -70,7 +70,7 @@ const formoStateHandler = (Component) => {
       const newValues = getValues(fields);
       const oldValues = getValues(this.state.fields);
       const valuesDidntChange = isEqual(oldValues, newValues);
-      const maybeMergedValidations = valuesDidntChange ? undefined : this.mergeValidations(newValues, oldValues)(this.props.validations, this.state.validations);
+      const maybeMergedValidations = valuesDidntChange ? undefined : this.mergeValidations(this.props.validations, this.state.validations);
 
       this.setState({
         ...pickBy({ validations: maybeMergedValidations }),
@@ -90,21 +90,11 @@ const formoStateHandler = (Component) => {
       }));
     }
 
-    mergeValidations = (newValues, oldValues) => (validationsFromProps, validationsFromState) => {
-      // PROBLEM: it would be good to know if the async validation depends only from the field's own value
-      // FOR now let's assume yes
-      return mapValues(validationsFromProps, (_, fieldNameOrForm) => {
-        const newValue = newValues[fieldNameOrForm];
-        const oldValue = oldValues[fieldNameOrForm];
-        const valueDidntChange = isEqual(oldValue, newValue);
-
-        return (valueDidntChange && fieldNameOrForm !== 'form') ? { // form validations should be updated since at least one value changed
-          ...validationsFromState[fieldNameOrForm]
-        } : {
-          ...validationsFromState[fieldNameOrForm],
-          ...validationsFromProps[fieldNameOrForm]// it would be the first argument of mapValues callback, but for symmetry...
-        };
-      });
+    mergeValidations = (validationsFromProps, validationsFromState) => {
+      return mapValues(validationsFromProps, (_, fieldNameOrForm) => ({
+        ...validationsFromState[fieldNameOrForm],
+        ...validationsFromProps[fieldNameOrForm]// it would be the first argument of mapValues callback, but for symmetry...
+      }));
     }
 
     componentWillReceiveProps({ fields, validations }) {
@@ -112,7 +102,7 @@ const formoStateHandler = (Component) => {
       const newValues = getValues(mergedFields);
       const oldValues = getValues(this.state.fields);
       const valuesDidntChange = isEqual(newValues, oldValues);
-      const maybeMergedValidations = valuesDidntChange ? undefined : this.mergeValidations(newValues, oldValues)(validations, this.state.validations);
+      const maybeMergedValidations = valuesDidntChange ? undefined : this.mergeValidations(validations, this.state.validations);
 
       this.setState({
         // if values didn't change, do not merge the validations
