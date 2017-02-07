@@ -54,8 +54,8 @@ const formoConfig = (props) => {
   emailInitialValue: t.maybe(t.String),
   emailona: t.maybe(t.String),
   email: t.Object, // specify
-  password: t.Object, //specify
-  sex: t.Object, //specify
+  password: t.Object, // specify
+  sex: t.Object, // specify
   form: t.Object
 })
 export default class MyForm extends React.Component {

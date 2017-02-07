@@ -62,7 +62,7 @@ const StarRating = ({ rating, onChange }) => (
   value: t.maybe(t.Object),
   form: t.Object,
   rating: t.Object, // specify
-  feedback: t.Object, //specify
+  feedback: t.Object, // specify
   securityQuestion: t.Object
 })
 export default class AnotherOneOfMyForms extends React.Component {
