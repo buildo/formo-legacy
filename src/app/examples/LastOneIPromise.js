@@ -32,7 +32,7 @@ const formoConfig = (props) => props.value || ({
   value: t.maybe(t.Object),
   form: t.Object,
   favouriteCountries: t.Object, // specify
-  preferredConditions: t.Object, //specify
+  preferredConditions: t.Object, // specify
   bestDayOfYourLife: t.Object,
   doYouLikeTrains: t.Object
 })

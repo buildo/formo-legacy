@@ -75,8 +75,8 @@ const formoConfig = (props) => props.value || ({
 @props({
   value: t.maybe(t.Object),
   number: t.Object, // specify
-  cardholder: t.Object, //specify
-  expirationMonth: t.Object, //specify
+  cardholder: t.Object, // specify
+  expirationMonth: t.Object, // specify
   expirationYear: t.Object,
   cvv: t.Object,
   saveData: t.Object,
