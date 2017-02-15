@@ -3,6 +3,7 @@ import t, { dict, maybe, inter } from 'tcomb';
 import { props } from 'tcomb-react';
 import { skinnable, pure, contains } from 'revenge';
 import mapValues from 'lodash/mapValues';
+import noop from 'lodash/noop';
 
 const FormoField = inter({
   value: t.Any,
@@ -22,10 +23,6 @@ const formoStateHandler = (Component) => {
   }, { strict: false })
   class FormoStateHandler extends React.Component {
 
-    static defaultProps = {
-      onChange: () => {}
-    }
-
     state = {
       fields: this.props.fields
     };
@@ -33,11 +30,12 @@ const formoStateHandler = (Component) => {
     static displayName = `FormoStateHandler${(Component.displayName || Component.name || '')}`
 
     onChange = (fields, meta) => {
+      const { onChange = noop } = this.props; // apparently defaultProps doesn't work
       this.setState({
         fields
         // oldFields: this.state.fields // TODO should this be used in `cwrp` to avoid useless setState/(or to optimize componentShouldUpdate)?
       }, () => {
-        this.props.onChange(fields, meta);
+        onChange(fields, meta);
       });
     }
 
