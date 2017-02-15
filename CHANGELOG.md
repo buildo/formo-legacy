@@ -1,7 +1,14 @@
 #  Change Log
 
 ## [Unreleased](https://github.com/buildo/formo/tree/HEAD)
-[Full Changelog](https://github.com/buildo/formo/compare/v0.0.3...HEAD)
+[Full Changelog](https://github.com/buildo/formo/compare/v0.1.0...HEAD)
+
+#### Fixes (bugs & defects):
+
+- `onChange` method doesn't get default value in FormoStateHandler [#37](https://github.com/buildo/formo/issues/37)
+
+## [v0.1.0](https://github.com/buildo/formo/tree/v0.1.0) (2017-02-15)
+[Full Changelog](https://github.com/buildo/formo/compare/v0.0.3...v0.1.0)
 
 #### Breaking:
 
