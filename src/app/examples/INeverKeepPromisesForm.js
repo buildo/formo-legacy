@@ -54,8 +54,8 @@ const formoConfig = (props) => {
   emailInitialValue: t.maybe(t.String),
   emailona: t.maybe(t.String),
   email: t.Object, // specify
-  password: t.Object, //specify
-  sex: t.Object, //specify
+  password: t.Object, // specify
+  sex: t.Object, // specify
   form: t.Object
 })
 export default class MyForm extends React.Component {
@@ -96,7 +96,7 @@ export default class MyForm extends React.Component {
             {sex.touched && compact(map(sex.validations)).join(', ')}
           </View>
         </View>
-        <View column  marginTop={30}>
+        <View column marginTop={30}>
           <textarea
             readOnly
             style={{ height: 500, width: 500, fontFamily: 'monospace' }}

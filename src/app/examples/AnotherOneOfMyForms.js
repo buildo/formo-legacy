@@ -62,7 +62,7 @@ const StarRating = ({ rating, onChange }) => (
   value: t.maybe(t.Object),
   form: t.Object,
   rating: t.Object, // specify
-  feedback: t.Object, //specify
+  feedback: t.Object, // specify
   securityQuestion: t.Object
 })
 export default class AnotherOneOfMyForms extends React.Component {
@@ -95,7 +95,7 @@ export default class AnotherOneOfMyForms extends React.Component {
         </View>
 
 
-        <View column  marginTop={30}>
+        <View column marginTop={30}>
           <textarea
             readOnly
             style={{ height: 500, width: 500, fontFamily: 'monospace' }}
