@@ -1,7 +1,14 @@
 #  Change Log
 
 ## [Unreleased](https://github.com/buildo/formo/tree/HEAD)
-[Full Changelog](https://github.com/buildo/formo/compare/v0.0.2...HEAD)
+[Full Changelog](https://github.com/buildo/formo/compare/v0.0.3...HEAD)
+
+#### Breaking:
+
+- new validations API [#25](https://github.com/buildo/formo/issues/25)
+
+## [v0.0.3](https://github.com/buildo/formo/tree/v0.0.3) (2017-02-01)
+[Full Changelog](https://github.com/buildo/formo/compare/v0.0.2...v0.0.3)
 
 #### New features:
 
