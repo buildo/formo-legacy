@@ -110,7 +110,7 @@ export default class MyForm extends React.Component {
             <button onClick={form.touchAll}>Validate</button>
           </View>
         </View>
-        <View column  marginTop={30}>
+        <View column marginTop={30}>
           <textarea
             readOnly
             style={{ height: 1000, width: 1000, fontFamily: 'monospace', fontSize: 20 }}

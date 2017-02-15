@@ -217,7 +217,7 @@ const formo = (Component) => {
     formIsChanged = fields => some(fields, this.isChanged);
 
     formIsValid = (fields, validationErrors) => {
-      return every(fields, 'isValid') && (validationErrors.length  === 0);
+      return every(fields, 'isValid') && (validationErrors.length === 0);
     }
 
     enforceOnlyOneActive = (fields) => {
@@ -242,7 +242,7 @@ const formo = (Component) => {
         touched: some(fields, 'touched'),
         allTouched: every(fields, 'touched'),
         validationErrors,
-        isValid: this.formIsValid(fields,  validationErrors),
+        isValid: this.formIsValid(fields, validationErrors),
         isChanged: this.formIsChanged(fields)
       };
     }

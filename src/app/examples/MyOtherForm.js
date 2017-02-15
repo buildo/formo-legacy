@@ -75,8 +75,8 @@ const formoConfig = (props) => props.value || ({
 @props({
   value: t.maybe(t.Object),
   number: t.Object, // specify
-  cardholder: t.Object, //specify
-  expirationMonth: t.Object, //specify
+  cardholder: t.Object, // specify
+  expirationMonth: t.Object, // specify
   expirationYear: t.Object,
   cvv: t.Object,
   saveData: t.Object,
@@ -166,7 +166,7 @@ export default class MyOtherForm extends React.Component {
         </View>
 
 
-        <View column  marginTop={30}>
+        <View column marginTop={30}>
           <textarea
             readOnly
             style={{ height: 500, width: 500, fontFamily: 'monospace' }}
