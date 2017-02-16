@@ -298,6 +298,16 @@ describe('form.validationErrors', () => {
 
 });
 
+describe('[field].touch()', () => {
+
+  it('sets the field as touched', () => {
+    const rendered = shallowRender({ fields: { email: { }, password: { } } });
+    rendered.dive().node.props.email.touch();
+    expect(rendered.dive().node.props.email.touched).toBe(true);
+    expect(rendered.dive().node.props.password.touched).toBe(false);
+  });
+});
+
 describe('form.touchAll()', () => {
 
   it('sets every field as touched', () => {
