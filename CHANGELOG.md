@@ -1,7 +1,18 @@
 #  Change Log
 
 ## [Unreleased](https://github.com/buildo/formo/tree/HEAD)
-[Full Changelog](https://github.com/buildo/formo/compare/v0.1.0...HEAD)
+[Full Changelog](https://github.com/buildo/formo/compare/v0.1.1...HEAD)
+
+#### New features:
+
+- Value is not in sync in onChange param [#40](https://github.com/buildo/formo/issues/40)
+
+#### Fixes (bugs & defects):
+
+- Issue Preview doesn't work on github enterprise [#39](https://github.com/buildo/formo/issues/39)
+
+## [v0.1.1](https://github.com/buildo/formo/tree/v0.1.1) (2017-02-15)
+[Full Changelog](https://github.com/buildo/formo/compare/v0.1.0...v0.1.1)
 
 #### Fixes (bugs & defects):
 
