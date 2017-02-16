@@ -189,7 +189,7 @@ const formo = (Component) => {
     fieldsWithSetters = fields => mapValues(fields, (field, fieldName) => {
       const setters = {
         set: this.set(fieldName),
-        touch: this.clearValue(fieldName),
+        touch: this.touch(fieldName),
         clear: this.clearValue(fieldName),
         update: this.updateValue(fieldName),
         setActive: this.setActive(fieldName),
