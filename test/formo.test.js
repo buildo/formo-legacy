@@ -397,4 +397,15 @@ describe('onChange', () => {
     expect(onChange.mock.calls[0][1].form.validationErrors).toEqual([]);
   });
 
+  it('should be called with each field value set correctly when passing only initial values', () => {
+    const onChange = jest.fn();
+    const rendered = shallowRender({
+      onChange,
+      fields: { email: { initialValue: 'email@example.com' }, password: { initialValue: 's3curity' } }
+    });
+    rendered.dive().node.props.email.touch();
+    expect(onChange.mock.calls[0][0].email.value).toBe('email@example.com');
+    expect(onChange.mock.calls[0][0].password.value).toBe('s3curity');
+  });
+
 });
