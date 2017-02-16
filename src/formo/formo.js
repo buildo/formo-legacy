@@ -126,16 +126,15 @@ const formo = (Component) => {
       return mapValues({ validationErrors }, Object.keys);
     };
 
-    getFields = (fields) => mapValues(fields, (field, fieldName) => ({
+    getFieldsValues = (fields) => mapValues(fields, (field) => ({
       ...field,
       value: firstDefined(field.value, field.initialValue),
-      validations: this.props.validations[fieldName] || {},
       initialValue: firstDefined(field.initialValue)
     }))
 
     fieldsWithValidations = fields => {
-      return mapValues(fields, (field) => {
-        const { validationErrors } = this.evalValidations(field.validations, field.value, mapValues(fields, 'value'));
+      return mapValues(fields, (field, fieldName) => {
+        const { validationErrors } = this.evalValidations(this.props.validations[fieldName] || {}, field.value, mapValues(fields, 'value'));
         const isValid = validationErrors.length === 0;
         return {
           ...omit(field, 'validations'),
@@ -146,8 +145,8 @@ const formo = (Component) => {
     }
 
     onChange = (newFields) => {
-      const fields = mapValues(newFields, omitF(['validationErrors', 'isValid', 'isChanged']));
-      const richFields = flowRight(this.fieldsAreChanged, this.fieldsWithValidations, this.enforceOnlyOneActive, this.getFields)(fields);
+      const fields = mapValues(this.getFieldsValues(newFields), omitF(['validationErrors', 'isValid', 'isChanged']));
+      const richFields = flowRight(this.fieldsAreChanged, this.fieldsWithValidations, this.enforceOnlyOneActive)(fields);
       const meta = {
         ...mapValues(richFields, pickF(['validationErrors', 'isValid', 'isChanged'])),
         form: this.makeForm({ fields, validations: this.props.validations })
@@ -236,7 +235,7 @@ const formo = (Component) => {
     }
 
     makeForm = ({ fields: rawFields, validations }) => {
-      const fields = flowRight(this.fieldsWithValidations, this.enforceOnlyOneActive, this.fieldsAreChanged, this.getFields)(rawFields);
+      const fields = flowRight(this.fieldsWithValidations, this.enforceOnlyOneActive, this.fieldsAreChanged, this.getFieldsValues)(rawFields);
       const { validationErrors } = this.evalValidations(validations.form || returnEmpty, mapValues(fields, 'value'));
       return {
         touched: some(fields, 'touched'),
@@ -255,7 +254,7 @@ const formo = (Component) => {
 
     getLocals(_props) {
       const props = omit(_props, ['onChange', 'fields', 'validations']);
-      const fields = flowRight(this.fieldsAreTouched, this.fieldsWithSetters, this.fieldsWithValidations, this.enforceOnlyOneActive, this.fieldsAreChanged, this.getFields)(this.props.fields);
+      const fields = flowRight(this.fieldsAreTouched, this.fieldsWithSetters, this.fieldsWithValidations, this.enforceOnlyOneActive, this.fieldsAreChanged, this.getFieldsValues)(this.props.fields);
       const form = flowRight(this.formWithSetters, this.makeForm)({ fields: this.props.fields, validations: this.props.validations });
       return {
         ...props,
