@@ -1,7 +1,14 @@
 #  Change Log
 
 ## [Unreleased](https://github.com/buildo/formo/tree/HEAD)
-[Full Changelog](https://github.com/buildo/formo/compare/v0.1.1...HEAD)
+[Full Changelog](https://github.com/buildo/formo/compare/v0.1.2...HEAD)
+
+#### Fixes (bugs & defects):
+
+- BugFix: [field].touch is actually clear [#42](https://github.com/buildo/formo/issues/42)
+
+## [v0.1.2](https://github.com/buildo/formo/tree/v0.1.2) (2017-02-16)
+[Full Changelog](https://github.com/buildo/formo/compare/v0.1.1...v0.1.2)
 
 #### New features:
 
