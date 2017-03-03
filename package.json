@@ -22,7 +22,6 @@
     "babel-eslint": "7.1.1",
     "babel-jest": "18.0.0",
     "babel-loader": "6.2.10",
-    "babel-plugin-transform-class-properties": "6.19.0",
     "babel-preset-buildo": "^0.1.1",
     "buildo-react-components": "0.10.0",
     "classnames": "2.1.5",
