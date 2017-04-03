@@ -9,11 +9,12 @@ import noop from 'lodash/noop';
 @props({
   value: maybe(union([t.Integer, t.String]), 'InputValue'),
   onChange: t.Function,
-  onEnter: maybe(t.Function)
+  onEnter: maybe(t.Function),
+  onKeyUp: maybe(t.Function)
 }, { strict: false })
 export default class Input extends React.Component {
 
-  template({ value, onChange, onEnter = noop, onKeyup = noop, ...others }) {
+  template({ value, onChange, onEnter = noop, onKeyUp = noop, ...others }) {
     return (
       <input
         value={t.Nil.is(value) ? '' : value}
@@ -24,7 +25,7 @@ export default class Input extends React.Component {
           if (isEnter) {
             onEnter();
           }
-          onKeyup(evt);
+          onKeyUp(evt);
         }}
         {...others}
       />
