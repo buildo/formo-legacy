@@ -1,7 +1,18 @@
 #  Change Log
 
-## [Unreleased](https://github.com/buildo/formo/tree/HEAD)
-[Full Changelog](https://github.com/buildo/formo/compare/v0.1.2...HEAD)
+
+
+## [v0.1.4](https://github.com/buildo/formo/tree/v0.1.4) (2017-04-03)
+[Full Changelog](https://github.com/buildo/formo/compare/v0.1.3...v0.1.4)
+
+#### New features:
+
+- Update smooth-release version [#50](https://github.com/buildo/formo/issues/50)
+- add onEnter to formo/dom/Input [#49](https://github.com/buildo/formo/issues/49)
+- Expose formo/dom [#47](https://github.com/buildo/formo/issues/47)
+
+## [v0.1.3](https://github.com/buildo/formo/tree/v0.1.3) (2017-02-16)
+[Full Changelog](https://github.com/buildo/formo/compare/v0.1.2...v0.1.3)
 
 #### Fixes (bugs & defects):
 
