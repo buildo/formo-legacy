@@ -1,5 +1,5 @@
-import React from 'react';
-import t from 'tcomb';
+import * as React from 'react';
+import * as t from 'tcomb';
 import { props } from 'tcomb-react';
 import { skinnable, pure } from 'revenge';
 import View from 'react-flexview';

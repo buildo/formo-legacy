@@ -1,7 +1,9 @@
-import React from 'react';
+import * as React from 'react';
 import formo from '../src/formo';
-import renderer from 'react-test-renderer';
+import * as renderer from 'react-test-renderer';
 import { shallow } from 'enzyme';
+import * as sinon from 'sinon';
+import * as expect from 'expect';
 
 const getProps = ({ fields, validations, onChange = () => {} } = {}) => {
   const C = formo(props => <div {...props} />);
@@ -36,13 +38,13 @@ it('can be rendered', () => {
 
 it('always passes the form meta prop', () => {
   const props = getProps({ fields: {} });
-  expect(props.form).toBeDefined();
+  expect(props.form).toExist();
 });
 
 it('passes a prop for every given field', () => {
   const props = getProps({ fields: { email: {}, password: {} } });
-  expect(props.email).toBeDefined();
-  expect(props.password).toBeDefined();
+  expect(props.email).toExist();
+  expect(props.password).toExist();
 });
 
 describe('[field].value', () => {
@@ -371,51 +373,51 @@ describe('form.isChanged', () => {
 describe('onChange', () => {
 
   it('should be called with the updated value (and a meta object as a second argument) after an update() call', () => {
-    const onChange = jest.fn();
+    const onChange = sinon.spy();
     const rendered = shallowRender({ onChange, fields: { email: { value: 'foo' } } });
     rendered.dive().node.props.email.update('bar');
-    expect(onChange.mock.calls.length).toBe(1);
-    expect(onChange.mock.calls[0].length).toBe(2);
-    expect(onChange.mock.calls[0][0].email.value).toBe('bar');
+    expect(onChange.args.length).toBe(1);
+    expect(onChange.args[0].length).toBe(2);
+    expect(onChange.args[0][0].email.value).toBe('bar');
   });
 
   it('should be called with a second argument meta containing `isChanged`, `isValid` and `validationErrors` for each field', () => {
-    const onChange = jest.fn();
+    const onChange = sinon.spy();
     const rendered = shallowRender({ onChange, fields: { email: { value: 'foo' } } });
     rendered.dive().node.props.email.update('bar');
-    expect(onChange.mock.calls.length).toBe(1);
-    expect(onChange.mock.calls[0].length).toBe(2);
-    expect(onChange.mock.calls[0][1].email.isValid).toBe(true);
-    expect(onChange.mock.calls[0][1].email.isChanged).toBe(true);
-    expect(onChange.mock.calls[0][1].email.validationErrors).toEqual([]);
+    expect(onChange.args.length).toBe(1);
+    expect(onChange.args[0].length).toBe(2);
+    expect(onChange.args[0][1].email.isValid).toBe(true);
+    expect(onChange.args[0][1].email.isChanged).toBe(true);
+    expect(onChange.args[0][1].email.validationErrors).toEqual([]);
   });
 
 
   it('should be called with an updated isValid after an update() call', () => {
-    const onChange = jest.fn();
+    const onChange = sinon.spy();
     const rendered = shallowRender({
       onChange,
       fields: { email: { value: 'foo' } },
       validations: { email: { error: v => v !== 'error' } }
     });
     rendered.dive().node.props.email.update('error');
-    expect(onChange.mock.calls.length).toBe(1);
-    expect(onChange.mock.calls[0].length).toBe(2);
-    expect(onChange.mock.calls[0][1].email.isValid).toBe(false);
-    expect(onChange.mock.calls[0][1].form.isValid).toBe(false);
-    expect(onChange.mock.calls[0][1].email.validationErrors).toEqual(['error']);
-    expect(onChange.mock.calls[0][1].form.validationErrors).toEqual([]);
+    expect(onChange.args.length).toBe(1);
+    expect(onChange.args[0].length).toBe(2);
+    expect(onChange.args[0][1].email.isValid).toBe(false);
+    expect(onChange.args[0][1].form.isValid).toBe(false);
+    expect(onChange.args[0][1].email.validationErrors).toEqual(['error']);
+    expect(onChange.args[0][1].form.validationErrors).toEqual([]);
   });
 
   it('should be called with each field value set correctly when passing only initial values', () => {
-    const onChange = jest.fn();
+    const onChange = sinon.spy();
     const rendered = shallowRender({
       onChange,
       fields: { email: { initialValue: 'email@example.com' }, password: { initialValue: 's3curity' } }
     });
     rendered.dive().node.props.email.touch();
-    expect(onChange.mock.calls[0][0].email.value).toBe('email@example.com');
-    expect(onChange.mock.calls[0][0].password.value).toBe('s3curity');
+    expect(onChange.args[0][0].email.value).toBe('email@example.com');
+    expect(onChange.args[0][0].password.value).toBe('s3curity');
   });
 
 });
