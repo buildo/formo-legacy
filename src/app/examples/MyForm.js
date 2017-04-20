@@ -1,12 +1,12 @@
 /* eslint-disable no-copy-paste-default-export/default, react/no-multi-comp */
-import React from 'react';
-import t from 'tcomb';
+import * as React from 'react';
+import * as t from 'tcomb';
 import { props } from 'tcomb-react';
 import { skinnable, pure } from 'revenge';
 import View from 'react-flexview';
 import { Dropdown } from 'buildo-react-components';
 import formo, { Field, Form } from 'formo';
-import every from 'lodash/every';
+import { every } from 'lodash';
 import printJSON from 'printJSON';
 import { Input } from 'formo/dom';
 

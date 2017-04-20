@@ -1,9 +1,10 @@
-import React from 'react';
-import t, { dict, maybe, inter } from 'tcomb';
+import * as React from 'react';
+import * as t from 'tcomb';
+import { dict, maybe, inter } from 'tcomb';
 import { props } from 'tcomb-react';
 import { skinnable, pure, contains } from 'revenge';
-import mapValues from 'lodash/mapValues';
-import noop from 'lodash/noop';
+import { mapValues } from 'lodash';
+import { noop } from 'lodash';
 
 const FormoField = inter({
   value: t.Any,

@@ -1,9 +1,9 @@
-import React from 'react';
+import * as React from 'react';
 import * as _examples from './examples';
 import View from 'react-flexview';
-import map from 'lodash/map';
-import omit from 'lodash/omit';
-import isUndefined from 'lodash/isUndefined';
+import { map } from 'lodash';
+import { omit } from 'lodash';
+import { isUndefined } from 'lodash';
 
 const examples = omit(_examples, ['__esModule']);
 
