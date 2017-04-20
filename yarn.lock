@@ -6,6 +6,16 @@
   version "4.14.62"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.62.tgz#8674f9861582148a60b7a89cb260f11378d11683"
 
+"@types/react-dom@^15.5.0":
+  version "15.5.0"
+  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-15.5.0.tgz#7f4fb9613d4051141773242f7b6b5f1a46b34bd9"
+  dependencies:
+    "@types/react" "*"
+
+"@types/react@*", "@types/react@^15.0.22":
+  version "15.0.22"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-15.0.22.tgz#50803cde8d89f60a9b034f2dd0d619bc5f0273b5"
+
 "@types/sinon@^2.1.2":
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/@types/sinon/-/sinon-2.1.2.tgz#88dbbd29910c4fd1b5fbd3c733a723f277eab583"
@@ -4501,13 +4511,17 @@ tcomb-validation@^3.0.0:
   dependencies:
     tcomb "^3.0.0"
 
-tcomb@3.1.0, tcomb@^3.0.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/tcomb/-/tcomb-3.1.0.tgz#1f26a78491eb1540248e8d4f6297567bbedcfcdb"
+tcomb@3.2.20:
+  version "3.2.20"
+  resolved "https://registry.yarnpkg.com/tcomb/-/tcomb-3.2.20.tgz#823e689dcf3518d82c4b6c890a822aa6916692cd"
 
 tcomb@^3, tcomb@^3.2.15:
   version "3.2.18"
   resolved "https://registry.yarnpkg.com/tcomb/-/tcomb-3.2.18.tgz#7377f6025b6a52ee1f2bfc4e79b5f7f28548d165"
+
+tcomb@^3.0.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/tcomb/-/tcomb-3.1.0.tgz#1f26a78491eb1540248e8d4f6297567bbedcfcdb"
 
 text-encoding@0.6.4:
   version "0.6.4"
