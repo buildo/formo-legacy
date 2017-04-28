@@ -19,7 +19,6 @@
   "devDependencies": {
     "babel-cli": "6.22.2",
     "babel-core": "6.21.0",
-    "babel-eslint": "7.1.1",
     "babel-jest": "18.0.0",
     "babel-loader": "6.2.10",
     "babel-preset-buildo": "^0.1.1",
@@ -29,8 +28,6 @@
     "css-loader": "0.26.1",
     "enzyme": "2.7.0",
     "es6-promise": "3.2.1",
-    "eslint": "2.4.0",
-    "eslint-config-buildo": "github:buildo/eslint-config#d2e9ae2a518591ffd6527c87fe450b882390dc15",
     "eslint-loader": "1.0.0",
     "expect": "1.6.0",
     "extract-text-webpack-plugin": "1.0.1",
