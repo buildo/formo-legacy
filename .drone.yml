@@ -2,7 +2,8 @@ build:
   install:
     image: node:5
     commands:
-      - npm i
+      - npm i - g yarn
+      - yarn
   lint:
     image: node:5
     commands:
