@@ -4511,17 +4511,9 @@ tcomb-validation@^3.0.0:
   dependencies:
     tcomb "^3.0.0"
 
-tcomb@3.2.20:
+tcomb@3.2.20, tcomb@^3, tcomb@^3.0.0, tcomb@^3.2.15:
   version "3.2.20"
   resolved "https://registry.yarnpkg.com/tcomb/-/tcomb-3.2.20.tgz#823e689dcf3518d82c4b6c890a822aa6916692cd"
-
-tcomb@^3, tcomb@^3.2.15:
-  version "3.2.18"
-  resolved "https://registry.yarnpkg.com/tcomb/-/tcomb-3.2.18.tgz#7377f6025b6a52ee1f2bfc4e79b5f7f28548d165"
-
-tcomb@^3.0.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/tcomb/-/tcomb-3.1.0.tgz#1f26a78491eb1540248e8d4f6297567bbedcfcdb"
 
 text-encoding@0.6.4:
   version "0.6.4"
