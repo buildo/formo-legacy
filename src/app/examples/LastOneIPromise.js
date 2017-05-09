@@ -76,7 +76,7 @@ export default class LastOneIPromise extends React.Component {
             <Toggle value={doYouLikeTrains.value} onChange={doYouLikeTrains.update} />
           </View>
 
-          <Button onClick={form.clearValues} label='clear'/>
+          <Button onClick={form.clearValues} label='clear' />
 
         </View>
 
