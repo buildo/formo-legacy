@@ -89,8 +89,8 @@ export default class AnotherOneOfMyForms extends React.Component {
             {securityQuestion.touched && compact(map(securityQuestion.validations)).join(', ')}
           </View>
 
-          <Button onClick={form.clearValues} label='clear'/>
-          <Button onClick={form.touchAll} label='validate'/>
+          <Button onClick={form.clearValues} label='clear' />
+          <Button onClick={form.touchAll} label='validate' />
 
         </View>
 
