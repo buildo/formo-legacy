@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { skinnable, pure, contains } from 'revenge';
 import { omit } from 'lodash';
 import { pick } from 'lodash';
 import { mapValues } from 'lodash';
@@ -13,7 +12,11 @@ import { flowRight } from 'lodash';
 import { constant } from 'lodash';
 import { isEqual } from 'lodash';
 import formoStateHandler from './formo-state-handler';
-import { Form, FormoField, FormoFields, FormoProps, MetaForm, ValidationsErrors } from './types';
+import {
+  Form, FormoValidation, FormoValidations,
+  ComponentProps, FormoStateHandlerProps, FormoProps,
+  FormoField, FormoFields, MetaForm, ValidationsErrors
+} from './types';
 
 const returnEmpty = constant({});
 
@@ -63,24 +66,14 @@ const touchAll = (fields: FormoFields): FormoFields => {
   return mapValues(fields, set('touched')(true));
 };
 
+const formo = (Component: React.ComponentClass<ComponentProps>): React.ComponentClass<FormoStateHandlerProps> => {
 
-interface ComponentProps {
-  name?: string
-}
-const formo = (Component: React.ComponentClass<ComponentProps>) => {
-  @formoStateHandler
-  @pure
-  @skinnable(contains(Component))
-  class Formo extends React.Component<FormoProps, void> {
+  class Formo extends React.PureComponent<FormoProps, React.ComponentState> {
 
-    static displayName = `Formo${(Component.displayName || Component.name || '')}`
+    static displayName = `Formo${(Component.displayName || '')}`
 
-    static defaultProps = {
-      validations: {}
-    }
-
-    evalValidations = (validations, value, otherValues) => {
-      const evaluated = mapValues(validations, validationFn => validationFn(value, otherValues));
+    evalValidations = (validations: FormoValidation, value, otherValues) => {
+      const evaluated = mapValues(validations, (validationFn) => validationFn(value, otherValues));
       const validationErrors = pickBy(evaluated, x => x === false);
       return mapValues({ validationErrors }, Object.keys);
     };
@@ -104,7 +97,7 @@ const formo = (Component: React.ComponentClass<ComponentProps>) => {
     }
 
     onChange = (newFields: FormoFields): void => {
-      const fields = mapValues(this.getFieldsValues(newFields), x => omit(x, ['validationErrors', 'isValid', 'isChanged']));
+      const fields: FormoFields = mapValues(this.getFieldsValues(newFields), x => omit(x, ['validationErrors', 'isValid', 'isChanged']));
       const richFields = flowRight(this.fieldsAreChanged, this.fieldsWithValidations, this.enforceOnlyOneActive)(fields);
       const meta = {
         ...mapValues(richFields, x => pick(x, ['validationErrors', 'isValid', 'isChanged'])),
@@ -193,7 +186,7 @@ const formo = (Component: React.ComponentClass<ComponentProps>) => {
       }));
     }
 
-    makeForm = ({ fields: rawFields, validations }: { fields: FormoFields, validations: ValidationsErrors}): MetaForm => {
+    makeForm = ({ fields: rawFields, validations }: { fields: FormoFields, validations: FormoValidations }): MetaForm => {
       const fields = flowRight(this.fieldsWithValidations, this.enforceOnlyOneActive, this.fieldsAreChanged, this.getFieldsValues)(rawFields);
       const { validationErrors } = this.evalValidations(validations.form || returnEmpty, mapValues(fields, 'value'));
       return {
@@ -211,10 +204,10 @@ const formo = (Component: React.ComponentClass<ComponentProps>) => {
       touchAll: this.touchAll
     })
 
-    getLocals(_props: FormoProps) {
+    getLocals(_props: FormoProps): ComponentProps {
       const props = omit(_props, ['onChange', 'fields', 'validations']);
       const fields = flowRight(this.fieldsAreTouched, this.fieldsWithSetters, this.fieldsWithValidations, this.enforceOnlyOneActive, this.fieldsAreChanged, this.getFieldsValues)(this.props.fields);
-      const form = flowRight(this.formWithSetters, this.makeForm)({ fields: this.props.fields, validations: this.props.validations });
+      const form: Form = flowRight(this.formWithSetters, this.makeForm)({ fields: this.props.fields, validations: this.props.validations });
       return {
         ...props,
         ...fields,
@@ -222,9 +215,13 @@ const formo = (Component: React.ComponentClass<ComponentProps>) => {
       };
     }
 
+    render() {
+      return <Component {...this.getLocals(this.props)} />;
+    }
+
   }
 
-  return Formo;
+  return formoStateHandler(Formo);
 };
 
 export default formo;
