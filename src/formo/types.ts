@@ -79,14 +79,15 @@ export type Props = { [key: string]: FormoField<any> } & {
 
 interface FormoBaseProps {
   fields: FormoFields
-  validations: FormoValidations,
 }
 
 export interface FormoProps extends FormoBaseProps {
+  validations?: FormoValidations,
   onChange: OnChange
 }
 
 export interface FormoStateHandlerProps extends FormoBaseProps {
+  validations: FormoValidations,
   onChange?: OnChange
 }
 
