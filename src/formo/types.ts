@@ -28,25 +28,8 @@ export type FormoFields = { [key: string]: FormoField<any> };
 
 export type OnChange = (fields: FormoFields, meta: Meta) => void;
 
-export interface Props {
-  fields: FormoFields,
-  [key: string]: any
-}
-
-export interface FormoStateHandlerProps extends Props {
-  onChange?: OnChange
-}
-
-export interface FormoProps extends Props {
-  onChange: OnChange
-}
-
-export type State = {
-  fields: FormoFields
-}
-
-export interface FormoValidation<T> { [key: string]: (value: T) => boolean }
-export interface FormoValidations<T> { [key: string]:  FormoValidation<T> }
+export interface FormoValidation { [key: string]: (value: any, otherValue: any) => boolean }
+export interface FormoValidations { [key: string]:  FormoValidation }
 
 export type ValidationsErrors = Array<string>;
 
@@ -66,7 +49,7 @@ export interface Field<T> {
   set: () => void
 }
 
-export interface Form {
+export type Form = {
   validationErrors: ValidationsErrors,
   isValid: boolean,
   isChanged: boolean,
@@ -74,4 +57,39 @@ export interface Form {
   allTouched: boolean,
   clearValues: () => void,
   touchAll: () => void
+}
+
+export interface Fields {
+  [key: string]: Field<any>
+}
+
+// type FormKey = 'form' | 'other-form';
+// export type ComponentProps = Fields & { [k in FormKey]: Form };
+
+export interface ComponentProps {
+  [key: string]: Field<any> | Form,
+  form: Form
+}
+
+type OnChange = (fields: FormoFields, meta: Meta) => void;
+
+export type Props = { [key: string]: FormoField<any> } & {
+  onChange?: OnChange
+}
+
+interface FormoBaseProps {
+  fields: FormoFields
+  validations: FormoValidations,
+}
+
+export interface FormoProps extends FormoBaseProps {
+  onChange: OnChange
+}
+
+export interface FormoStateHandlerProps extends FormoBaseProps {
+  onChange?: OnChange
+}
+
+export type FormoStateHandlerState = {
+  fields: FormoFields
 }
