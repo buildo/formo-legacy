@@ -25,9 +25,9 @@ const set = (key: string) => (value: any) => (object: Object) => ({
   [key]: value
 });
 
-const firstDefined = (...args) => find(args, x => x !== void 0);
+const firstDefined = (...args: any[]) => find(args, x => x !== void 0);
 
-const innerSet = (object) => (firstKey: string) => (secondKey: string) => (value: any) => {
+const innerSet = (object: { [key:string]: any }) => (firstKey: string) => (secondKey: string) => (value: any) => {
   const newFirstKeyObject = set(secondKey)(value)(object[firstKey]);
   return set(firstKey)(newFirstKeyObject)(object);
 };
@@ -72,7 +72,7 @@ const formo = (Component: React.ComponentClass<ComponentProps>): React.Component
 
     static displayName = `Formo${(Component.displayName || '')}`
 
-    evalValidations = (validations: FormoValidation, value, otherValues) => {
+    evalValidations = (validations: FormoValidation, value: any, otherValues?: any) => {
       const evaluated = mapValues(validations, (validationFn) => validationFn(value, otherValues));
       const validationErrors = pickBy(evaluated, x => x === false);
       return mapValues({ validationErrors }, Object.keys);
@@ -86,7 +86,8 @@ const formo = (Component: React.ComponentClass<ComponentProps>): React.Component
 
     fieldsWithValidations = (fields: FormoFields) => {
       return mapValues(fields, (field, fieldName) => {
-        const { validationErrors } = this.evalValidations(this.props.validations[fieldName] || {}, field.value, mapValues(fields, 'value'));
+        const fieldValidations = fieldName && this.props.validations[fieldName] || {};
+        const { validationErrors } = this.evalValidations(fieldValidations, field.value, mapValues(fields, 'value'));
         const isValid = validationErrors.length === 0;
         return {
           ...omit(field, 'validations'),
@@ -122,7 +123,7 @@ const formo = (Component: React.ComponentClass<ComponentProps>): React.Component
       this.onChange(unsetActive(this.props.fields)(fieldName));
     };
 
-    set = (fieldName: string) => (prop, value) => {
+    set = (fieldName: string) => (prop: string, value: any) => {
       this.onChange(innerSet(this.props.fields)(fieldName)(prop)(value));
     }
 
@@ -188,7 +189,8 @@ const formo = (Component: React.ComponentClass<ComponentProps>): React.Component
 
     makeForm = ({ fields: rawFields, validations }: { fields: FormoFields, validations: FormoValidations }): MetaForm => {
       const fields = flowRight(this.fieldsWithValidations, this.enforceOnlyOneActive, this.fieldsAreChanged, this.getFieldsValues)(rawFields);
-      const { validationErrors } = this.evalValidations(validations.form || returnEmpty, mapValues(fields, 'value'));
+      const formValidation = validations.form || returnEmpty;
+      const { validationErrors } = this.evalValidations(formValidation, mapValues(fields, 'value'));
       return {
         touched: some(fields, 'touched'),
         allTouched: every(fields, 'touched'),
