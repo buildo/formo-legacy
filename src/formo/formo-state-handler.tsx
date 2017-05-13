@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { mapValues } from 'lodash';
 import { noop } from 'lodash';
-import { FormoFields, FormoStateHandlerProps, FormoProps, Meta, State } from './types';
+import { FormoFields, Meta, FormoStateHandlerState, FormoProps, FormoStateHandlerProps } from './types';
 
-export default function formoStateHandler(Component: React.ComponentClass<FormoStateHandlerProps>): React.ComponentClass<FormoProps> {
+// formoStateHandler(FormoClass(Component))
+export default function formoStateHandler(Component: React.ComponentClass<FormoProps>): React.ComponentClass<FormoStateHandlerProps> {
 
-  return class FormoStateHandler extends React.PureComponent<FormoProps, State> {
+  return class FormoStateHandler extends React.PureComponent<FormoStateHandlerProps, FormoStateHandlerState> {
 
     static displayName = `FormoStateHandler${(Component.displayName || '')}`
 
@@ -13,7 +14,7 @@ export default function formoStateHandler(Component: React.ComponentClass<FormoS
       fields: this.props.fields
     };
 
-    onChange = (fields: FormoFields, meta: Meta) => {
+    onChange = (fields: FormoFields, meta: Meta): void => {
       const { onChange = noop } = this.props; // apparently defaultProps doesn't work
       this.setState({
         fields
@@ -23,7 +24,7 @@ export default function formoStateHandler(Component: React.ComponentClass<FormoS
       });
     }
 
-    mergeFields = (fieldsFromProps: FormoFields, fieldsFromState: FormoFields) => {
+    mergeFields = (fieldsFromProps: FormoFields, fieldsFromState: FormoFields): FormoFields => {
       // the source of truths of which fields are in the form come from the props (they can be removed, or new ones added)
       return mapValues(fieldsFromProps, (_, fieldName: string) => ({
         // still, bits of form state can be managed just from formo component state
@@ -40,10 +41,11 @@ export default function formoStateHandler(Component: React.ComponentClass<FormoS
       });
     }
 
-    getLocals(props: FormoStateHandlerProps) {
+    getLocals(props: FormoStateHandlerProps): FormoProps {
       const { onChange } = this;
       const { fields } = this.state;
       return {
+        validations: {},
         ...props,
         fields,
         onChange
