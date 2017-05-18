@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { noop } from 'lodash';
+import { noop, omit } from 'lodash';
 
 export type Props = {
   value?: number | string | null,
@@ -8,8 +8,9 @@ export type Props = {
   onKeyUp?: (evt: React.KeyboardEvent<HTMLInputElement>) => void
 };
 
-export default function Input({ value, onChange, onEnter = noop, onKeyUp = noop, ...others }: Props) {
-
+export default function Input<T extends Props>(props: T) {
+  const { value, onChange, onEnter = noop, onKeyUp = noop } = props;
+  const others = omit(props, ['value', 'onChange', 'onEnter', 'onKeyUp']);
   return (
     <input
       value={value == null ? '' : value}
