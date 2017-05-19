@@ -73,17 +73,17 @@ export interface FormoWrapperProps {
 
 type OnChange = (fields: FormoFields, meta: Meta) => void;
 
-interface FormoBaseProps {
-  fields: FormoFields
-}
-
-export interface FormoProps extends FormoBaseProps {
-  validations?: FormoValidations,
+export interface FormoProps {
+  [key: string]: any,
+  fields: FormoFields,
+  validations: FormoValidations,
   onChange: OnChange
 }
 
-export interface FormoStateHandlerProps extends FormoBaseProps {
-  validations: FormoValidations,
+export interface FormoStateHandlerProps {
+  [key: string]: any,
+  fields: FormoFields,
+  validations?: FormoValidations,
   onChange?: OnChange
 }
 
