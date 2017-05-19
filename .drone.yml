@@ -6,8 +6,6 @@ build:
       - yarn
   lint:
     image: node:5
-    commands:
-      - npm run lint
   test:
     image: node:5
     commands:
