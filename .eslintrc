@@ -1,6 +1,0 @@
-{
-  "extends": "buildo",
-  "rules": {
-    "max-len": 0
-  }
-}
