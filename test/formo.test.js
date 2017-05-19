@@ -5,17 +5,18 @@ import { shallow } from 'enzyme';
 import * as sinon from 'sinon';
 import * as expect from 'expect';
 
-const getProps = ({ fields, validations, onChange = () => {} } = {}) => {
+const getProps = ({ fields, validations, onChange = () => undefined } = {}) => {
   const C = formo(props => <div {...props} />);
   return renderer.create(<C fields={fields} validations={validations} onChange={onChange} />).toJSON().props;
 };
 
-const shallowRender = ({ fields = {}, validations, onChange = () => {} } = {}) => {
+const shallowRender = ({ fields = {}, validations, onChange = () => undefined } = {}) => {
   const C = formo(props => <div {...props} />);
   return shallow(<C fields={fields} validations={validations} onChange={onChange} />);
 };
 
-let consoleWarn, consoleError;
+let consoleWarn;
+let consoleError;
 const throwLog = (...args) => {
   throw new Error(args.join(','));
 };
@@ -249,9 +250,15 @@ describe('[field].isChanged', () => {
   });
 
   it('should be false if value and initial value are equal with respect to `lodash.isEqual`', () => {
-    expect(getProps({ fields: { birthDay: { value: new Date('1987-07-14'), initialValue: new Date('1987-07-14') } } }).birthDay.isChanged).toBe(false);
-    expect(getProps({ fields: { favouriteColors: { initialValue: ['red', 'blue'], value: ['red', 'blue'] } } }).favouriteColors.isChanged).toBe(false);
-    expect(getProps({ fields: { something: { initialValue: { foo: 'bar' }, value: { foo: 'bar' } } } }).something.isChanged).toBe(false);
+    expect(getProps({
+      fields: { birthDay: { value: new Date('1987-07-14'), initialValue: new Date('1987-07-14') } }
+    }).birthDay.isChanged).toBe(false);
+    expect(getProps({
+      fields: { favouriteColors: { initialValue: ['red', 'blue'], value: ['red', 'blue'] } }
+    }).favouriteColors.isChanged).toBe(false);
+    expect(getProps({
+      fields: { something: { initialValue: { foo: 'bar' }, value: { foo: 'bar' } } }
+    }).something.isChanged).toBe(false);
   });
 
 });
@@ -381,6 +388,7 @@ describe('onChange', () => {
     expect(onChange.args[0][0].email.value).toBe('bar');
   });
 
+  // tslint:disable-next-line max-line-length
   it('should be called with a second argument meta containing `isChanged`, `isValid` and `validationErrors` for each field', () => {
     const onChange = sinon.spy();
     const rendered = shallowRender({ onChange, fields: { email: { value: 'foo' } } });
@@ -391,7 +399,6 @@ describe('onChange', () => {
     expect(onChange.args[0][1].email.isChanged).toBe(true);
     expect(onChange.args[0][1].email.validationErrors).toEqual([]);
   });
-
 
   it('should be called with an updated isValid after an update() call', () => {
     const onChange = sinon.spy();
