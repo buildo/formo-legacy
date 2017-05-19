@@ -14,13 +14,22 @@ import 'buildo-react-components/src/loading-spinner/loadingSpinner.scss';
 import './myForm.scss';
 
 const style = ({ isValid, active, touched }) => ({
-  borderColor: touched ? isValid ? 'green' : 'red' : 'black',
-  backgroundColor: active ? 'yellow' : 'white'
+  backgroundColor: active ? 'yellow' : 'white',
+  borderColor: touched ? isValid ? 'green' : 'red' : 'black'
 });
 
 @formo
 @pure
 @skinnable()
+@props({
+  confirmPassword: Field,
+  email: Field,
+  favouriteNumber: Field,
+  form: Form,
+  password: Field,
+  sex: Field,
+  title: t.String
+})
 export default class MyForm extends React.Component {
 
   template({ title, email, password, confirmPassword, sex, form, favouriteNumber } ) {
