@@ -12,7 +12,8 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 module.exports = {
 
   resolve: {
-    root: [paths.APP, paths.SRC]
+    root: [paths.APP, paths.SRC],
+    extensions: ['', '.js', 'ts', '.tsx']
   },
 
   stats: {
