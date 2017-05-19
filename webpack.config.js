@@ -43,10 +43,15 @@ module.exports = {
   },
 
   module: {
+    preLoaders: [{
+      test: /\.tsx?$|\.jsx?$/,
+      loader: 'tslint-loader',
+      include: [paths.SRC]
+    }],
     loaders: [{
       test: /\.tsx?$|\.jsx?$/,
       loaders: ['awesome-typescript'],
-      include: [paths.SRC, paths.TEST]
+      include: [paths.SRC]
     }, {
       test: /\.css$/,
       loader: 'style!css'

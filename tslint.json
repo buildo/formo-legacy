@@ -1,0 +1,26 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:recommended",
+        "tslint-eslint-rules"
+    ],
+    "jsRules": {
+        "max-line-length": [true, 120],
+        "quotemark": [true, "single"],
+        "trailing-comma": [true, "never"]
+    },
+    "rules": {
+        "interface-name": [true, "never-prefix"],
+        "max-line-length": [false],
+        "quotemark": [true, "single"],
+        "trailing-comma": [true, "never"],
+        "ter-max-len": [true, {
+            "code": 120,
+            "tabWidth": 2,
+            "ignoreImports": true,
+            "ignoreStrings": true,
+            "ignoreUrls": true
+        }]
+    },
+    "rulesDirectory": []
+}
