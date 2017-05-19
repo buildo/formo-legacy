@@ -66,16 +66,12 @@ export interface Fields {
 // type FormKey = 'form' | 'other-form';
 // export type ComponentProps = Fields & { [k in FormKey]: Form };
 
-export interface ComponentProps {
-  [key: string]: Field<any> | Form,
+export interface FormoWrapperProps {
+  [key: string]: any | Field<any> | Form,
   form: Form
 }
 
 type OnChange = (fields: FormoFields, meta: Meta) => void;
-
-export type Props = { [key: string]: FormoField<any> } & {
-  onChange?: OnChange
-}
 
 interface FormoBaseProps {
   fields: FormoFields
@@ -91,6 +87,6 @@ export interface FormoStateHandlerProps extends FormoBaseProps {
   onChange?: OnChange
 }
 
-export type FormoStateHandlerState = {
+export interface FormoStateHandlerState {
   fields: FormoFields
 }
