@@ -3,7 +3,6 @@ import { mapValues } from 'lodash';
 import { noop } from 'lodash';
 import { FormoFields, Meta, FormoStateHandlerState, FormoProps, FormoStateHandlerProps } from './types';
 
-// formoStateHandler(FormoClass(Component))
 export default function formoStateHandler(Component: React.ComponentClass<FormoProps>): React.ComponentClass<FormoStateHandlerProps> {
 
   return class FormoStateHandler extends React.PureComponent<FormoStateHandlerProps, FormoStateHandlerState> {

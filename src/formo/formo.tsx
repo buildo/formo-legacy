@@ -14,7 +14,7 @@ import { isEqual } from 'lodash';
 import formoStateHandler from './formo-state-handler';
 import {
   Form, FormoValidation, FormoValidations,
-  ComponentProps, FormoStateHandlerProps, FormoProps,
+  FormoWrapperProps, FormoStateHandlerProps, FormoProps,
   FormoField, FormoFields, MetaForm, ValidationsErrors
 } from './types';
 
@@ -66,7 +66,7 @@ const touchAll = (fields: FormoFields): FormoFields => {
   return mapValues(fields, set('touched')(true));
 };
 
-const formo = (Component: React.ComponentClass<ComponentProps>): React.ComponentClass<FormoStateHandlerProps> => {
+const formo = (Component: React.ComponentClass<FormoWrapperProps>): React.ComponentClass<FormoStateHandlerProps> => {
 
   class Formo extends React.PureComponent<FormoProps, React.ComponentState> {
 
@@ -206,7 +206,7 @@ const formo = (Component: React.ComponentClass<ComponentProps>): React.Component
       touchAll: this.touchAll
     })
 
-    getLocals(_props: FormoProps): ComponentProps {
+    getLocals(_props: FormoProps): FormoWrapperProps {
       const props = omit(_props, ['onChange', 'fields', 'validations']);
       const fields = flowRight(this.fieldsAreTouched, this.fieldsWithSetters, this.fieldsWithValidations, this.enforceOnlyOneActive, this.fieldsAreChanged, this.getFieldsValues)(this.props.fields);
       const form: Form = flowRight(this.formWithSetters, this.makeForm)({ fields: this.props.fields, validations: this.props.validations });
