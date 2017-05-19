@@ -3652,6 +3652,15 @@ react-flexview@1.0.1:
     sass-flex-mixins "^0.1.0"
     tcomb-react "^0.9.3"
 
+react-flexview@1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/react-flexview/-/react-flexview-1.0.6.tgz#1eff4808dd4060f8b5f6c0d886717b834df1e4aa"
+  dependencies:
+    classnames "^2.2.5"
+    lodash "^4.15.0"
+    sass-flex-mixins "^0.1.0"
+    tcomb-react "^0.9.3"
+
 react-input-autosize@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/react-input-autosize/-/react-input-autosize-1.1.0.tgz#3fe1ac832387d8abab85f6051ceab1c9e5570853"
