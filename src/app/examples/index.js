@@ -1,5 +1,13 @@
-export MyForm from './MyForm';
-// export MyOtherForm from './MyOtherForm';
-// export AnotherOneOfMyForms from './AnotherOneOfMyForms';
-// export LastOneIPromise from './LastOneIPromise';
-// export INeverKeepPromisesForm from './INeverKeepPromisesForm';
+import MyForm from './MyForm';
+// import MyOtherForm from './MyOtherForm';
+// import AnotherOneOfMyForms from './AnotherOneOfMyForms';
+// import LastOneIPromise from './LastOneIPromise';
+// import INeverKeepPromisesForm from './INeverKeepPromisesForm';
+
+export {
+  // MyOtherForm,
+  // AnotherOneOfMyForms,
+  // LastOneIPromise,
+  // INeverKeepPromisesForm,
+  MyForm
+};

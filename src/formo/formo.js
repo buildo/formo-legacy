@@ -1,20 +1,20 @@
-import React from 'react';
-import t, { dict, maybe, inter, list } from 'tcomb';
+import * as React from 'react';
+import * as t from 'tcomb';
+import { dict, maybe, inter, list } from 'tcomb';
 import { props } from 'tcomb-react';
 import { skinnable, pure, contains } from 'revenge';
-import omit from 'lodash/omit';
-import omitF from 'lodash/fp/omit';
-import pickF from 'lodash/fp/pick';
-import mapValues from 'lodash/mapValues';
-import pickBy from 'lodash/pickBy';
-import every from 'lodash/every';
-import includes from 'lodash/includes';
-import some from 'lodash/some';
-import find from 'lodash/find';
-import findKey from 'lodash/findKey';
-import flowRight from 'lodash/flowRight';
-import constant from 'lodash/constant';
-import isEqual from 'lodash/isEqual';
+import { omit } from 'lodash';
+import { pick } from 'lodash';
+import { mapValues } from 'lodash';
+import { pickBy } from 'lodash';
+import { every } from 'lodash';
+import { includes } from 'lodash';
+import { some } from 'lodash';
+import { find } from 'lodash';
+import { findKey } from 'lodash';
+import { flowRight } from 'lodash';
+import { constant } from 'lodash';
+import { isEqual } from 'lodash';
 import formoStateHandler from './formo-state-handler';
 
 const FormoField = inter({
@@ -145,10 +145,10 @@ const formo = (Component) => {
     }
 
     onChange = (newFields) => {
-      const fields = mapValues(this.getFieldsValues(newFields), omitF(['validationErrors', 'isValid', 'isChanged']));
+      const fields = mapValues(this.getFieldsValues(newFields), x => omit(x, ['validationErrors', 'isValid', 'isChanged']));
       const richFields = flowRight(this.fieldsAreChanged, this.fieldsWithValidations, this.enforceOnlyOneActive)(fields);
       const meta = {
-        ...mapValues(richFields, pickF(['validationErrors', 'isValid', 'isChanged'])),
+        ...mapValues(richFields, x => pick(x, ['validationErrors', 'isValid', 'isChanged'])),
         form: this.makeForm({ fields, validations: this.props.validations })
       };
       this.props.onChange(fields, meta);

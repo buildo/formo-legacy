@@ -1,8 +1,9 @@
-import React from 'react';
-import t, { maybe, union } from 'tcomb';
+import * as React from 'react';
+import * as t from 'tcomb';
+import { maybe, union } from 'tcomb';
 import { props } from 'tcomb-react';
 import { skinnable, pure } from 'revenge';
-import noop from 'lodash/noop';
+import { noop } from 'lodash';
 
 @pure
 @skinnable()

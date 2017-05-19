@@ -1,13 +1,13 @@
 /* eslint-disable no-copy-paste-default-export/default, react/no-multi-comp */
-import React from 'react';
-import t from 'tcomb';
+import * as React from 'react';
+import * as t from 'tcomb';
 import { props } from 'tcomb-react';
 import { skinnable, pure } from 'revenge';
 import View from 'react-flexview';
 import { Dropdown } from 'buildo-react-components';
 import formo, { Input } from 'formo';
-import compact from 'lodash/compact';
-import map from 'lodash/map';
+import { compact } from 'lodash';
+import { map } from 'lodash';
 import printJSON from 'printJSON';
 
 import 'buildo-react-components/src/dropdown/dropdown.scss';

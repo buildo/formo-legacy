@@ -1,12 +1,12 @@
-import React from 'react';
-import t from 'tcomb';
+import * as React from 'react';
+import * as t from 'tcomb';
 import { props } from 'tcomb-react';
 import { skinnable, pure } from 'revenge';
 import View from 'react-flexview';
 import formo, { Input } from 'formo';
-import range from 'lodash/range';
-import compact from 'lodash/compact';
-import map from 'lodash/map';
+import { range } from 'lodash';
+import { compact } from 'lodash';
+import { map } from 'lodash';
 import printJSON from 'printJSON';
 import { Button } from 'buildo-react-components';
 

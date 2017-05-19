@@ -43,8 +43,8 @@ module.exports = {
 
   module: {
     loaders: [{
-      test: /\.jsx?$/, // test for both js and jsx
-      loaders: ['babel'], // babel config stays in .babelrc
+      test: /\.tsx?$|\.jsx?$/,
+      loaders: ['awesome-typescript'],
       include: [paths.SRC, paths.TEST]
     }, {
       test: /\.css$/,
