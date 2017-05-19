@@ -19,15 +19,15 @@ const throwLog = (...args) => {
 };
 
 beforeEach(() => {
-  consoleWarn = console.warn; // eslint-disable-line no-console
-  consoleError = console.error; // eslint-disable-line no-console
-  console.warn = throwLog; // eslint-disable-line no-console
-  console.error = throwLog; // eslint-disable-line no-console
+  consoleWarn = console.warn; //eslint-disable-line no-console
+  consoleError = console.error; //eslint-disable-line no-console
+  console.warn = throwLog; //eslint-disable-line no-console
+  console.error = throwLog; //eslint-disable-line no-console
 });
 
 afterEach(() => {
-  console.warn = consoleWarn; // eslint-disable-line no-console
-  console.error = consoleError; // eslint-disable-line no-console
+  console.warn = consoleWarn; //eslint-disable-line no-console
+  console.error = consoleError; //eslint-disable-line no-console
 });
 
 it('can be rendered', () => {

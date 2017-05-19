@@ -1,5 +1,5 @@
 {
-  "extends": "./node_modules/scriptoni/lib/scripts/eslint/eslintrc.json",
+  "extends": "buildo",
   "rules": {
     "max-len": 0
   }
