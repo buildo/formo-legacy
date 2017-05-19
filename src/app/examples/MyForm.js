@@ -1,7 +1,6 @@
 /* eslint-disable no-copy-paste-default-export/default, react/no-multi-comp */
 import * as React from 'react';
 import * as t from 'tcomb';
-import { props } from 'tcomb-react';
 import { skinnable, pure } from 'revenge';
 import View from 'react-flexview';
 import { Dropdown } from 'buildo-react-components';
@@ -22,15 +21,6 @@ const style = ({ isValid, active, touched }) => ({
 @formo
 @pure
 @skinnable()
-@props({
-  title: t.String,
-  email: Field,
-  favouriteNumber: Field,
-  password: Field,
-  confirmPassword: Field,
-  sex: Field,
-  form: Form
-})
 export default class MyForm extends React.Component {
 
   template({ title, email, password, confirmPassword, sex, form, favouriteNumber } ) {
