@@ -41,7 +41,7 @@
     "react": "^0.14 || ^15",
     "react-addons-test-utils": "15.4.1",
     "react-dom": "^0.14 || ^15",
-    "react-flexview": "1.0.1",
+    "react-flexview": "1.0.6",
     "react-test-renderer": "15.4.1",
     "require-noop": "0.0.2",
     "resolve-url-loader": "1.4.3",
