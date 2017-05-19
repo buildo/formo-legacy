@@ -60,6 +60,7 @@
     "clean": "rm -rf build/* && mkdir -p build",
     "start": "npm run clean && cp src/index.html build && webpack-dev-server --config webpack.config.js --hot --inline",
     "lint": "tslint src/**/* test/**/*",
+    "lint-fix": "tslint --fix src/**/* test/**/*",
     "mocha": "mocha -r ts-node/register test/*.js",
     "test": "npm run mocha",
     "preversion": "npm run lint && npm run test",
