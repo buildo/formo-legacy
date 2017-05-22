@@ -67,8 +67,8 @@ export interface Fields {
 // export type ComponentProps = Fields & { [k in FormKey]: Form };
 
 export interface FormoWrapperProps {
-  [key: string]: any | Field<any> | Form;
-  form: Form;
+  [key: string]: any | Field<any>,
+  form: Form
 }
 
 type OnChange = (fields: FormoFields, meta: Meta) => void;
