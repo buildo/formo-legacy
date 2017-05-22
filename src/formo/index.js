@@ -1,2 +1,3 @@
-export default from './formo';
-export { Field, Form } from './formo';
+export * from './types';
+import formo from './formo';
+export default formo;

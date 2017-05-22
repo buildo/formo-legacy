@@ -1,12 +1,11 @@
 /* eslint-disable no-copy-paste-default-export/default, react/no-multi-comp */
-import React from 'react';
-import t from 'tcomb';
-import { props } from 'tcomb-react';
+import * as React from 'react';
+import * as t from 'tcomb';
 import { skinnable, pure } from 'revenge';
 import View from 'react-flexview';
 import { Dropdown } from 'buildo-react-components';
 import formo, { Field, Form } from 'formo';
-import every from 'lodash/every';
+import { every } from 'lodash';
 import printJSON from 'printJSON';
 import { Input } from 'formo/dom';
 
@@ -15,21 +14,21 @@ import 'buildo-react-components/src/loading-spinner/loadingSpinner.scss';
 import './myForm.scss';
 
 const style = ({ isValid, active, touched }) => ({
-  borderColor: touched ? isValid ? 'green' : 'red' : 'black',
-  backgroundColor: active ? 'yellow' : 'white'
+  backgroundColor: active ? 'yellow' : 'white',
+  borderColor: touched ? isValid ? 'green' : 'red' : 'black'
 });
 
 @formo
 @pure
 @skinnable()
 @props({
-  title: t.String,
+  confirmPassword: Field,
   email: Field,
   favouriteNumber: Field,
+  form: Form,
   password: Field,
-  confirmPassword: Field,
   sex: Field,
-  form: Form
+  title: t.String
 })
 export default class MyForm extends React.Component {
 

@@ -1,19 +1,22 @@
-import React from 'react';
+import * as React from 'react';
 import formo from '../src/formo';
-import renderer from 'react-test-renderer';
+import * as renderer from 'react-test-renderer';
 import { shallow } from 'enzyme';
+import * as sinon from 'sinon';
+import * as expect from 'expect';
 
-const getProps = ({ fields, validations, onChange = () => {} } = {}) => {
+const getProps = ({ fields, validations, onChange = () => undefined } = {}) => {
   const C = formo(props => <div {...props} />);
   return renderer.create(<C fields={fields} validations={validations} onChange={onChange} />).toJSON().props;
 };
 
-const shallowRender = ({ fields = {}, validations, onChange = () => {} } = {}) => {
+const shallowRender = ({ fields = {}, validations, onChange = () => undefined } = {}) => {
   const C = formo(props => <div {...props} />);
   return shallow(<C fields={fields} validations={validations} onChange={onChange} />);
 };
 
-let consoleWarn, consoleError;
+let consoleWarn;
+let consoleError;
 const throwLog = (...args) => {
   throw new Error(args.join(','));
 };
@@ -36,13 +39,13 @@ it('can be rendered', () => {
 
 it('always passes the form meta prop', () => {
   const props = getProps({ fields: {} });
-  expect(props.form).toBeDefined();
+  expect(props.form).toExist();
 });
 
 it('passes a prop for every given field', () => {
   const props = getProps({ fields: { email: {}, password: {} } });
-  expect(props.email).toBeDefined();
-  expect(props.password).toBeDefined();
+  expect(props.email).toExist();
+  expect(props.password).toExist();
 });
 
 describe('[field].value', () => {
@@ -247,9 +250,15 @@ describe('[field].isChanged', () => {
   });
 
   it('should be false if value and initial value are equal with respect to `lodash.isEqual`', () => {
-    expect(getProps({ fields: { birthDay: { value: new Date('1987-07-14'), initialValue: new Date('1987-07-14') } } }).birthDay.isChanged).toBe(false);
-    expect(getProps({ fields: { favouriteColors: { initialValue: ['red', 'blue'], value: ['red', 'blue'] } } }).favouriteColors.isChanged).toBe(false);
-    expect(getProps({ fields: { something: { initialValue: { foo: 'bar' }, value: { foo: 'bar' } } } }).something.isChanged).toBe(false);
+    expect(getProps({
+      fields: { birthDay: { value: new Date('1987-07-14'), initialValue: new Date('1987-07-14') } }
+    }).birthDay.isChanged).toBe(false);
+    expect(getProps({
+      fields: { favouriteColors: { initialValue: ['red', 'blue'], value: ['red', 'blue'] } }
+    }).favouriteColors.isChanged).toBe(false);
+    expect(getProps({
+      fields: { something: { initialValue: { foo: 'bar' }, value: { foo: 'bar' } } }
+    }).something.isChanged).toBe(false);
   });
 
 });
@@ -371,51 +380,51 @@ describe('form.isChanged', () => {
 describe('onChange', () => {
 
   it('should be called with the updated value (and a meta object as a second argument) after an update() call', () => {
-    const onChange = jest.fn();
+    const onChange = sinon.spy();
     const rendered = shallowRender({ onChange, fields: { email: { value: 'foo' } } });
     rendered.dive().node.props.email.update('bar');
-    expect(onChange.mock.calls.length).toBe(1);
-    expect(onChange.mock.calls[0].length).toBe(2);
-    expect(onChange.mock.calls[0][0].email.value).toBe('bar');
+    expect(onChange.args.length).toBe(1);
+    expect(onChange.args[0].length).toBe(2);
+    expect(onChange.args[0][0].email.value).toBe('bar');
   });
 
+  // tslint:disable-next-line max-line-length
   it('should be called with a second argument meta containing `isChanged`, `isValid` and `validationErrors` for each field', () => {
-    const onChange = jest.fn();
+    const onChange = sinon.spy();
     const rendered = shallowRender({ onChange, fields: { email: { value: 'foo' } } });
     rendered.dive().node.props.email.update('bar');
-    expect(onChange.mock.calls.length).toBe(1);
-    expect(onChange.mock.calls[0].length).toBe(2);
-    expect(onChange.mock.calls[0][1].email.isValid).toBe(true);
-    expect(onChange.mock.calls[0][1].email.isChanged).toBe(true);
-    expect(onChange.mock.calls[0][1].email.validationErrors).toEqual([]);
+    expect(onChange.args.length).toBe(1);
+    expect(onChange.args[0].length).toBe(2);
+    expect(onChange.args[0][1].email.isValid).toBe(true);
+    expect(onChange.args[0][1].email.isChanged).toBe(true);
+    expect(onChange.args[0][1].email.validationErrors).toEqual([]);
   });
-
 
   it('should be called with an updated isValid after an update() call', () => {
-    const onChange = jest.fn();
+    const onChange = sinon.spy();
     const rendered = shallowRender({
       onChange,
       fields: { email: { value: 'foo' } },
       validations: { email: { error: v => v !== 'error' } }
     });
     rendered.dive().node.props.email.update('error');
-    expect(onChange.mock.calls.length).toBe(1);
-    expect(onChange.mock.calls[0].length).toBe(2);
-    expect(onChange.mock.calls[0][1].email.isValid).toBe(false);
-    expect(onChange.mock.calls[0][1].form.isValid).toBe(false);
-    expect(onChange.mock.calls[0][1].email.validationErrors).toEqual(['error']);
-    expect(onChange.mock.calls[0][1].form.validationErrors).toEqual([]);
+    expect(onChange.args.length).toBe(1);
+    expect(onChange.args[0].length).toBe(2);
+    expect(onChange.args[0][1].email.isValid).toBe(false);
+    expect(onChange.args[0][1].form.isValid).toBe(false);
+    expect(onChange.args[0][1].email.validationErrors).toEqual(['error']);
+    expect(onChange.args[0][1].form.validationErrors).toEqual([]);
   });
 
   it('should be called with each field value set correctly when passing only initial values', () => {
-    const onChange = jest.fn();
+    const onChange = sinon.spy();
     const rendered = shallowRender({
       onChange,
       fields: { email: { initialValue: 'email@example.com' }, password: { initialValue: 's3curity' } }
     });
     rendered.dive().node.props.email.touch();
-    expect(onChange.mock.calls[0][0].email.value).toBe('email@example.com');
-    expect(onChange.mock.calls[0][0].password.value).toBe('s3curity');
+    expect(onChange.args[0][0].email.value).toBe('email@example.com');
+    expect(onChange.args[0][0].password.value).toBe('s3curity');
   });
 
 });

@@ -1,9 +1,9 @@
-import React from 'react';
+import * as React from 'react';
 import * as _examples from './examples';
 import View from 'react-flexview';
-import map from 'lodash/map';
-import omit from 'lodash/omit';
-import isUndefined from 'lodash/isUndefined';
+import { map } from 'lodash';
+import { omit } from 'lodash';
+import { isUndefined } from 'lodash';
 
 const examples = omit(_examples, ['__esModule']);
 
@@ -18,48 +18,47 @@ const checkEmail = (email) => {
 
 const otherProps = {
   MyForm: {
+    fields: {
+      confirmPassword: {},
+      email: {},
+      favouriteNumber: {},
+      password: {},
+      sex: { initialValue: 'male' }
+    },
     title: 'My Form',
     validations: {
-      form: {
-        ifMaleMustFinishWithO: ({ email, sex }) => sex !== 'male' || (email || '').slice(-1) === 'o'
+      confirmPassword: {
+        sameAsPassword: (value, { password }) => value === password
       },
       email: {
         isAvailable: checkEmail,
         isBeautiful: e => e === 'beautiful',
+        lengthMoreThan5: (value) => !!value && value.length > 5,
         required: (value) => !!value,
-        lengthMoreThan5: (value) => !!value && value.length > 5
+      },
+      favouriteNumber: {
+        bigEnough: (value) => isInteger(value) && value > 10,
+        isInteger
+      },
+      form: {
+        ifMaleMustFinishWithO: ({ email, sex }) => sex !== 'male' || (email || '').slice(-1) === 'o'
       },
       password: {
         lengthMoreThan5: (value) => !!value && value.length > 5,
         unsafePassword: (value, { favouriteNumber }) => value !== favouriteNumber
       },
-      favouriteNumber: {
-        isInteger,
-        bigEnough: (value) => isInteger(value) && value > 10
-      },
-      confirmPassword: {
-        sameAsPassword: (value, { password }) => value === password
-      },
       sex: {
         required: (value) => !!value
       }
-    },
-    fields: {
-      email: {},
-      favouriteNumber: {},
-      password: {},
-      confirmPassword: {},
-      sex: { initialValue: 'male' }
     }
   }
 };
-
 
 export default class App extends React.Component {
 
   state = {
     example: 'MyForm'
-  }
+  };
 
   render() {
     return (
@@ -104,6 +103,7 @@ export default class App extends React.Component {
                 <div> {this.state[`${name}IsChanged`] ? 'is changed' : 'didn\'t change'}</div>
                 <div>{this.state[`${name}IsValid`] ? 'is valid' : 'is not valid'}</div>
                 <div>{this.state[`${name}IsTouched`] ? 'has been touched' : 'has\'t been touched'}</div>
+                {/* tslint:disable-next-line max-line-length */}
                 <div>{this.state[`${name}IsAllTouched`] ? 'has been touched everywhere' : 'hasn\'t been touched everywhere'}</div>
               </div>
             )}

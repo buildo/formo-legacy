@@ -12,7 +12,8 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 module.exports = {
 
   resolve: {
-    root: [paths.APP, paths.SRC]
+    root: [paths.APP, paths.SRC],
+    extensions: ['', '.js', 'ts', '.tsx']
   },
 
   stats: {
@@ -42,10 +43,15 @@ module.exports = {
   },
 
   module: {
+    preLoaders: [{
+      test: /\.tsx?$|\.jsx?$/,
+      loader: 'tslint-loader',
+      include: [paths.SRC]
+    }],
     loaders: [{
-      test: /\.jsx?$/, // test for both js and jsx
-      loaders: ['babel'], // babel config stays in .babelrc
-      include: [paths.SRC, paths.TEST]
+      test: /\.tsx?$|\.jsx?$/,
+      loaders: ['awesome-typescript'],
+      include: [paths.SRC]
     }, {
       test: /\.css$/,
       loader: 'style!css'
