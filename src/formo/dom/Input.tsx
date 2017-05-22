@@ -1,12 +1,12 @@
-import * as React from 'react';
 import { noop, omit } from 'lodash';
+import * as React from 'react';
 
-export type Props = {
-  value?: number | string | null,
-  onChange: (value: string) => void,
-  onEnter?: () => void,
-  onKeyUp?: (evt: React.KeyboardEvent<HTMLInputElement>) => void
-};
+export interface Props {
+  value?: number | string | null;
+  onChange: (value: string) => void;
+  onEnter?: () => void;
+  onKeyUp?: (evt: React.KeyboardEvent<HTMLInputElement>) => void;
+}
 
 export default function Input<T extends Props>(props: T) {
   const { value, onChange, onEnter = noop, onKeyUp = noop } = props;
