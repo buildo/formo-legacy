@@ -7,22 +7,7 @@
 
 #### Breaking:
 
-- [JS-to-TS] add stricter types to formo.tsx [#81](https://github.com/buildo/formo/issues/81)
-- [JS-to-TS] fix npm start [#79](https://github.com/buildo/formo/issues/79)
-- [JS-to-TS] Fix imports adding allowSyntheticDefaultImports: true [#77](https://github.com/buildo/formo/issues/77)
-- [JS-to-TS] Add tslint [#75](https://github.com/buildo/formo/issues/75)
 - [JS-to-TS] [#71](https://github.com/buildo/formo/issues/71)
-
-#### New features:
-
-- revert scriptoni [#72](https://github.com/buildo/formo/issues/72)
-- Convert formo.js to ts [#69](https://github.com/buildo/formo/issues/69)
-- yarn on ci [#65](https://github.com/buildo/formo/issues/65)
-- Convert formo-state-handler [#61](https://github.com/buildo/formo/issues/61)
-- convert formo/dom/Input [#59](https://github.com/buildo/formo/issues/59)
-- Prepare for ts [#57](https://github.com/buildo/formo/issues/57)
-- remove eslint [#55](https://github.com/buildo/formo/issues/55)
-- Replace babel with typescript [#53](https://github.com/buildo/formo/issues/53)
 
 ## [v0.1.4](https://github.com/buildo/formo/tree/v0.1.4) (2017-04-03)
 [Full Changelog](https://github.com/buildo/formo/compare/v0.1.3...v0.1.4)
