@@ -5,8 +5,10 @@ export interface FormoField<T> {
   active?: boolean;
 }
 
+export type ValidationsErrors = string[];
+
 export interface MetaField {
-  validationErrors: string[];
+  validationErrors: ValidationsErrors;
   isValid: boolean;
   isChanged: boolean;
 }
@@ -30,8 +32,6 @@ export type OnChange = (fields: FormoFields, meta: Meta) => void;
 
 export interface FormoValidation { [key: string]: (value: any, otherValue: any) => boolean; }
 export interface FormoValidations { [key: string]: FormoValidation; }
-
-export type ValidationsErrors = string[];
 
 export interface Field<T> {
   value: T;
@@ -67,8 +67,8 @@ export interface Fields {
 // export type ComponentProps = Fields & { [k in FormKey]: Form };
 
 export interface FormoWrapperProps {
-  [key: string]: any | Field<any>,
-  form: Form
+  [key: string]: any | Field<any>;
+  form: Form;
 }
 
 type OnChange = (fields: FormoFields, meta: Meta) => void;
