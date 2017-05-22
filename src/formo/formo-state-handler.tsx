@@ -7,13 +7,13 @@ export default function formoStateHandler(Component: React.ComponentClass<FormoP
 
   return class FormoStateHandler extends React.PureComponent<FormoStateHandlerProps, FormoStateHandlerState> {
 
-    public static displayName = `FormoStateHandler${(Component.displayName || '')}`;
+    static displayName = `FormoStateHandler${(Component.displayName || '')}`;
 
-    public state = {
+    state = {
       fields: this.props.fields
     };
 
-    public onChange = (fields: FormoFields, meta: Meta): void => {
+    onChange = (fields: FormoFields, meta: Meta): void => {
       const { onChange = noop } = this.props; // apparently defaultProps doesn't work
       this.setState({
         fields
@@ -24,7 +24,7 @@ export default function formoStateHandler(Component: React.ComponentClass<FormoP
       });
     }
 
-    public mergeFields = (fieldsFromProps: FormoFields, fieldsFromState: FormoFields): FormoFields => {
+    mergeFields = (fieldsFromProps: FormoFields, fieldsFromState: FormoFields): FormoFields => {
       // the source of truths of which fields are in the form
       // come from the props (they can be removed, or new ones added)
       return mapValues(fieldsFromProps, (_, fieldName: string) => ({
@@ -34,7 +34,7 @@ export default function formoStateHandler(Component: React.ComponentClass<FormoP
       }));
     }
 
-    public componentWillReceiveProps({ fields }: FormoStateHandlerProps) {
+    componentWillReceiveProps({ fields }: FormoStateHandlerProps) {
       const mergedFields = this.mergeFields(fields, this.state.fields);
 
       this.setState({
@@ -42,7 +42,7 @@ export default function formoStateHandler(Component: React.ComponentClass<FormoP
       });
     }
 
-    public getLocals(props: FormoStateHandlerProps): FormoProps {
+    getLocals(props: FormoStateHandlerProps): FormoProps {
       const { onChange, state: { fields } } = this;
       return {
         validations: {},
@@ -52,7 +52,7 @@ export default function formoStateHandler(Component: React.ComponentClass<FormoP
       };
     }
 
-    public render() {
+    render() {
       return <Component {...this.getLocals(this.props)} />;
     }
 
