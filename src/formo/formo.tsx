@@ -1,4 +1,3 @@
-import { constant } from 'lodash';
 import { every } from 'lodash';
 import { find } from 'lodash';
 import { findKey } from 'lodash';
@@ -18,47 +17,45 @@ import {
   MetaForm, ValidationsErrors
 } from './types';
 
-const returnEmpty = constant({});
-
-const set = (key: string) => (value: any) => (object: object) => ({
+const set = (key: string) => (value: any) => (object: { [key: string]: any }) => ({
   ...object,
   [key]: value
 });
 
 const firstDefined = (...args: any[]): any => find(args, (x) => x !== void 0);
 
-const innerSet = (object: { [key: string]: any }) => (firstKey: string) => (secondKey: string) => (value: any) => {
+const innerSet = (object: { [key: string]: any }) => (firstKey: string) => (secondKey: string) => (value: any): { [key: string]: any } => { // tslint:disable-line ter-max-len
   const newFirstKeyObject = set(secondKey)(value)(object[firstKey]);
   return set(firstKey)(newFirstKeyObject)(object);
 };
 
-const updateValue = (fields: FormoFields) => (fieldName: string) => (value: any) => {
+const updateValue = (fields: FormoFields) => (fieldName: string) => (value: any): FormoFields => {
   return innerSet(fields)(fieldName)('value')(value);
 };
 
-const setActive = (fields: FormoFields) => (fieldName: string) => {
+const setActive = (fields: FormoFields) => (fieldName: string): FormoFields => {
   // set all fields to active: false
   const activeFalseFields = mapValues(fields, set('active')(false));
   // set fieldName field to active: true
   return innerSet(activeFalseFields)(fieldName)('active')(true);
 };
 
-const touch = (fields: FormoFields) => (fieldName: string) => {
+const touch = (fields: FormoFields) => (fieldName: string): FormoFields => {
   return innerSet(fields)(fieldName)('touched')(true);
 };
 
-const unsetActive = (fields: FormoFields) => (fieldName: string) => {
+const unsetActive = (fields: FormoFields) => (fieldName: string): FormoFields => {
   // set the field to active: false
   const deactivated = innerSet(fields)(fieldName)('active')(false);
   // set the field to touched: true
   return touch(deactivated)(fieldName);
 };
 
-const clearValue = (fields: FormoFields) => (fieldName: string) => {
+const clearValue = (fields: FormoFields) => (fieldName: string): FormoFields => {
   return innerSet(fields)(fieldName)('value')(undefined);
 };
 
-const clearValues = (fields: FormoFields) => {
+const clearValues = (fields: FormoFields): FormoFields => {
   return mapValues(fields, (field) => set('value')(field.initialValue)(field));
 };
 
@@ -72,19 +69,19 @@ const formo = (Component: React.ComponentClass<FormoWrapperProps>): React.Compon
 
     static displayName = `Formo${(Component.displayName || '')}`;
 
-    evalValidations = (validations: FormoValidation | (() => {}), value: any, otherValues?: any) => {
+    evalValidations = (validations: FormoValidation , value: any, otherValues?: { [key: string]: any }): {[key: string]: ValidationsErrors} => { // tslint:disable-line ter-max-len
       const evaluated = mapValues(validations, (validationFn) => validationFn(value, otherValues));
       const validationErrors = pickBy(evaluated, (x) => x === false);
       return mapValues({ validationErrors }, Object.keys);
     }
 
-    getFieldsValues = (fields: FormoFields) => mapValues(fields, (field) => ({
+    getFieldsValues = (fields: FormoFields): FormoFields => mapValues(fields, (field: FormoField<any>): FormoField<any> => ({ // tslint:disable-line ter-max-len
       ...field,
       initialValue: firstDefined(field.initialValue),
       value: firstDefined(field.value, field.initialValue)
     }))
 
-    fieldsWithValidations = (fields: FormoFields) => {
+    fieldsWithValidations = (fields: FormoFields): FormoFields => {
       return mapValues(fields, (field, fieldName) => {
         const fieldValidations = fieldName && this.props.validations ? this.props.validations[fieldName] : {};
         const { validationErrors } = this.evalValidations(fieldValidations, field.value, mapValues(fields, 'value'));
@@ -111,11 +108,11 @@ const formo = (Component: React.ComponentClass<FormoWrapperProps>): React.Compon
       this.props.onChange(fields, meta);
     }
 
-    updateValue = (fieldName: string) => (value: any) => {
+    updateValue = (fieldName: string) => (value: any): void => {
       this.onChange(updateValue(this.props.fields)(fieldName)(value));
     }
 
-    setActive = (fieldName: string) => () => {
+    setActive = (fieldName: string) => (): void => {
       this.onChange(setActive(this.props.fields)(fieldName));
     }
 
@@ -127,7 +124,7 @@ const formo = (Component: React.ComponentClass<FormoWrapperProps>): React.Compon
       this.onChange(unsetActive(this.props.fields)(fieldName));
     }
 
-    set = (fieldName: string) => (prop: string, value: any) => {
+    set = (fieldName: string) => (prop: string, value: any): void => {
       this.onChange(innerSet(this.props.fields)(fieldName)(prop)(value));
     }
 
@@ -156,7 +153,7 @@ const formo = (Component: React.ComponentClass<FormoWrapperProps>): React.Compon
         return { ...field, ...setters };
       })
 
-    isChanged = ({ value, initialValue }: FormoField<any>) => {
+    isChanged = ({ value, initialValue }: FormoField<any>): boolean => {
       const similarlyNil = ['', undefined, null];
       return (
         !isEqual(value, initialValue) &&
@@ -168,13 +165,13 @@ const formo = (Component: React.ComponentClass<FormoWrapperProps>): React.Compon
       return mapValues(fields, (field: FormoField<any>) => ({ ...field, isChanged: this.isChanged(field) }));
     }
 
-    formIsChanged = (fields: FormoFields) => some(fields, this.isChanged);
+    formIsChanged = (fields: FormoFields): boolean => some(fields, this.isChanged);
 
-    formIsValid = (fields: FormoFields, validationErrors: ValidationsErrors) => {
+    formIsValid = (fields: FormoFields, validationErrors: ValidationsErrors): boolean => {
       return every(fields, 'isValid') && (validationErrors.length === 0);
     }
 
-    enforceOnlyOneActive = (fields: FormoFields) => {
+    enforceOnlyOneActive = (fields: FormoFields): FormoFields => {
       const firstFieldActive = findKey(fields, 'active');
       return mapValues(fields, (field, fieldName) => ({
         ...field,
@@ -182,7 +179,7 @@ const formo = (Component: React.ComponentClass<FormoWrapperProps>): React.Compon
       }));
     }
 
-    fieldsAreTouched = (fields: FormoFields) => {
+    fieldsAreTouched = (fields: FormoFields): FormoFields => {
       return mapValues(fields, (field) => ({
         ...field,
         touched: !!field.touched
@@ -196,7 +193,7 @@ const formo = (Component: React.ComponentClass<FormoWrapperProps>): React.Compon
         this.fieldsAreChanged,
         this.getFieldsValues
       )(fields);
-      const formValidation = validations && validations.form || returnEmpty;
+      const formValidation = validations && validations.form || {};
       const { validationErrors } = this.evalValidations(formValidation, mapValues(parsedFields, 'value'));
       return {
         allTouched: every(fields, 'touched'),
