@@ -12,6 +12,7 @@
     "rules": {
         "interface-name": [true, "never-prefix"],
         "max-line-length": [false],
+        "member-access": [true, "no-public"],
         "quotemark": [true, "single"],
         "trailing-comma": [true, "never"],
         "ter-max-len": [true, {
