@@ -70,21 +70,21 @@ const formo = (Component: React.ComponentClass<FormoWrapperProps>): React.Compon
 
   class Formo extends React.PureComponent<FormoProps, React.ComponentState> {
 
-    public static displayName = `Formo${(Component.displayName || '')}`;
+    static displayName = `Formo${(Component.displayName || '')}`;
 
-    public evalValidations = (validations: FormoValidation | (() => {}), value: any, otherValues?: any) => {
+    evalValidations = (validations: FormoValidation | (() => {}), value: any, otherValues?: any) => {
       const evaluated = mapValues(validations, (validationFn) => validationFn(value, otherValues));
       const validationErrors = pickBy(evaluated, (x) => x === false);
       return mapValues({ validationErrors }, Object.keys);
     }
 
-    public getFieldsValues = (fields: FormoFields) => mapValues(fields, (field) => ({
+    getFieldsValues = (fields: FormoFields) => mapValues(fields, (field) => ({
       ...field,
       initialValue: firstDefined(field.initialValue),
       value: firstDefined(field.value, field.initialValue)
     }))
 
-    public fieldsWithValidations = (fields: FormoFields) => {
+    fieldsWithValidations = (fields: FormoFields) => {
       return mapValues(fields, (field, fieldName) => {
         const fieldValidations = fieldName && this.props.validations ? this.props.validations[fieldName] : {};
         const { validationErrors } = this.evalValidations(fieldValidations, field.value, mapValues(fields, 'value'));
@@ -97,7 +97,7 @@ const formo = (Component: React.ComponentClass<FormoWrapperProps>): React.Compon
       });
     }
 
-    public onChange = (newFields: FormoFields): void => {
+    onChange = (newFields: FormoFields): void => {
       const { fieldsAreChanged, fieldsWithValidations, enforceOnlyOneActive } = this;
       const propsKeysToOmit = ['validationErrors', 'isValid', 'isChanged'];
       const newFieldsValues = this.getFieldsValues(newFields);
@@ -111,39 +111,39 @@ const formo = (Component: React.ComponentClass<FormoWrapperProps>): React.Compon
       this.props.onChange(fields, meta);
     }
 
-    public updateValue = (fieldName: string) => (value: any) => {
+    updateValue = (fieldName: string) => (value: any) => {
       this.onChange(updateValue(this.props.fields)(fieldName)(value));
     }
 
-    public setActive = (fieldName: string) => () => {
+    setActive = (fieldName: string) => () => {
       this.onChange(setActive(this.props.fields)(fieldName));
     }
 
-    public touch = (fieldName: string) => (): void => {
+    touch = (fieldName: string) => (): void => {
       this.onChange(touch(this.props.fields)(fieldName));
     }
 
-    public unsetActive = (fieldName: string) => (): void => {
+    unsetActive = (fieldName: string) => (): void => {
       this.onChange(unsetActive(this.props.fields)(fieldName));
     }
 
-    public set = (fieldName: string) => (prop: string, value: any) => {
+    set = (fieldName: string) => (prop: string, value: any) => {
       this.onChange(innerSet(this.props.fields)(fieldName)(prop)(value));
     }
 
-    public clearValue = (fieldName: string) => (): void => {
+    clearValue = (fieldName: string) => (): void => {
       this.onChange(clearValue(this.props.fields)(fieldName));
     }
 
-    public clearValues = (): void => {
+    clearValues = (): void => {
       this.onChange(clearValues(this.props.fields));
     }
 
-    public touchAll = (): void => {
+    touchAll = (): void => {
       this.onChange(touchAll(this.props.fields));
     }
 
-    public fieldsWithSetters = (fields: FormoFields) =>
+    fieldsWithSetters = (fields: FormoFields) =>
       mapValues(fields, (field: FormoField<any>, fieldName: string) => {
         const setters = {
           clear: this.clearValue(fieldName),
@@ -156,7 +156,7 @@ const formo = (Component: React.ComponentClass<FormoWrapperProps>): React.Compon
         return { ...field, ...setters };
       })
 
-    public isChanged = ({ value, initialValue }: FormoField<any>) => {
+    isChanged = ({ value, initialValue }: FormoField<any>) => {
       const similarlyNil = ['', undefined, null];
       return (
         !isEqual(value, initialValue) &&
@@ -164,17 +164,17 @@ const formo = (Component: React.ComponentClass<FormoWrapperProps>): React.Compon
       );
     }
 
-    public fieldsAreChanged = (fields: FormoFields) => {
+    fieldsAreChanged = (fields: FormoFields) => {
       return mapValues(fields, (field: FormoField<any>) => ({ ...field, isChanged: this.isChanged(field) }));
     }
 
-    public formIsChanged = (fields: FormoFields) => some(fields, this.isChanged);
+    formIsChanged = (fields: FormoFields) => some(fields, this.isChanged);
 
-    public formIsValid = (fields: FormoFields, validationErrors: ValidationsErrors) => {
+    formIsValid = (fields: FormoFields, validationErrors: ValidationsErrors) => {
       return every(fields, 'isValid') && (validationErrors.length === 0);
     }
 
-    public enforceOnlyOneActive = (fields: FormoFields) => {
+    enforceOnlyOneActive = (fields: FormoFields) => {
       const firstFieldActive = findKey(fields, 'active');
       return mapValues(fields, (field, fieldName) => ({
         ...field,
@@ -182,14 +182,14 @@ const formo = (Component: React.ComponentClass<FormoWrapperProps>): React.Compon
       }));
     }
 
-    public fieldsAreTouched = (fields: FormoFields) => {
+    fieldsAreTouched = (fields: FormoFields) => {
       return mapValues(fields, (field) => ({
         ...field,
         touched: !!field.touched
       }));
     }
 
-    public makeForm = (fields: FormoFields, validations?: FormoValidations): MetaForm => {
+    makeForm = (fields: FormoFields, validations?: FormoValidations): MetaForm => {
       const parsedFields = flowRight(
         this.fieldsWithValidations,
         this.enforceOnlyOneActive,
@@ -207,13 +207,13 @@ const formo = (Component: React.ComponentClass<FormoWrapperProps>): React.Compon
       };
     }
 
-    public formWithSetters = (form: MetaForm): Form => ({
+    formWithSetters = (form: MetaForm): Form => ({
       ...form,
       clearValues: this.clearValues,
       touchAll: this.touchAll
     })
 
-    public getLocals(props: FormoProps): FormoWrapperProps {
+    getLocals(props: FormoProps): FormoWrapperProps {
       const otherProps = omit(props, ['onChange', 'fields', 'validations']);
       const fields = flowRight(
         this.fieldsAreTouched,
@@ -234,7 +234,7 @@ const formo = (Component: React.ComponentClass<FormoWrapperProps>): React.Compon
       };
     }
 
-    public render() {
+    render() {
       return <Component {...this.getLocals(this.props)} />;
     }
 
