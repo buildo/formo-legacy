@@ -25,4 +25,4 @@ export const Form = t.interface({
   touchAll: t.Function,
   touched: t.Boolean,
   validationErrors: ValidationsErrors
-});
+}, { name: 'Form', strict: true });
