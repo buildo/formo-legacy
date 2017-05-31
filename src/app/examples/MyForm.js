@@ -1,6 +1,7 @@
 /* eslint-disable no-copy-paste-default-export/default, react/no-multi-comp */
 import * as React from 'react';
 import * as t from 'tcomb';
+import { props } from 'tcomb-react';
 import { skinnable, pure } from 'revenge';
 import View from 'react-flexview';
 import { Dropdown } from 'buildo-react-components';

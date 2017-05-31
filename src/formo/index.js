@@ -1,3 +1,2 @@
-export * from './types';
-import formo from './formo';
-export default formo;
+export * from './formo';
+export { Form, Field } from './tcomb-types';
