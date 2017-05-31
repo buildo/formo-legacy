@@ -2,6 +2,13 @@
 
 
 
+## [v0.2.1](https://github.com/buildo/formo/tree/v0.2.1) (2017-05-31)
+[Full Changelog](https://github.com/buildo/formo/compare/v0.2.0...v0.2.1)
+
+#### Fixes (bugs & defects):
+
+- fix broken npm release [#83](https://github.com/buildo/formo/issues/83)
+
 ## [v0.2.0](https://github.com/buildo/formo/tree/v0.2.0) (2017-05-22)
 [Full Changelog](https://github.com/buildo/formo/compare/v0.1.4...v0.2.0)
 
@@ -14,7 +21,6 @@
 
 #### New features:
 
-- Update smooth-release version [#50](https://github.com/buildo/formo/issues/50)
 - add onEnter to formo/dom/Input [#49](https://github.com/buildo/formo/issues/49)
 - Expose formo/dom [#47](https://github.com/buildo/formo/issues/47)
 
@@ -31,10 +37,6 @@
 #### New features:
 
 - Value is not in sync in onChange param [#40](https://github.com/buildo/formo/issues/40)
-
-#### Fixes (bugs & defects):
-
-- Issue Preview doesn't work on github enterprise [#39](https://github.com/buildo/formo/issues/39)
 
 ## [v0.1.1](https://github.com/buildo/formo/tree/v0.1.1) (2017-02-15)
 [Full Changelog](https://github.com/buildo/formo/compare/v0.1.0...v0.1.1)
