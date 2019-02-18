@@ -224,7 +224,7 @@ type | name/usage | description
 `boolean` | `[field].touched` | `true` if input has been `unsetActive()` in the past (typically after a blur, or, as always, if the field is configured as `touched=true` in config)
 `function` | `[field].clear()` | Set field `value` to `initialValue || undefined`
 `boolean` | `[field].isChanged` | `true` if input `value` is the same as `initialValue` (or "adequately equal")
-`list(string)` | `form.validationErrors` | validations failing
+`list(string)` | `[field].validationErrors` | validations failing
 `any` | `[field].[<any other key>]` | Any other field key provided in form config is just passed down
 `function(string, any)` | `[field].set('prop', value)` | Any other field key can be changed using `.set`
 
